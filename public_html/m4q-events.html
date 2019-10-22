@@ -266,10 +266,16 @@
 
                 <h3 id="_func_ready">Document ready</h3>
                 <p>
-                    Create document ready function. You can specify function as constructor argument and receive document ready function.
+                    Create document ready function. You can specify function as constructor argument and receive document ready function or use <code>$.ready(...)</code> method.
                 </p>
                 <pre><code>
                     $(function(){
+                        ...
+                    });
+
+                    or
+
+                    $.ready(function(){
                         ...
                     });
                 </code></pre>
