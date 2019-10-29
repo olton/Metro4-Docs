@@ -480,7 +480,7 @@
                 <div class="example">
                     <div class="row">
                         <div class="cell-md-6">
-                            <input type="text" data-role="calendarpicker" id="dp2" data-on-change="$('#dp1').attr('value', (arguments[1]))">
+                            <input type="text" data-role="calendarpicker" id="dp2" data-on-change="$('#dp1').attr('value', (arguments[0]))">
                         </div>
                         <div class="cell-md-6">
                             <input type="text" data-role="calendarpicker" id="dp1" data-format="%d %b %Y">
@@ -490,7 +490,7 @@
                 <pre><code>
                     &lt;input type="text"
                         data-role="calendarpicker" id="dp2"
-                        data-on-change="$('#dp1').attr('value', (arguments[1]))"&gt;
+                        data-on-change="$('#dp1').attr('value', (arguments[0]))"&gt;
 
                     &lt;input type="text"
                         data-role="calendarpicker" id="dp1" data-format="%d %b %Y"&gt;

@@ -1,5 +1,5 @@
 /*
- * Metro 4 Components Library v4.3.2  (https://metroui.org.ua)
+ * Metro 4 Components Library v4.3.3  (https://metroui.org.ua)
  * Copyright 2012-2019 Sergey Pimenov
  * Licensed under MIT
  */
@@ -12,6 +12,8 @@
     }
 }(function( ) { 
 'use strict';
+
+window.hideM4QVersion = true;
 
 (function (global, undefined) {
 
@@ -547,7 +549,7 @@ function iif(val1, val2, val3){
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.2. Built at 20/10/2019 17:44:04";
+var m4qVersion = "v1.0.3. Built at 29/10/2019 16:21:57";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -601,6 +603,7 @@ $.extend = $.fn.extend = function(){
     return target;
 };
 
+if (typeof window["hideM4QVersion"] === "undefined") console.log("m4q "+$.version);
 
 // Source: src/interval.js
 
@@ -1649,7 +1652,7 @@ $.fn.extend({
                     }
 
                     if (!sel) {
-                        handler.call(target, e);
+                        handler.call(el, e);
                     } else {
                         while (target && target !== el) {
                             if (matches.call(target, sel)) {
@@ -1841,6 +1844,13 @@ $.fn.extend({
     }
 });
 
+$.fn.extend({
+    ready: function(fn){
+        if (this.length && this[0] === document && typeof fn === 'function') {
+            return $.ready(fn);
+        }
+    }
+});
 
 // Source: src/ajax.js
 
@@ -2102,10 +2112,11 @@ $.fn.extend({
         if (not(cls) || (""+cls).trim() === "") return this;
         return this.each(function(){
             var el = this;
+            var hasClassList = typeof el.classList !== "undefined";
             $.each(cls.split(" ").filter(function(v){
                 return (""+v).trim() !== "";
             }), function(){
-                if (el.classList) el.classList[method](this);
+                if (hasClassList) el.classList[method](this);
             });
         });
     }
@@ -3388,7 +3399,7 @@ $.fn.extend({
 // Source: src/init.js
 
 $.init = function(sel, ctx){
-    var parsed;
+    var parsed, r;
 
     this.uid = $.uniqueId();
 
@@ -3427,9 +3438,19 @@ $.init = function(sel, ctx){
     }
 
     if (sel instanceof $) {
-        var r = $();
+        r = $();
         $.each(sel, function(){
             r.push(this);
+        });
+        return r;
+    }
+
+    if (Array.isArray(sel)) {
+        r = $();
+        $.each(sel, function(){
+            $(this).each(function(){
+                r.push(this);
+            });
         });
         return r;
     }
@@ -3543,7 +3564,7 @@ if (window.METRO_INIT === undefined) {
 }
 
 if (window.METRO_INIT_MODE === undefined) {
-    window.METRO_INIT_MODE = meta_init_mode !== undefined ? meta_init_mode : "immediate";
+    window.METRO_INIT_MODE = meta_init_mode !== undefined ? meta_init_mode : "contentloaded";
 }
 
 if (window.METRO_DEBUG === undefined) {window.METRO_DEBUG = true;}
@@ -3606,9 +3627,9 @@ var isTouch = (('ontouchstart' in window) || (navigator["MaxTouchPoints"] > 0) |
 
 var Metro = {
 
-    version: "4.3.2",
-    compileTime: "20/10/2019 17:53:59",
-    buildNumber: "739",
+    version: "4.3.3",
+    compileTime: "29/10/2019 17:27:38",
+    buildNumber: "740",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
     sheet: null,
@@ -7157,6 +7178,10 @@ var Utils = {
             }
         }
         return q;
+    },
+
+    decCount: function(v){
+        return v % 1 === 0 ? 0 : v.toString().split(".")[1].length;
     }
 };
 
@@ -7473,19 +7498,19 @@ Metro.plugin('activity', Activity);
 
 Metro['activity'] = {
     open: function(options){
-
-        var activity = '<div data-role="activity" data-type="'+( options.type ? options.type : 'cycle' )+'" data-style="'+( options.style ? options.style : 'color' )+'"></div>';
-        var text = options.text ? '<div class="text-center">'+options.text+'</div>' : '';
+        var o = options || {};
+        var activity = '<div data-role="activity" data-type="'+( o.type ? o.type : 'cycle' )+'" data-style="'+( o.style ? o.style : 'color' )+'"></div>';
+        var text = o.text ? '<div class="text-center">'+o.text+'</div>' : '';
 
         return Metro.dialog.create({
             content: activity + text,
             defaultAction: false,
             clsContent: "d-flex flex-column flex-justify-center flex-align-center bg-transparent no-shadow w-auto",
             clsDialog: "no-border no-shadow bg-transparent global-dialog",
-            autoHide: options.autoHide ? options.autoHide : 0,
-            overlayClickClose: options.overlayClickClose === true,
-            overlayColor: options.overlayColor?options.overlayColor:'#000000',
-            overlayAlpha: options.overlayAlpha?options.overlayAlpha:.5,
+            autoHide: o.autoHide ? o.autoHide : 0,
+            overlayClickClose: o.overlayClickClose === true,
+            overlayColor: o.overlayColor ? o.overlayColor:'#000000',
+            overlayAlpha: o.overlayAlpha ? o.overlayAlpha:.5,
             clsOverlay: "global-overlay"
         })
     },
@@ -7645,7 +7670,7 @@ var AppBar = {
         var hamburger = element.find(".hamburger");
 
         menu.slideUp(o.duration, function(){
-            menu.addClass("collapsed");
+            menu.addClass("collapsed").removeClass("opened");
             hamburger.removeClass("active");
         });
     },
@@ -7656,7 +7681,7 @@ var AppBar = {
         var hamburger = element.find(".hamburger");
 
         menu.slideDown(o.duration, function(){
-            menu.removeClass("collapsed");
+            menu.removeClass("collapsed").addClass("opened");
             hamburger.addClass("active");
         });
     },
@@ -9435,6 +9460,8 @@ var CalendarPickerDefaultConfig = {
     special: null,
     showHeader: true,
 
+    showWeekNumber: false,
+
     clsCalendar: "",
     clsCalendarHeader: "",
     clsCalendarContent: "",
@@ -9511,6 +9538,7 @@ var CalendarPicker = {
         var calendarButton, clearButton, cal = $("<div>").addClass("drop-shadow");
         var curr = element.val().trim();
         var id = Utils.elementId("calendarpicker");
+        var body = $("body");
 
         container.attr("id", id);
 
@@ -9531,7 +9559,7 @@ var CalendarPicker = {
         container.insertBefore(element);
         element.appendTo(container);
         buttons.appendTo(container);
-        cal.appendTo(container);
+        cal.appendTo(o.dialogMode ? body : container);
 
         Metro.makePlugin(cal, "calendar", {
             wide: o.calendarWide,
@@ -9547,7 +9575,7 @@ var CalendarPicker = {
             buttons: false,
             headerFormat: o.headerFormat,
 
-            clsCalendar: o.clsCalendar,
+            clsCalendar: [o.clsCalendar, "calendar-for-picker", (o.dialogMode ? "dialog-mode":"")].join(" "),
             clsCalendarHeader: o.clsCalendarHeader,
             clsCalendarContent: o.clsCalendarContent,
             clsCalendarFooter: "d-none",
@@ -9567,6 +9595,7 @@ var CalendarPicker = {
             special: o.special,
             showHeader: o.showHeader,
             showFooter: false,
+            showWeekNumber: o.showWeekNumber,
             onDayClick: function(sel, day, el){
                 var date = new Date(sel[0]);
                 date.setHours(0,0,0,0);
@@ -9864,7 +9893,7 @@ var CalendarPicker = {
         element.off(Metro.events.focus);
         element.off(Metro.events.change);
 
-        Metro.getPlugin(this.calendar[0], "calendar").destroy();
+        Metro.getPlugin(this.calendar, "calendar").destroy();
 
         return element;
     }
@@ -13391,7 +13420,7 @@ Metro['dialog'] = {
 
         dlg_options._runtime = true;
 
-        return dlg.dialog(dlg_options);
+        return Metro.makePlugin(dlg, "dialog", dlg_options);
     }
 };
 
@@ -14097,9 +14126,10 @@ var File = {
             var fi = this;
             var file_names = [];
             var entry;
-            if (fi.files.length === 0) {
-                return ;
-            }
+
+            // if (fi.files.length === 0) {
+            //     return ;
+            // }
 
             Array.from(fi.files).forEach(function(file){
                 file_names.push(file.name);
@@ -14208,7 +14238,7 @@ Metro.gravatarSetup = function (options) {
 };
 
 if (typeof window["metroGravatarSetup"] !== undefined) {
-    Metro.bottomSheetSetup(window["metroGravatarSetup"]);
+    Metro.gravatarSetup(window["metroGravatarSetup"]);
 }
 
 var Gravatar = {
@@ -15496,14 +15526,15 @@ Metro['infobox'] = {
     },
 
     create: function(c, t, o, open){
+        var $$ = Utils.$();
         var el, ib, box_type;
 
         box_type = t !== undefined ? t : "";
 
-        el = $("<div>").appendTo($("body"));
-        $("<div>").addClass("info-box-content").appendTo(el);
+        el = $$("<div>").appendTo($$("body"));
+        $$("<div>").addClass("info-box-content").appendTo(el);
 
-        var ib_options = $.extend({}, {
+        var ib_options = $$.extend({}, {
             removeOnClose: true,
             type: box_type
         }, (o !== undefined ? o : {}));
@@ -15512,7 +15543,7 @@ Metro['infobox'] = {
 
         el.infobox(ib_options);
 
-        ib = el.data('infobox');
+        ib = Metro.getPlugin(el, 'infobox');
         ib.setContent(c);
         if (open !== false) {
             ib.open();
@@ -19283,6 +19314,11 @@ var Popover = {
 Metro.plugin('popover', Popover);
 
 var ProgressDefaultConfig = {
+    showValue: false,
+    valuePosition: "free", // center, free
+    showLabel: false,
+    labelPosition: "before", // before, after
+    labelTemplate: "",
     value: 0,
     buffer: 0,
     type: "bar",
@@ -19290,6 +19326,8 @@ var ProgressDefaultConfig = {
     clsBack: "",
     clsBar: "",
     clsBuffer: "",
+    clsValue: "",
+    clsLabel: "",
     onValueChange: Metro.noop,
     onBufferChange: Metro.noop,
     onComplete: Metro.noop,
@@ -19302,7 +19340,7 @@ Metro.progressSetup = function (options) {
 };
 
 if (typeof window["metroProgressSetup"] !== undefined) {
-    Metro.bottomSheetSetup(window["metroProgressSetup"]);
+    Metro.progressSetup(window["metroProgressSetup"]);
 }
 
 var Progress = {
@@ -19320,7 +19358,7 @@ var Progress = {
     },
 
     _setOptionsFromDOM: function(){
-        var that = this, element = this.element, o = this.options;
+        var element = this.element, o = this.options;
 
         $.each(element.data(), function(key, value){
             if (key in o) {
@@ -19335,8 +19373,11 @@ var Progress = {
 
     _create: function(){
         var element = this.element, o = this.options;
+        var value;
 
         Metro.checkRuntime(element, "progress");
+
+        if (typeof o.type === "string") o.type = o.type.toLowerCase();
 
         element
             .html("")
@@ -19369,13 +19410,26 @@ var Progress = {
             default: _progress();
         }
 
-        if (o.small === true) {
-            element.addClass("small");
+        if (o.type !== 'line') {
+            value = $("<span>").addClass("value").addClass(o.clsValue).appendTo(element);
+            if (o.valuePosition === "center") value.addClass("centered");
+            if (o.showValue === false) value.hide();
         }
+
+        if (o.small === true) element.addClass("small");
 
         element.addClass(o.clsBack);
         element.find(".bar").addClass(o.clsBar);
         element.find(".buffer").addClass(o.clsBuffer);
+
+        if (o.showLabel === true) {
+            var label = $("<span>").addClass("progress-label").addClass(o.clsLabel).html(o.labelTemplate === "" ? o.value+"%" : o.labelTemplate.replace("%VAL%", o.value));
+            if (o.labelPosition === 'before') {
+                label.insertBefore(element);
+            } else {
+                label.insertAfter(element);
+            }
+        }
 
         this.val(o.value);
         this.buff(o.buffer);
@@ -19386,6 +19440,7 @@ var Progress = {
 
     val: function(v){
         var that = this, element = this.element, o = this.options;
+        var value = element.find(".value");
 
         if (v === undefined) {
             return that.value;
@@ -19400,6 +19455,19 @@ var Progress = {
         this.value = parseInt(v, 10);
 
         bar.css("width", this.value + "%");
+        value.html(this.value+"%");
+
+        var diff = element.width() - bar.width();
+        var valuePosition = value.width() > diff ? {left: "auto", right: diff + 'px'} : {left: v + '%'};
+
+        if (o.valuePosition === "free") value.css(valuePosition);
+
+        if (o.showLabel === true) {
+            var label = element[o.labelPosition === "before" ? "prev" : "next"](".progress-label");
+            if (label.length) {
+                label.html(o.labelTemplate === "" ? o.value+"%" : o.labelTemplate.replace("%VAL%", o.value));
+            }
+        }
 
         Utils.exec(o.onValueChange, [this.value], element[0]);
         element.fire("valuechange", {
@@ -21190,7 +21258,460 @@ Metro['sidebar'] = {
     }
 };
 
+var DoubleSliderDefaultConfig = {
+    roundValue: true,
+    min: 0,
+    max: 100,
+    accuracy: 0,
+    showMinMax: false,
+    minMaxPosition: Metro.position.TOP,
+    valueMin: null,
+    valueMax: null,
+    hint: false,
+    hintAlways: false,
+    hintPositionMin: Metro.position.TOP,
+    hintPositionMax: Metro.position.TOP,
+    hintMaskMin: "$1",
+    hintMaskMax: "$1",
+    target: null,
+    size: 0,
+
+    clsSlider: "",
+    clsBackside: "",
+    clsComplete: "",
+    clsMarker: "",
+    clsMarkerMin: "",
+    clsMarkerMax: "",
+    clsHint: "",
+    clsHintMin: "",
+    clsHintMax: "",
+    clsMinMax: "",
+    clsMin: "",
+    clsMax: "",
+
+    onStart: Metro.noop,
+    onStop: Metro.noop,
+    onMove: Metro.noop,
+    onChange: Metro.noop,
+    onChangeValue: Metro.noop,
+    onFocus: Metro.noop,
+    onBlur: Metro.noop,
+    onDoubleSliderCreate: Metro.noop
+};
+
+Metro.doubleSliderSetup = function (options) {
+    DoubleSliderDefaultConfig = $.extend({}, DoubleSliderDefaultConfig, options);
+};
+
+if (typeof window["metroDoubleSliderSetup"] !== undefined) {
+    Metro.doubleSliderSetup(window["metroDoubleSliderSetup"]);
+}
+
+var DoubleSlider = {
+    init: function( options, elem ) {
+        this.options = $.extend( {}, DoubleSliderDefaultConfig, options );
+        this.elem  = elem;
+        this.element = $(elem);
+        this.slider = null;
+        this.valueMin = null;
+        this.valueMax = null;
+        this.keyInterval = false;
+
+        this._setOptionsFromDOM();
+        this._create();
+
+        return this;
+    },
+
+    _setOptionsFromDOM: function(){
+        var element = this.element, o = this.options;
+
+        $.each(element.data(), function(key, value){
+            if (key in o) {
+                try {
+                    o[key] = JSON.parse(value);
+                } catch (e) {
+                    o[key] = value;
+                }
+            }
+        });
+    },
+
+    _create: function(){
+        var element = this.element, o = this.options;
+
+        Metro.checkRuntime(element, "doubleslider");
+
+        this.valueMin = Utils.isValue(o.valueMin) ? +o.valueMin : +o.min;
+        this.valueMax = Utils.isValue(o.valueMax) ? +o.valueMax : +o.max;
+
+        this._createSlider();
+        this._createEvents();
+
+        this.val(this.valueMin, this.valueMax);
+
+        Utils.exec(o.onDoubleSliderCreate, null, element[0]);
+        element.fire("doubleslidercreate");
+    },
+
+    _createSlider: function(){
+        var element = this.element, o = this.options;
+        var slider = $("<div>").addClass("slider").addClass(o.clsSlider).addClass(this.elem.className);
+        var backside = $("<div>").addClass("backside").addClass(o.clsBackside);
+        var complete = $("<div>").addClass("complete").addClass(o.clsComplete);
+        var markerMin = $("<button>").attr("type", "button").addClass("marker marker-min").addClass(o.clsMarker).addClass(o.clsMarkerMin);
+        var markerMax = $("<button>").attr("type", "button").addClass("marker marker-max").addClass(o.clsMarker).addClass(o.clsMarkerMax);
+        var hintMin = $("<div>").addClass("hint hint-min").addClass(o.hintPositionMin + "-side").addClass(o.clsHint).addClass(o.clsHintMin);
+        var hintMax = $("<div>").addClass("hint hint-max").addClass(o.hintPositionMax + "-side").addClass(o.clsHint).addClass(o.clsHintMax);
+        var id = Utils.elementId("slider");
+        var i;
+
+        Metro.checkRuntime(element, "doubleslider");
+
+        slider.attr("id", id);
+
+        if (o.size > 0) {
+            slider.outerWidth(o.size);
+        }
+
+        slider.insertBefore(element);
+        element.appendTo(slider);
+        backside.appendTo(slider);
+        complete.appendTo(slider);
+        markerMin.appendTo(slider);
+        markerMax.appendTo(slider);
+        hintMin.appendTo(markerMin);
+        hintMax.appendTo(markerMax);
+
+        if (o.hintAlways === true) {
+            $([hintMin, hintMax]).css({
+                display: "block"
+            }).addClass("permanent-hint");
+        }
+
+        if (o.showMinMax === true) {
+            var min_max_wrapper = $("<div>").addClass("slider-min-max clear").addClass(o.clsMinMax);
+            $("<span>").addClass("place-left").addClass(o.clsMin).html(o.min).appendTo(min_max_wrapper);
+            $("<span>").addClass("place-right").addClass(o.clsMax).html(o.max).appendTo(min_max_wrapper);
+            if (o.minMaxPosition === Metro.position.TOP) {
+                min_max_wrapper.insertBefore(slider);
+            } else {
+                min_max_wrapper.insertAfter(slider);
+            }
+        }
+
+        element[0].className = '';
+        if (o.copyInlineStyles === true) {
+            for (i = 0; i < element[0].style.length; i++) {
+                slider.css(element[0].style[i], element.css(element[0].style[i]));
+            }
+        }
+
+        if (element.is(":disabled")) {
+            this.disable();
+        } else {
+            this.enable();
+        }
+
+        this.slider = slider;
+    },
+
+    _createEvents: function(){
+        var that = this, element = this.element, slider = this.slider, o = this.options;
+        var marker = slider.find(".marker");
+
+        marker.on(Metro.events.startAll, function(){
+            var _marker = $(this);
+            var hint = _marker.find(".hint");
+            if (o.hint === true && o.hintAlways !== true) {
+                hint.fadeIn(300);
+            }
+
+            $(document).on(Metro.events.moveAll, function(e){
+                that._move(e);
+                Utils.exec(o.onMove, [that.valueMin, that.valueMax], element[0]);
+                element.fire("move", {
+                    val: [that.valueMin, that.valueMax]
+                });
+            }, {ns: slider.attr("id")});
+
+            $(document).on(Metro.events.stopAll, function(){
+                $(document).off(Metro.events.moveAll, {ns: slider.attr("id")});
+                $(document).off(Metro.events.stopAll, {ns: slider.attr("id")});
+
+                if (o.hintAlways !== true) {
+                    hint.fadeOut(300);
+                }
+
+                Utils.exec(o.onStop, [that.valueMin, that.valueMax], element[0]);
+                element.fire("stop", {
+                    val: [that.valueMin, that.valueMax]
+                });
+            }, {ns: slider.attr("id")});
+
+            Utils.exec(o.onStart, [that.valueMin, that.valueMax], element[0]);
+            element.fire("start", {
+                val: [that.valueMin, that.valueMax]
+            });
+        });
+
+        marker.on(Metro.events.focus, function(){
+            Utils.exec(o.onFocus, [that.valueMin, that.valueMax], element[0]);
+            element.fire("focus", {
+                val: [that.valueMin, that.valueMax]
+            });
+        });
+
+        marker.on(Metro.events.blur, function(){
+            Utils.exec(o.onBlur, [that.valueMin, that.valueMax], element[0]);
+            element.fire("blur", {
+                val: [that.valueMin, that.valueMax]
+            });
+        });
+
+        $(window).on(Metro.events.resize,function(){
+            that.val(that.valueMin, that.valueMax);
+        }, {ns: slider.attr("id")});
+    },
+
+    _convert: function(v, how){
+        var slider = this.slider, o = this.options;
+        var length = slider.outerWidth() - slider.find(".marker").outerWidth();
+        switch (how) {
+            case "pix2prc": return ( v * 100 / length );
+            case "pix2val": return ( this._convert(v, 'pix2prc') * ((o.max - o.min) / 100) + o.min );
+            case "val2prc": return ( (v - o.min)/( (o.max - o.min) / 100 )  );
+            case "prc2pix": return ( v / ( 100 / length ));
+            case "val2pix": return ( this._convert(this._convert(v, 'val2prc'), 'prc2pix') );
+        }
+
+        return 0;
+    },
+
+    _correct: function(value){
+        var res = value;
+        var accuracy  = this.options.accuracy;
+        var min = this.options.min, max = this.options.max;
+        var _dec = function(v){
+            return v % 1 === 0 ? 0 : v.toString().split(".")[1].length;
+        };
+
+        if (accuracy === 0 || isNaN(accuracy)) {
+            return res;
+        }
+
+        res = Math.round(value/accuracy)*accuracy;
+
+        if (res < min) {
+            res = min;
+        }
+
+        if (res > max) {
+            res = max;
+        }
+
+        return res.toFixed(_dec(accuracy));
+    },
+
+    _move: function(e){
+        var isMin = $(e.target).hasClass("marker-min");
+        var slider = this.slider, o = this.options;
+        var offset = slider.offset(),
+            marker_size = slider.find(".marker").outerWidth(),
+            markerMin = slider.find(".marker-min"),
+            markerMax = slider.find(".marker-max"),
+            length = slider.outerWidth(),
+            cPix, cStart, cStop;
+
+        cPix = Utils.pageXY(e).x - offset.left - marker_size / 2;
+
+        if (isMin) {
+            cStart = 0;
+            cStop = parseInt(markerMax.css("left")) - marker_size;
+        } else {
+            cStart = parseInt(markerMin.css("left")) + marker_size;
+            cStop = length - marker_size;
+        }
+
+        if (cPix < cStart || cPix > cStop) {
+            return ;
+        }
+
+        this[isMin ? "valueMin" : "valueMax"] = this._correct(this._convert(cPix, 'pix2val'));
+
+        this._redraw();
+    },
+
+    _hint: function(){
+        var that = this, o = this.options, slider = this.slider, hint = slider.find(".hint");
+
+        hint.each(function(){
+            var _hint = $(this);
+            var isMin = _hint.hasClass("hint-min");
+            var _mask = isMin ? o.hintMaskMin : o.hintMaskMax;
+            var value = +(isMin ? that.valueMin : that.valueMax) || 0;
+            _hint.text(_mask.replace("$1", value.toFixed(Utils.decCount(o.accuracy))))
+        });
+    },
+
+    _value: function(){
+        var element = this.element, o = this.options;
+        var v1 = +this.valueMin || 0, v2 = +this.valueMax || 0;
+        var value;// = [this.valueMin, this.valueMax].join(", ");
+
+        if (o.roundValue) {
+            v1 = v1.toFixed(Utils.decCount(o.accuracy));
+            v2 = v2.toFixed(Utils.decCount(o.accuracy));
+        }
+
+        value = [v1, v2].join(", ");
+
+        if (element[0].tagName === "INPUT") {
+            element.val(value);
+        }
+
+        if (o.target !== null) {
+            var target = $(o.target);
+            if (target.length !== 0) {
+
+                $.each(target, function(){
+                    var t = $(this);
+                    if (this.tagName === "INPUT") {
+                        t.val(value);
+                    } else {
+                        t.text(value);
+                    }
+                    t.trigger("change");
+                });
+            }
+        }
+
+        Utils.exec(o.onChangeValue, [value], element[0]);
+        element.fire("changevalue", {
+            val: value
+        });
+
+        Utils.exec(o.onChange, [value], element[0]);
+        element.fire("change", {
+            val: value
+        });
+    },
+
+    _marker: function(){
+        var slider = this.slider, o = this.options;
+        var markerMin = slider.find(".marker-min");
+        var markerMax = slider.find(".marker-max");
+        var complete = slider.find(".complete");
+        var marker_size = parseInt(Utils.getStyleOne(markerMin, "width"));
+        var slider_visible = Utils.isVisible(slider);
+
+        if (slider_visible) {
+            $([markerMin, markerMax]).css({
+                'margin-top': 0,
+                'margin-left': 0
+            });
+        }
+
+        if (slider_visible) {
+            markerMin.css('left', this._convert(this.valueMin, 'val2pix'));
+            markerMax.css('left', this._convert(this.valueMax, 'val2pix'));
+        } else {
+            markerMin.css({
+                'left': (this._convert(this.valueMin, 'val2prc')) + "%",
+                'margin-top': this._convert(this.valueMin, 'val2prc') === 0 ? 0 : -1 * marker_size / 2
+            });
+            markerMax.css({
+                'left': (this._convert(this.valueMax, 'val2prc')) + "%",
+                'margin-top': this._convert(this.valueMax, 'val2prc') === 0 ? 0 : -1 * marker_size / 2
+            });
+        }
+
+        complete.css({
+            "left": this._convert(this.valueMin, 'val2pix'),
+            "width": this._convert(this.valueMax, 'val2pix') - this._convert(this.valueMin, 'val2pix')
+        });
+    },
+
+    _redraw: function(){
+        this._marker();
+        this._value();
+        this._hint();
+    },
+
+    val: function(vMin, vMax){
+        var o = this.options;
+
+        if (!Utils.isValue(vMin) && !Utils.isValue(vMax)) {
+            return [this.valueMin, this.valueMax];
+        }
+
+        if (vMin < o.min) vMin = o.min;
+        if (vMax < o.min) vMax = o.min;
+
+        if (vMin > o.max) vMin = o.max;
+        if (vMax > o.max) vMax = o.max;
+
+        this.valueMin = this._correct(vMin);
+        this.valueMax = this._correct(vMax);
+
+        this._redraw();
+    },
+
+    changeValue: function(){
+        var element = this.element;
+        var valMin = +element.attr("data-value-min");
+        var valMax = +element.attr("data-value-max");
+        this.val(valMin, valMax);
+    },
+
+    disable: function(){
+        var element = this.element;
+        element.data("disabled", true);
+        element.parent().addClass("disabled");
+    },
+
+    enable: function(){
+        var element = this.element;
+        element.data("disabled", false);
+        element.parent().removeClass("disabled");
+    },
+
+    toggleState: function(){
+        if (this.elem.disabled) {
+            this.disable();
+        } else {
+            this.enable();
+        }
+    },
+
+    changeAttribute: function(attributeName){
+        switch (attributeName) {
+            case "data-value-min": this.changeValue(); break;
+            case "data-value-max": this.changeValue(); break;
+            case 'disabled': this.toggleState(); break;
+        }
+    },
+
+    destroy: function(){
+        var element = this.element, slider = this.slider;
+        var marker = slider.find(".marker");
+
+        marker.off(Metro.events.startAll);
+        marker.off(Metro.events.focus);
+        marker.off(Metro.events.blur);
+        marker.off(Metro.events.keydown);
+        marker.off(Metro.events.keyup);
+        slider.off(Metro.events.click);
+        $(window).off(Metro.events.resize, {ns: slider.attr("id")});
+
+        return element;
+    }
+};
+
+Metro.plugin('doubleslider', DoubleSlider);
+
 var SliderDefaultConfig = {
+    roundValue: true,
     min: 0,
     max: 100,
     accuracy: 0,
@@ -21297,11 +21818,7 @@ var Slider = {
         var id = Utils.elementId("slider");
         var i;
 
-        if (!element.attr("data-role-slider")) {
-            element
-                .attr("data-role-slider", true)
-                .attr("data-role", "slide");
-        }
+        Metro.checkRuntime(element, "slider");
 
         slider.attr("id", id);
 
@@ -21493,35 +22010,37 @@ var Slider = {
         var slider = this.slider, o = this.options;
         var length = (o.vertical === true ? slider.outerHeight() : slider.outerWidth()) - slider.find(".marker").outerWidth();
         switch (how) {
-            case "pix2prc": return Math.round( v * 100 / length );
-            case "pix2val": return Math.round( this._convert(v, 'pix2prc') * ((o.max - o.min) / 100) + o.min );
-            case "val2prc": return Math.round( (v - o.min)/( (o.max - o.min) / 100 )  );
-            case "prc2pix": return Math.round( v / ( 100 / length ));
-            case "val2pix": return Math.round( this._convert(this._convert(v, 'val2prc'), 'prc2pix') );
+            case "pix2prc": return ( v * 100 / length );
+            case "pix2val": return ( this._convert(v, 'pix2prc') * ((o.max - o.min) / 100) + o.min );
+            case "val2prc": return ( (v - o.min)/( (o.max - o.min) / 100 )  );
+            case "prc2pix": return ( v / ( 100 / length ));
+            case "val2pix": return ( this._convert(this._convert(v, 'val2prc'), 'prc2pix') );
         }
 
         return 0;
     },
 
     _correct: function(value){
+        var res = value;
         var accuracy  = this.options.accuracy;
         var min = this.options.min, max = this.options.max;
 
         if (accuracy === 0 || isNaN(accuracy)) {
-            return value;
+            return res;
         }
 
-        value = Math.floor(value / accuracy) * accuracy + Math.round(value % accuracy / accuracy) * accuracy;
+        // value = Math.floor(value / accuracy) * accuracy + Math.round(value % accuracy / accuracy) * accuracy;
+        res = Math.round(value/accuracy)*accuracy;
 
-        if (value < min) {
-            value = min;
+        if (res < min) {
+            res = min;
         }
 
-        if (value > max) {
-            value = max;
+        if (res > max) {
+            res = max;
         }
 
-        return value;
+        return res.toFixed(Utils.decCount(accuracy));
     },
 
     _move: function(e){
@@ -21547,16 +22066,28 @@ var Slider = {
 
     _hint: function(){
         var o = this.options, slider = this.slider, hint = slider.find(".hint");
-        var value;
+        var value = +this.value || 0;
+        var percent = +this.percent || 0;
 
-        value = o.hintMask.replace("$1", this.value).replace("$2", this.percent);
+        if (o.roundValue) {
+            value = (Utils.isValue(value) ? +value : 0).toFixed(Utils.decCount(o.accuracy));
+            percent = (Utils.isValue(percent) ? +percent : 0).toFixed(Utils.decCount(o.accuracy));
+        }
 
-        hint.text(value);
+        hint.text(o.hintMask.replace("$1", value).replace("$2", percent));
     },
 
     _value: function(){
         var element = this.element, o = this.options, slider = this.slider;
         var value = o.returnType === 'value' ? this.value : this.percent;
+        var percent = this.percent;
+        var buffer = this.buffer;
+
+        if (o.roundValue) {
+            value = (Utils.isValue(value) ? +value : 0).toFixed(Utils.decCount(o.accuracy));
+            percent = (Utils.isValue(percent) ? +percent : 0).toFixed(Utils.decCount(o.accuracy));
+            buffer = (Utils.isValue(buffer) ? +buffer : 0).toFixed(Utils.decCount(o.accuracy));
+        }
 
         if (element[0].tagName === "INPUT") {
             element.val(value);
@@ -21575,21 +22106,21 @@ var Slider = {
                     } else {
                         t.text(value);
                     }
+                    t.trigger("change");
                 });
             }
         }
 
-        Utils.exec(o.onChangeValue, [value, this.percent], element[0]);
+        Utils.exec(o.onChangeValue, [value], element[0]);
         element.fire("changevalue", {
-            val: value,
-            percent: this.percent
+            val: value
         });
 
-        Utils.exec(o.onChange, [value, this.percent, this.buffer], element[0]);
+        Utils.exec(o.onChange, [value, percent, buffer], element[0]);
         element.fire("change", {
             val: value,
-            percent: this.percent,
-            buffer: this.buffer
+            percent: percent,
+            buffer: buffer
         });
     },
 
@@ -23772,7 +24303,7 @@ var TableDefaultConfig = {
     infoWrapper: null,
     paginationWrapper: null,
 
-    cellWrapper: true,
+    cellWrapper: false,
 
     clsComponent: "",
     clsTableContainer: "",
@@ -25124,9 +25655,6 @@ var Table = {
                         val = that.heads[cell_index].template.replace("%VAL%", val);
                     }
 
-                    if (o.cellWrapper === true) {
-                        val = $("<div>").addClass("data-wrapper").addClass(o.clsCellWrapper).html(val);
-                    }
                     td.html(val);
 
                     td.addClass(o.clsBodyCell);
@@ -25153,6 +25681,11 @@ var Table = {
                         head: that.heads[cell_index],
                         items: cells
                     });
+
+                    if (o.cellWrapper === true) {
+                        val = $("<div>").addClass("data-wrapper").addClass(o.clsCellWrapper).html(td.html());
+                        td.html('').append(val);
+                    }
                 });
 
                 for (j = 0; j < cells.length; j++){
@@ -25520,6 +26053,11 @@ var Table = {
 
     reload: function(review){
         this.loadData(this.options.source, review);
+    },
+
+    clear: function(){
+        this.items = [];
+        return this.draw();
     },
 
     next: function(){
@@ -27691,9 +28229,11 @@ var Toast = {
 
     create: function(message, callback, timeout, cls, options){
         var o = options || Toast.options;
-        var toast = $("<div>").addClass("toast").html(message).appendTo($("body")).hide();
+        var toast = $("<div>").addClass("toast").html(message).appendTo($("body"));
         var width = toast.outerWidth();
         var timer = null;
+
+        toast.hide();
 
         timeout = timeout || o.timeout;
         callback = callback || o.callback;
@@ -29615,8 +30155,8 @@ Metro.validatorSetup = function (options) {
     ValidatorDefaultConfig = $.extend({}, ValidatorDefaultConfig, options);
 };
 
-if (typeof window.metroValidatorSetup !== undefined) {
-    Metro.validatorSetup(window.metroValidatorSetup);
+if (typeof window["metroValidatorSetup"] !== undefined) {
+    Metro.validatorSetup(window["metroValidatorSetup"]);
 }
 
 var Validator = {
