@@ -25061,6 +25061,12 @@ aside::after {
     font-size: 80%;
   }
 }
+.table-load-data-activity {
+  position: absolute!important;
+  top: 0;
+  left: 0;
+  z-index: 500;
+}
 .button,
 .flat-button {
   display: inline-block;
@@ -26582,15 +26588,22 @@ input[type=reset]:active {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: inline-block;
   width: auto;
   height: 36px;
   line-height: 1;
 }
-.info-button .button {
+.info-button::after {
   display: block;
+  clear: both;
+  content: "";
+}
+.info-button::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+.info-button .button {
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -26615,6 +26628,8 @@ input[type=reset]:active {
 }
 .info-button .button,
 .info-button .info {
+  display: block;
+  float: left;
   border-right: none;
   height: 100%;
   line-height: 32px;
@@ -27426,7 +27441,7 @@ fieldset.disabled,
   top: 0;
   right: 0;
 }
-.select.multiple .button-group {
+.select.multiple > .button-group {
   position: absolute;
   top: 0;
   right: 34px;

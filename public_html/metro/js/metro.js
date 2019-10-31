@@ -549,7 +549,7 @@ function iif(val1, val2, val3){
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.3. Built at 29/10/2019 16:21:57";
+var m4qVersion = "v1.0.3. Built at 30/10/2019 16:53:09";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -1658,6 +1658,7 @@ $.fn.extend({
                             if (matches.call(target, sel)) {
                                 handler.call(target, e);
                                 if (e.isPropagationStopped) {
+                                    e.stopImmediatePropagation();
                                     break;
                                 }
                             }
@@ -1681,11 +1682,7 @@ $.fn.extend({
 
                 originEvent = name+(sel ? ":"+sel:"")+(ns ? ":"+ns:"");
 
-                if (options.capture === undefined) {
-                    options.capture = false;
-                }
-
-                el.addEventListener(name, h, options);
+                el.addEventListener(name, h, !isEmptyObject(options) ? options : false);
 
                 index = $.setEventHandler({
                     el: el,
@@ -3628,7 +3625,7 @@ var isTouch = (('ontouchstart' in window) || (navigator["MaxTouchPoints"] > 0) |
 var Metro = {
 
     version: "4.3.3",
-    compileTime: "29/10/2019 19:09:40",
+    compileTime: "31/10/2019 12:03:33",
     buildNumber: "740",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
@@ -13816,6 +13813,7 @@ var Dropdown = {
         this.element = $(elem);
         this._toggle = null;
         this.displayOrigin = null;
+        this.isOpen = false;
 
         this._setOptionsFromDOM();
         this._create();
@@ -13950,6 +13948,8 @@ var Dropdown = {
 
         Utils.exec(options.onUp, null, el[0]);
         el.fire("up");
+
+        this.isOpen = false;
     },
 
     _open: function(el, immediate){
@@ -13972,6 +13972,8 @@ var Dropdown = {
 
         Utils.exec(options.onDrop, null, el[0]);
         el.fire("drop");
+
+        this.isOpen = true;
     },
 
     close: function(immediate){
@@ -13980,6 +13982,13 @@ var Dropdown = {
 
     open: function(immediate){
         this._open(this.element, immediate);
+    },
+
+    toggle: function(){
+        if (this.isOpen)
+            this.close();
+        else
+            this.open();
     },
 
     changeAttribute: function(attributeName){
@@ -17464,6 +17473,7 @@ var ListViewDefaultConfig = {
     onExpandNode: Metro.noop,
     onGroupNodeClick: Metro.noop,
     onNodeClick: Metro.noop,
+    onNodeDblClick: Metro.noop,
     onListViewCreate: Metro.noop
 };
 
@@ -17644,6 +17654,10 @@ var ListView = {
         element.on(Metro.events.dblclick, ".node-group > .data > .caption", function(){
             var node = $(this).closest("li");
             that.toggleNode(node);
+            Utils.exec(o.onNodeDblClick, [node], element[0]);
+            element.fire("nodedblclick", {
+                node: node
+            });
         });
     },
 
@@ -20599,7 +20613,7 @@ var Select = {
         Metro.makePlugin(drop_container, "dropdown", {
             dropFilter: ".select",
             duration: o.duration,
-            toggleElement: "#"+select_id,
+            toggleElement: [container],
             onDrop: function(){
                 var dropped, target;
                 dropdown_toggle.addClass("active-toggle");
@@ -20684,6 +20698,9 @@ var Select = {
 
         clearButton.on(Metro.events.click, function(e){
             element.val(o.emptyValue);
+            if (element[0].multiple) {
+                list.find("li").removeClass("d-none");
+            }
             that._setPlaceholder();
             e.preventDefault();
             e.stopPropagation();
@@ -20696,8 +20713,8 @@ var Select = {
         container.on(Metro.events.click, function(e){
             $(".focused").removeClass("focused");
             container.addClass("focused");
-            e.preventDefault();
-            e.stopPropagation();
+            // e.preventDefault();
+            // e.stopPropagation();
         });
 
         input.on(Metro.events.click, function(){
@@ -20793,6 +20810,11 @@ var Select = {
                     li[i].style.display = "none";
                 }
             }
+        });
+
+        filter_input.on(Metro.events.click, function(e){
+            e.preventDefault();
+            e.stopPropagation();
         });
 
         drop_container.on(Metro.events.click, function(e){
@@ -20970,14 +20992,8 @@ var Select = {
 };
 
 $(document).on(Metro.events.click, function(){
-    var $$ = Utils.$();
-    var selects = $(".select .drop-container");
-    $.each(selects, function(){
-        var drop = $$(this).data('dropdown');
-        if (drop && drop.close) drop.close();
-    });
     $(".select").removeClass("focused");
-}, {ns: "close-select-elements"});
+}, {ns: "blur-select-elements"});
 
 Metro.plugin('select', Select);
 
@@ -24381,6 +24397,7 @@ var Table = {
         this.searchString = "";
         this.data = null;
         this.activity = null;
+        this.loadActivity = null;
         this.busy = false;
         this.filters = [];
         this.wrapperInfo = null;
@@ -24434,6 +24451,7 @@ var Table = {
     _create: function(){
         var that = this, element = this.element, o = this.options;
         var id = Utils.elementId("table");
+        var table_component, table_container, activity, loadActivity;
 
         Metro.checkRuntime(element, "table");
 
@@ -24475,28 +24493,63 @@ var Table = {
             o.rows = -1;
         }
 
+        table_component = $("<div>").addClass("table-component");
+        table_component.attr("id", Utils.elementId("table"));
+        table_component.insertBefore(element);
+
+        table_container = $("<div>").addClass("table-container").addClass(o.clsTableContainer).appendTo(table_component);
+        element.appendTo(table_container);
+
+        if (o.horizontalScroll === true) {
+            table_container.addClass("horizontal-scroll");
+        }
+        if (!Utils.isNull(o.horizontalScrollStop) && Utils.mediaExist(o.horizontalScrollStop)) {
+            table_container.removeClass("horizontal-scroll");
+        }
+
+        table_component.addClass(o.clsComponent);
+
+        this.activity =  $("<div>").addClass("table-progress").appendTo(table_component);
+
+        activity = $("<div>").appendTo(this.activity);
+        Metro.makePlugin(activity, "activity", {
+            type: o.activityType,
+            style: o.activityStyle
+        });
+
+        if (o.showActivity !== true) {
+            this.activity.css({
+                visibility: "hidden"
+            })
+        }
+
+        this.component = table_component;
+
         if (o.source !== null) {
             Utils.exec(o.onDataLoad, [o.source], element[0]);
             element.fire("dataload", {
                 source: o.source
             });
-
-            $.json(o.source).then(function(data){
-                if (typeof data !== "object") {
-                    throw new Error("Data for table is not a object");
-                }
-                Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                element.fire("dataloaded", {
-                    source: o.source,
-                    data: data
+            this.activity.show(function(){
+                $.json(o.source).then(function(data){
+                    that.activity.hide();
+                    if (typeof data !== "object") {
+                        throw new Error("Data for table is not a object");
+                    }
+                    Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
+                    element.fire("dataloaded", {
+                        source: o.source,
+                        data: data
+                    });
+                    that._build(data);
+                }, function(xhr){
+                    that.activity.hide();
+                    Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
+                    element.fire("dataloaderror", {
+                        source: o.source,
+                        xhr: xhr
+                    })
                 });
-                that._build(data);
-            }, function(xhr){
-                Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                element.fire("dataloaderror", {
-                    source: o.source,
-                    xhr: xhr
-                })
             });
         } else {
             that._build();
@@ -24971,7 +25024,7 @@ var Table = {
         search_block.addClass(o.clsSearch);
 
         search_input = $("<input>").attr("type", "text").appendTo(search_block);
-        search_input.input({
+        Metro.makePlugin(search_input, "input", {
             prepend: o.tableSearchTitle
         });
 
@@ -24990,7 +25043,7 @@ var Table = {
                 option.attr("selected", "selected");
             }
         });
-        rows_select.select({
+        Metro.makePlugin(rows_select, "select",{
             filter: false,
             prepend: o.tableRowsCountTitle,
             onChange: function (val) {
@@ -25037,41 +25090,13 @@ var Table = {
 
     _createStructure: function(){
         var that = this, element = this.element, o = this.options;
-        var table_container, table_component, columns;
+        var columns;
         var w_search = $(o.searchWrapper), w_info = $(o.infoWrapper), w_rows = $(o.rowsWrapper), w_paging = $(o.paginationWrapper);
 
         if (w_search.length > 0) {this.wrapperSearch = w_search;}
         if (w_info.length > 0) {this.wrapperInfo = w_info;}
         if (w_rows.length > 0) {this.wrapperRows = w_rows;}
         if (w_paging.length > 0) {this.wrapperPagination = w_paging;}
-
-        table_component = $("<div>").addClass("table-component");
-        table_component.attr("id", Utils.elementId("table"));
-        table_component.insertBefore(element);
-
-        table_container = $("<div>").addClass("table-container").addClass(o.clsTableContainer).appendTo(table_component);
-        element.appendTo(table_container);
-
-        if (o.horizontalScroll === true) {
-            table_container.addClass("horizontal-scroll");
-        }
-        if (!Utils.isNull(o.horizontalScrollStop) && Utils.mediaExist(o.horizontalScrollStop)) {
-            table_container.removeClass("horizontal-scroll");
-        }
-
-        table_component.addClass(o.clsComponent);
-
-        this.activity =  $("<div>").addClass("table-progress").appendTo(table_component);
-        $("<div>").activity({
-            type: o.activityType,
-            style: o.activityStyle
-        }).appendTo(this.activity);
-
-        if (o.showActivity !== true) {
-            this.activity.css({
-                visibility: "hidden"
-            })
-        }
 
         element.html("").addClass(o.clsTable);
 
@@ -25112,7 +25137,6 @@ var Table = {
 
         this.currentPage = 1;
 
-        this.component = table_component;
         this._draw();
     },
 
@@ -26018,36 +26042,41 @@ var Table = {
                 source: o.source
             });
 
-            $.json(o.source).then(function(data){
-                that.items = [];
-                that.heads = [];
-                that.foots = [];
+            that.activity.show(function(){
+                $.json(o.source).then(function(data){
+                    that.activity.hide();
+                    that.items = [];
+                    that.heads = [];
+                    that.foots = [];
 
-                Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                element.fire("dataloaded", {
-                    source: o.source,
-                    data: data
+                    Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
+                    element.fire("dataloaded", {
+                        source: o.source,
+                        data: data
+                    });
+
+                    if (Array.isArray(o.head)) {
+                        that.heads = o.head;
+                    }
+
+                    if (Array.isArray(o.body)) {
+                        that.items = o.body;
+                    }
+
+                    that._createItemsFromJSON(data);
+                    that._rebuild(review);
+                }, function(xhr){
+                    that.activity.hide();
+                    Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
+                    that._createItemsFromJSON(data);
+                    that._rebuild(review);
+                    element.fire("dataloaderror", {
+                        source: o.source,
+                        xhr: xhr
+                    })
                 });
-
-                if (Array.isArray(o.head)) {
-                    that.heads = o.head;
-                }
-
-                if (Array.isArray(o.body)) {
-                    that.items = o.body;
-                }
-
-                that._createItemsFromJSON(data);
-                that._rebuild(review);
-            }, function(xhr){
-                Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                that._createItemsFromJSON(data);
-                that._rebuild(review);
-                element.fire("dataloaderror", {
-                    source: o.source,
-                    xhr: xhr
-                })
             });
+
         }
     },
 
