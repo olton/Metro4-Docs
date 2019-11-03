@@ -382,8 +382,8 @@
                         <td>Fired when user move slider marker</td>
                     </tr>
                     <tr>
-                        <td>onClick(val, percent, slider)</td>
-                        <td><code>data-on-click</code></td>
+                        <td>onSliderClick(val, percent, slider)</td>
+                        <td><code>data-on-slider-click</code></td>
                         <td>Fired when user clicked on slider</td>
                     </tr>
                     <tr>
@@ -420,7 +420,7 @@
                 <div class="example">
                     <div class="row flex-align-center">
                         <div class="cell-md-6">
-                            <input data-role="slider" data-show-min-max="true" data-min="-100" data-max="100" data-on-change-value="$('#event-receiver').val('Value: '+arguments[0]+', '+arguments[1]+'%')">
+                            <input data-role="slider" data-show-min-max="true" data-min="-100" data-max="100" data-on-change="$('#event-receiver').val('Value: '+arguments[0]+', '+arguments[1]+'%')">
                         </div>
                         <div class="cell-md-6">
                             <input type="text" id="event-receiver">
@@ -431,7 +431,7 @@
                     &lt;input data-role="slider"
                         data-show-min-max="true"
                         data-min="-100" data-max="100"
-                        data-on-change-value="$('#event-receiver').val('Value: '+arguments[0]+', '+arguments[1]+'%')"&gt;
+                        data-on-change="$('#event-receiver').val('Value: '+arguments[0]+', '+arguments[1]+'%')"&gt;
 
                     &lt;input type="text" id="event-receiver"&gt;
                 </code></pre>
@@ -609,7 +609,7 @@
     </div>
 
     <script src="docsearch/docsearch.min.js"></script>
-<script src="js/ie11.js"></script>
+
 
     <script src="metro/js/metro.js?ver=@@b-version"></script>
     <script src="highlight/highlight.pack.js"></script>

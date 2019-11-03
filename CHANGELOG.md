@@ -1,3 +1,6 @@
+### 4.3.3
++ [ ] DoubleSlider: new components
+
 ### 4.3.2
 + [ ] Table: new attributes `data-head`, `data-body`, `data-static`
 + [ ] Table: new methods `addItem()`, `addItems()`
