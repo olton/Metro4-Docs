@@ -28,6 +28,6 @@
 <p align="center">
 
 ![Docs version](https://img.shields.io/badge/Docs%20version-2019.1-darklime.svg)
-![Metro 4 version](https://img.shields.io/badge/Metro%204-4.3.1-darklime.svg)
+![Metro 4 version](https://img.shields.io/badge/Metro%204-4.3.3-darklime.svg)
 
 </p>
