@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="twitter:site" content="@metroui">
+    <meta name="twitter:creator" content="@pimenov_sergey">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Metro 4 Components Library">
+    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.">
+    <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+
+    <meta property="og:url" content="https://metroui.org.ua/v4/index.html">
+    <meta property="og:title" content="Metro 4 Components Library">
+    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="968">
+    <meta property="og:image:height" content="504">
+
+    <meta name="author" content="Sergey Pimenov">
+    <meta name="description" content="Are you tired of Bootstrap? Get started with Metro 4, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page.">
+    <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
+    <link href="highlight/styles/github.css" rel="stylesheet">
+    <link href="docsearch/docsearch.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+
+    <title>Including Metro 4 in your page</title>
+</head>
+<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend">
+<div class="container-fluid">
+
+    <div class="row flex-xl-nowrap">
+        <div class="cell-md-3 cell-xl-2 pr-0 border-right bd-light" id="sidenav" data-role="htmlcontainer" data-html-source="sidenav.html" data-insert-mode="replace"  data-on-html-load="initDocSearchEngine()"></div>
+
+            <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
+                <h5>Table of contents</h5>
+                <hr/>
+                <ul class="toc-nav">
+                    <li class="toc-entry"><a href="#_css">Including CSS</a></li>
+                    <li class="toc-entry"><a href="#_js">Including JavaScript</a></li>
+                    <li class="toc-entry"><a href="#_manual_init">Manual init</a></li>
+                </ul>
+            </div>
+
+            <main class="cell-md-9 cell-xl-8 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+                <div class="place-right d-none d-block-lg" style="width: 200px;">
+                    <img src="images/logo.png" class="w-100">
+                </div>
+
+                <h1>Including Metro 4</h1>
+
+                <!-- ads-html -->
+
+                <h3 id="_css">Including CSS</h3>
+                <p>
+                    You must include <code>CSS</code> file in <code>head</code> of the page.
+                </p>
+                <pre><code>
+                    &lt;!DOCTYPE html&gt;
+                    &lt;head&gt;
+                        ...
+                        &lt;link href="path_to_metro/metro-all.css" rel="stylesheet"&gt;
+                        ...
+                    &lt;/head&gt;
+                </code></pre>
+
+                <h3 id="_js">Including JS</h3>
+                <p>
+                    Before <code>4.3.3</code> you must include <code>metro.js</code> before closing tag <code>&lt;/body&gt;</code>.
+                    Begin from <code>4.3.3</code>, you can include <code>metro.js</code> in <code>head</code> of your page or before closing tag <code>&lt;/body&gt;</code>.
+                </p>
+                <p>
+                    Begin from 4.3.3, Metro 4 initialized after page content was loaded. You can change this behavior with special meta tag <code>metro4:init:mode</code>.
+                    This tag can have a one of next values:
+                </p>
+                <ul>
+                    <li><code>contentloaded</code> (default) - Metro 4 initialized after content was loaded</li>
+                    <li><code>immediate</code> - Metro 4 initialized immediate after <code>metro.js</code> was loaded</li>
+                </ul>
+
+                <pre><code>
+                    &lt;!DOCTYPE html&gt;
+                    &lt;head&gt;
+                        ...
+                        &lt;link href="path_to_metro/metro-all.css" rel="stylesheet"&gt;
+                        &lt;script&gt; src="path_to_metro/metro.js"&lt;/script&gt;
+                        ...
+                    &lt;/head&gt;
+                </code></pre>
+
+                <div>or</div>
+
+                <pre><code>
+                    &lt;!DOCTYPE html&gt;
+                    &lt;head&gt;
+                        ...
+                        &lt;link href="path_to_metro/metro-all.css" rel="stylesheet"&gt;
+                        ...
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        ...
+                        &lt;script&gt; src="path_to_metro/metro.js"&lt;/script&gt;
+                    &lt;/body&gt;
+                </code></pre>
+
+                <h3 id="_manual_init">Manual Metro 4 initialization</h3>
+                <p>
+                    By default, Metro 4 initiated automatically. You can disable this behavior and init manual Metro 4 with special meta tag <code>metro4:init</code> and method <code>Metro.init()</code>.
+                    To disable auto init, you must add to page <code>head</code> meta tag <code>&lt;meta name="metro4:init" content="false"&gt;</code> and call method <code>Metro.init()</code> where you need it.
+                </p>
+
+                <pre><code>
+                    &lt;!DOCTYPE html&gt;
+                    &lt;head&gt;
+                        &lt;meta name="metro4:init" content="false"&gt;
+                        ...
+                        &lt;link href="path_to_metro/metro-all.css" rel="stylesheet"&gt;
+                        ...
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        ...
+                        &lt;script&gt; src="path_to_metro/metro.js"&lt;/script&gt;
+                        &lt;script&gt;
+                            $(function(){
+                                ...code...
+                                Metro.init();
+                            })
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                </code></pre>
+
+                <!-- ads-html -->
+
+
+            </main>
+        </div>
+
+    </div>
+
+    <script src="docsearch/docsearch.min.js"></script>
+
+
+    <script src="metro/js/metro.js?ver=@@b-version"></script>
+    <script src="highlight/highlight.pack.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/site.js"></script>
+    <!-- ads-script -->
+    <!-- ga-script -->
+    <!-- hit-ua -->
+</body>
+</html>
