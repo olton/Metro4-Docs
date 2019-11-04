@@ -28,6 +28,7 @@
 <p align="center">
 
 ![Docs version](https://img.shields.io/badge/Docs%20version-2019.1-darklime.svg)
-![Metro 4 version](https://img.shields.io/badge/Metro%204-4.3.1-darklime.svg)
+![GitHub release](https://img.shields.io/github/v/release/olton/Metro-UI-CSS)
+![GitHub release](https://img.shields.io/github/v/release/olton/Metro-UI-CSS?include_prereleases&label=pre-release)
 
 </p>
