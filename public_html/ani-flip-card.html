@@ -43,7 +43,7 @@
     </style>
 
 </head>
-<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend">
+<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend" data-on-html-load="$('#header-ver').html(Metro.ver(true));">
 <div class="container-fluid">
 
     <div class="row flex-xl-nowrap">
@@ -54,11 +54,9 @@
                 <hr/>
                 <ul class="toc-nav">
                     <li class="toc-entry"><a href="#_about">About</a></li>
-                    <li class="toc-entry"><a href="#_vertical">Vertical flip</a></li>
-                    <li class="toc-entry"><a href="#_horizontal">Horizontal flip</a></li>
-                    <li class="toc-entry"><a href="#_class">Class toggle</a></li>
+                    <li class="toc-entry"><a href="#_activation">Activation effect</a></li>
+                    <li class="toc-entry"><a href="#_flip_orientation">Horizontal flip</a></li>
                 </ul>
-
             </div>
 
             <main class="cell-md-9 cell-xl-8 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
@@ -78,7 +76,7 @@
                     To create <code>flip-card</code> animation you must create container with class <code>flip-card</code> and add two inner blocks with classes <code>.front</code> and <code>.back</code>.
                     In additional you must define size for <code>flip-card</code>: <code>height</code> and <code>width</code>
                 </p>
-                <pre><code>
+                <pre><code class="html">
                     &lt;div class="flip-card" style="height: 340px; width: 480px"&gt;
                         &lt;div class="front"&gt;&lt;/div&gt;
                         &lt;div class="back"&gt;&lt;/div&gt;
@@ -121,6 +119,42 @@
                         </div>
                     </div>
                 </div>
+
+                <h3 id="_activation">Activation effect</h3>
+                <p>
+                    To activation <code>flip-card</code> effect, you must add one of two subclasses:
+                </p>
+                <ul>
+                    <li><code>.flip-on-hover</code> - card flipped on user hover cursor on the card</li>
+                    <li><code>.flip-on-active</code> - card flipped on toggle class <code>.active</code> on card</li>
+                </ul>
+
+                <h4>flip-on-hover</h4>
+                <pre><code class="html">
+                    &lt;div class="flip-card flip-on-hover"&gt;
+                        &lt;div class="front"&gt;&lt;/div&gt;
+                        &lt;div class="back"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                </code></pre>
+
+                <h4>flip-on-active</h4>
+                <pre><code class="html">
+                    &lt;div class="flip-card flip-on-active"&gt;
+                        &lt;div class="front"&gt;&lt;/div&gt;
+                        &lt;div class="back"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                </code></pre>
+
+                <h3 id="_flip_orientation">Horizontal flip</h3>
+                <p>
+                    By default, card flipped in vertical plane. To flip card in horizontal plane, add subclass <code>.fli-horizontal</code> to card.
+                </p>
+                <pre><code class="html">
+                    &lt;div class="flip-card flip-on-hover flip-horizontal"&gt;
+                        &lt;div class="front"&gt;&lt;/div&gt;
+                        &lt;div class="back"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                </code></pre>
 
             </main>
         </div>

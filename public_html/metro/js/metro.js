@@ -1,7 +1,7 @@
 /*
  * Metro 4 Components Library v4.3.4  (https://metroui.org.ua)
  * Copyright 2012-2019 Sergey Pimenov
- * Built at 04/11/2019 16:35:10
+ * Built at 05/11/2019 14:47:04
  * Licensed under MIT
  */
 
@@ -554,7 +554,7 @@ function iif(val1, val2, val3){
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.3. Built at 03/11/2019 19:13:08";
+var m4qVersion = "v1.0.4. Built at 05/11/2019 14:38:39";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -2499,51 +2499,31 @@ $.extend({
 
 // Source: src/manipulation.js
 
-// TODO optimise promises append, prepend to one definition
 (function (arr) {
     arr.forEach(function (item) {
-        if (item.hasOwnProperty('append')) {
-            return;
-        }
-        Object.defineProperty(item, 'append', {
-            configurable: true,
-            enumerable: true,
-            writable: true,
-            value: function append() {
-                var argArr = Array.prototype.slice.call(arguments),
-                    docFrag = document.createDocumentFragment();
-
-                argArr.forEach(function (argItem) {
-                    var isNode = argItem instanceof Node;
-                    docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
-                });
-
-                this.appendChild(docFrag);
+        ['append', 'prepend'].forEach(function(where){
+            if (item.hasOwnProperty(where)) {
+                return;
             }
-        });
-    });
-})([Element.prototype, Document.prototype, DocumentFragment.prototype]);
+            Object.defineProperty(item, where, {
+                configurable: true,
+                enumerable: true,
+                writable: true,
+                value: function prepend() {
+                    var argArr = Array.prototype.slice.call(arguments),
+                        docFrag = document.createDocumentFragment();
 
-(function (arr) {
-    arr.forEach(function (item) {
-        if (item.hasOwnProperty('prepend')) {
-            return;
-        }
-        Object.defineProperty(item, 'prepend', {
-            configurable: true,
-            enumerable: true,
-            writable: true,
-            value: function prepend() {
-                var argArr = Array.prototype.slice.call(arguments),
-                    docFrag = document.createDocumentFragment();
+                    argArr.forEach(function (argItem) {
+                        var isNode = argItem instanceof Node;
+                        docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
+                    });
 
-                argArr.forEach(function (argItem) {
-                    var isNode = argItem instanceof Node;
-                    docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
-                });
-
-                this.insertBefore(docFrag, this.firstChild);
-            }
+                    if (where === 'prepend')
+                        this.insertBefore(docFrag, this.firstChild);
+                    else
+                        this.appendChild(docFrag);
+                }
+            });
         });
     });
 })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
@@ -3630,7 +3610,7 @@ var isTouch = (('ontouchstart' in window) || (navigator["MaxTouchPoints"] > 0) |
 var Metro = {
 
     version: "4.3.4",
-    compileTime: "04/11/2019 16:35:18",
+    compileTime: "05/11/2019 14:47:12",
     buildNumber: "742",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,

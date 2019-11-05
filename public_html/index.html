@@ -299,27 +299,5 @@
     <!-- ga-script -->
     <!-- hit-ua -->
 
-    <script>
-        setTimeout(function(){
-            var b = $(".adsbygoogle");
-            var div = $(".example");
-
-            if (Metro.utils.isLocalhost()) {
-                return ;
-            }
-
-            if (b.length === 0) {
-                // div.html("<div class='bg-red fg-white p-4 text-center h3 text-light'>With your help, I can make Metro 4 even better! Please, disable AdBlock or AdGuard.<br>Thank you for your support!</div>");
-            } else {
-                $.each(b, function(){
-                    var bl = $(this);
-                    if (bl.height() < 50 || Metro.utils.getStyleOne(bl, 'display') === 'none') {
-                        // div.html("<div class='bg-red fg-white p-4 text-center h3 text-light'>With your help, I can make Metro 4 even better! Please, disable AdBlock or AdGuard.<br>Thank you for your support!</div>");
-                    }
-                });
-            }
-        }, 1000)
-    </script>
-
 </body>
 </html>
