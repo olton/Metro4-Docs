@@ -43,11 +43,11 @@
     </style>
 
 </head>
-<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend" data-on-html-load="$('#header-ver').html(Metro.ver(true));">
+<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend">
 <div class="container-fluid">
 
     <div class="row flex-xl-nowrap">
-        <div class="cell-md-3 cell-xl-2 pr-0 border-right bd-light" id="sidenav" data-role="htmlcontainer" data-html-source="sidenav.html" data-insert-mode="replace"  data-on-html-load="initDocSearchEngine()"></div>
+        <div class="cell-md-3 cell-xl-2 pr-0 border-right bd-light" id="sidenav" data-role="htmlcontainer" data-html-source="sidenav.html" data-insert-mode="replace" ></div>
 
             <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
                 <h5>Table of contents</h5>
@@ -74,7 +74,7 @@
                 <h3 id="_about">About</h3>
                 <p>
                     To create <code>flip-card</code> animation you must create container with class <code>flip-card</code> and add two inner blocks with classes <code>.front</code> and <code>.back</code>.
-                    In additional you must define size for <code>flip-card</code>: <code>height</code> and <code>width</code>
+                    Also you must define size for <code>flip-card</code>: <code>height</code> and <code>width</code>
                 </p>
                 <pre><code class="html">
                     &lt;div class="flip-card" style="height: 340px; width: 480px"&gt;
