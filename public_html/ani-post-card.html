@@ -33,11 +33,11 @@
     <link href="docsearch/docsearch.min.css" rel="stylesheet">
     <link href="css/site.css" rel="stylesheet">
 
-    <title>Flip Card Animation - Metro 4 :: Popular HTML, CSS and JS library</title>
+    <title>Post Card Animation - Metro 4 :: Popular HTML, CSS and JS library</title>
 
     <style>
-        .flip-card {
-            width: 320px;
+        .post-card {
+            width: 100%;
             height: 480px;
         }
     </style>
@@ -55,7 +55,7 @@
                 <ul class="toc-nav">
                     <li class="toc-entry"><a href="#_about">About</a></li>
                     <li class="toc-entry"><a href="#_activation">Activation effect</a></li>
-                    <li class="toc-entry"><a href="#_flip_orientation">Horizontal flip</a></li>
+                    <li class="toc-entry"><a href="#_flip_orientation">Left or Right</a></li>
                 </ul>
             </div>
 
@@ -64,55 +64,78 @@
                     <img src="images/logo.png" class="w-100">
                 </div>
 
-                <h1>Flip Card</h1>
+                <h1>Post Card</h1>
                 <p class="text-leader">
-                    Use builtin animation for your object to create flip card animation.
+                    Use builtin animation for your object to create post card animation.
                 </p>
 
                 <!-- ads-html -->
 
                 <h3 id="_about">About</h3>
                 <p>
-                    To create <code>flip-card</code> animation you must create container with class <code>flip-card</code> and add two inner blocks with classes <code>.front</code> and <code>.back</code>.
-                    Also you must define size for <code>flip-card</code>: <code>height</code> and <code>width</code>
+                    To create <code>post-card</code> animation you must create container with class <code>post-card</code> and add two inner blocks with classes <code>.left</code> and <code>.right</code>.
+                    Also you must define size for <code>post-card</code>: <code>height</code> and <code>width</code>
                 </p>
                 <pre><code class="html">
-                    &lt;div class="flip-card" style="height: 340px; width: 480px"&gt;
-                        &lt;div class="front"&gt;&lt;/div&gt;
-                        &lt;div class="back"&gt;&lt;/div&gt;
+                    &lt;div class="post-card" style="height: 340px; width: 480px"&gt;
+                        &lt;div class="left"&gt;&lt;/div&gt;
+                        &lt;div class="right"&gt;&lt;/div&gt;
                     &lt;/div&gt;
                 </code></pre>
                 <div class="example">
                     <div class="text-center">
-                        <button class="button" onclick="$('.fc1').toggleClass('active')">Flip the cards</button>
+                        <button class="button" onclick="$('.post-card').toggleClass('active')">Flip the cards</button>
                     </div>
                     <div class="row mt-4" style="height: 600px;">
                         <div class="cell-lg-6 bg-dark d-flex flex-justify-center flex-align-center">
-                            <div class="flip-card effect-on-active fc1">
-                                <div class="front">
+                            <div class="post-card effect-on-active rotate-to-left">
+                                <div class="left">
                                     <div class="h-100 bg-white d-flex flex-align-center flex-justify-center">
-                                        <h1>Front</h1>
+                                        <img src="https://picsum.photos/id/1005/300/600">
                                     </div>
                                 </div>
 
-                                <div class="back">
-                                    <div class="h-100 bg-white d-flex flex-align-center flex-justify-center">
-                                        <h1>Back</h1>
+                                <div class="right">
+                                    <div class="h-100 bg-white d-flex flex-align-center flex-justify-center flex-column p-6">
+                                        <div class="bg-gray border-50 fg-white text-center" style="width: 64px; height: 64px;">
+                                            <span class="mif-user mif-4x"></span>
+                                        </div>
+                                        <br>
+                                        <form>
+                                            <input type="text" data-role="input" data-prepend="<span class='mif-envelop'>" placeholder="Enter email">
+                                            <input type="password" data-role="input" data-prepend="<span class='mif-lock'>" class="mt-2" placeholder="Enter password">
+                                            <hr/>
+                                            <div class="form-actions">
+                                                <button class="button info" type="submit">Submit</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="cell-lg-6 bg-dark d-flex flex-justify-center flex-align-center">
-                            <div class="flip-card effect-on-active flip-horizontal fc1">
-                                <div class="front">
-                                    <div class="h-100 bg-white d-flex flex-align-center flex-justify-center">
-                                        <h1>Front</h1>
+                            <div class="post-card effect-on-active">
+                                <div class="left">
+                                    <div class="h-100 bg-white d-flex flex-align-center flex-justify-center flex-column p-6">
+                                        <div class="bg-gray border-50 fg-white text-center" style="width: 64px; height: 64px;">
+                                            <span class="mif-user mif-4x"></span>
+                                        </div>
+                                        <br>
+                                        <form>
+                                            <input type="text" data-role="input" data-prepend="<span class='mif-envelop'>" placeholder="Enter email">
+                                            <input type="password" data-role="input" data-prepend="<span class='mif-lock'>" class="mt-2" placeholder="Enter password">
+                                            <hr/>
+                                            <div class="form-actions">
+                                                <button class="button info" type="submit">Submit</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
 
-                                <div class="back">
+                                <div class="right">
                                     <div class="h-100 bg-white d-flex flex-align-center flex-justify-center">
-                                        <h1>Back</h1>
+                                        <img src="https://picsum.photos/id/1005/300/600">
                                     </div>
                                 </div>
                             </div>
@@ -122,35 +145,35 @@
 
                 <h3 id="_activation">Activation effect</h3>
                 <p>
-                    To activation <code>flip-card</code> effect, you must add one of two subclasses:
+                    To activation <code>post-card</code> effect, you must add one of two subclasses:
                 </p>
                 <ul>
-                    <li><code>.effect-on-hover</code> - card flipped on user hover cursor on the card</li>
-                    <li><code>.effect-on-active</code> - card flipped on toggle class <code>.active</code> on card</li>
+                    <li><code>.effect-on-hover</code> - card rotated on user hover cursor on the card</li>
+                    <li><code>.effect-on-active</code> - card rotated on toggle class <code>.active</code> on card</li>
                 </ul>
 
                 <h4>effect-on-hover</h4>
                 <pre><code class="html">
-                    &lt;div class="flip-card effect-on-hover"&gt;
-                        &lt;div class="front"&gt;&lt;/div&gt;
-                        &lt;div class="back"&gt;&lt;/div&gt;
+                    &lt;div class="post-card effect-on-hover"&gt;
+                        &lt;div class="left"&gt;&lt;/div&gt;
+                        &lt;div class="right"&gt;&lt;/div&gt;
                     &lt;/div&gt;
                 </code></pre>
 
                 <h4>effect-on-active</h4>
                 <pre><code class="html">
-                    &lt;div class="flip-card effect-on-active"&gt;
-                        &lt;div class="front"&gt;&lt;/div&gt;
-                        &lt;div class="back"&gt;&lt;/div&gt;
+                    &lt;div class="post-card effect-on-active"&gt;
+                        &lt;div class="left"&gt;&lt;/div&gt;
+                        &lt;div class="right"&gt;&lt;/div&gt;
                     &lt;/div&gt;
                 </code></pre>
 
-                <h3 id="_flip_orientation">Horizontal flip</h3>
+                <h3 id="_flip_orientation">Left or Right</h3>
                 <p>
-                    By default, card flipped in vertical plane. To flip card in horizontal plane, add subclass <code>.flip-horizontal</code> to card.
+                    By default, card rotated to right side. To rotate card to left side, add subclass <code>.rotate-to-left</code> to card.
                 </p>
                 <pre><code class="html">
-                    &lt;div class="flip-card effect-on-hover flip-horizontal"&gt;
+                    &lt;div class="post-card effect-on-hover rotate-to-left"&gt;
                         &lt;div class="front"&gt;&lt;/div&gt;
                         &lt;div class="back"&gt;&lt;/div&gt;
                     &lt;/div&gt;
