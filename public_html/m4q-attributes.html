@@ -79,8 +79,12 @@
                         <code>id()</code>,
                         <code>prop()</code>,
                         <code>meta()</code>,
+                        <code>metaBy()</code>,
                         <code>doctype()</code>,
                         <code>html()</code>.
+                        <code>document()</code>.
+                        <code>window()</code>.
+                        <code>head()</code>.
                 </p>
 
                 <h3>attr()</h3>
@@ -185,6 +189,30 @@
                     $.html(); // get page DOCTYPE
                 </code></pre>
 
+                <h3>document()</h3>
+                <p>
+                    Get document object.
+                </p>
+                <pre><code>
+                    $.document(); // this eq to $("document")
+                </code></pre>
+
+                <h3>window()</h3>
+                <p>
+                    Get window object.
+                </p>
+                <pre><code>
+                    $.window(); // this eq to $(window)
+                </code></pre>
+
+                <h3>head()</h3>
+                <p>
+                    Get document head object.
+                </p>
+                <pre><code>
+                    $.head(); // this eq to $("head")
+                </code></pre>
+
                 <h3>meta()</h3>
                 <p>
                     Get <code>meta</code> attributes.
@@ -192,6 +220,14 @@
                 <pre><code>
                     $.meta(); // get all document meta attributes
                     $.meta("viewport"); // get meta with name viewport
+                </code></pre>
+
+                <h3>metaBy(what)</h3>
+                <p>
+                    Get <code>meta</code> by attribute name.
+                </p>
+                <pre><code>
+                    $.meta("property", "og:url"); // get meta with attribute name property and specified value
                 </code></pre>
 
                 <h3>charset()</h3>
