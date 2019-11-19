@@ -48,21 +48,22 @@
         }
     </style>
 </head>
-<body class="m4-cloak" style="padding-top: 50px">
-    <div class="container-fluid bg-hero fg-white pos-fixed fixed-top z-top">
-        <header class="app-bar container bg-hero fg-white pos-relative" data-role="appbar" data-expand-point="md">
-            <a href="index.html" class="brand fg-white no-hover">METRO 4</a>
+<body class="m4-cloak" style="padding-top: 0">
+    <div class="container-fluid bg-hero fg-white pos-fixed fixed-top z-top" id="header">
+        <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
+            <a href="index.html" class="brand fg-white no-hover text-bold">METRO 4</a>
             <ul class="app-bar-menu ml-auto" data-role="htmlcontainer" data-html-source="main-menu.html"></ul>
         </header>
     </div>
 
-    <div class="hero hero-bg text-center neb neb-hero" style="padding-top: 40px">
+    <div class="hero hero-bg-img text-center">
 
-        <h1 class="fg-white mt-10"><span class="reduce-1 enlarge-1-md">Support <span class="no-wrap">Metro 4</span> Development</span></h1>
+        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro</span><img src="images/four.png" class="d-inline-block va-bottom" style="height: 150px;"></div>
+        <h2 class="fg-white mt-10"><span class="reduce-1 enlarge-md">Support Development</span></h2>
         <div class="container mt-10 text-leader fg-white pl-5-fs pr-5-fs pl-20-md pr-20-md">
             <p class=" reduce-1 enlarge-1-md">
             Metro 4 is an MIT licensed open source project and completely free to use.
-            However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing.
+            <br>However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing.
             </p>
         </div>
 
@@ -302,6 +303,16 @@
     <script src="metro/js/metro.js?ver=@@b-version"></script>
     <script>
         $(".version-number").html(Metro.ver());
+        $(function(){
+            window.onscroll = function(){
+                var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                if (winScroll > 50) {
+                    $("#header").addClass("scrolled-header");
+                } else {
+                    $("#header").removeClass("scrolled-header");
+                }
+            };
+        });
     </script>
     <!-- ads-script -->
     <!-- ga-script -->

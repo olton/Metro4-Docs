@@ -334,17 +334,13 @@ body {
   padding-top: 64px;
 }
 .bg-hero {
-  background-color: #8c0c1d;
+  background-color: #E25825;
 }
 .fg-react {
   color: #61dafb !important;
 }
-.hero-bg {
-  background: #8c0c1d;
-  background: linear-gradient(to bottom, #8c0c1d 0%, #d95555 100%);
-}
 .hero-bg-img {
-  background: url("../images/bg.jpg") top left no-repeat;
+  background: url("../images/bg.png") top left no-repeat;
   background-size: cover;
 }
 .hero {
@@ -353,6 +349,19 @@ body {
 .hero-image-holder {
   background: url("../images/m-four.png") center right no-repeat;
   background-size: contain;
+}
+#header {
+  transition: background-color 0.3s linear;
+  background-color: #E25825 !important;
+}
+.scrolled-header {
+  background-color: #E25825 !important;
+  color: #fff;
+}
+@media screen and (min-width: 768px) {
+  #header:not(.scrolled-header) {
+    background-color: transparent !important;
+  }
 }
 .neb-commercial {
   z-index: 2;
@@ -382,7 +391,7 @@ body {
   z-index: 11;
 }
 .neb-hero::after {
-  border-color: #d95555 transparent transparent transparent;
+  border-color: #FD6518 transparent transparent transparent;
 }
 .neb-white::after {
   border-color: #ffffff transparent transparent transparent;

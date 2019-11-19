@@ -36,17 +36,17 @@
     <title>Metro 4 - Popular HTML, CSS and JS library</title>
 
 </head>
-<body class="m4-cloak" style="padding-top: 50px">
-    <div class="container-fluid bg-hero fg-white pos-fixed fixed-top z-top">
-        <header class="app-bar container bg-hero fg-white pos-relative" data-role="appbar" data-expand-point="md">
-            <a href="index.html" class="brand fg-white no-hover">METRO 4</a>
+<body class="m4-cloak" style="padding-top: 0">
+    <div class="container-fluid pos-fixed fixed-top z-top" id="header">
+        <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
+            <a href="index.html" class="brand fg-white no-hover text-bold">METRO 4</a>
             <ul class="app-bar-menu ml-auto" data-role="htmlcontainer" data-html-source="main-menu.html"></ul>
         </header>
     </div>
 
-    <div class="hero hero-bg text-center neb1 neb-hero">
+    <div class="hero hero-bg-img text-center neb1 neb-hero" id="hero">
 
-        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro_4</span></div>
+        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro</span><img src="images/four.png" class="d-inline-block va-bottom" style="height: 150px;"></div>
 
         <h4 class="text-center fg-white text-upper text-light">Impressive components library<span class="d-none-md1"><br></span> built on HTML, CSS, JavaScript</h4>
 
@@ -287,14 +287,27 @@
 <!--    -->
     <script src="metro/js/metro.js?ver=@@b-version"></script>
     <script>
-        $(".version-number").html(Metro.ver());
-        $(".version-number-full").html(Metro.ver(true));
-        if (!Metro.utils.isLocalhost()) Metro.utils.github("olton/Metro-UI-CSS", function(data){
-            $("#github-forks").attr("data-value", data.forks).data("counter").start();
-            $("#github-stars").attr("data-value", data.stargazers_count).data("counter").start();
-            $("#github-watchers").attr("data-value", data.subscribers_count).data("counter").start();
-        })
+        $(function(){
+            $(".version-number").html(Metro.ver());
+            $(".version-number-full").html(Metro.ver(true));
+            if (!Metro.utils.isLocalhost()) Metro.utils.github("olton/Metro-UI-CSS", function(data){
+                $("#github-forks").attr("data-value", data.forks).data("counter").start();
+                $("#github-stars").attr("data-value", data.stargazers_count).data("counter").start();
+                $("#github-watchers").attr("data-value", data.subscribers_count).data("counter").start();
+            });
+
+            window.onscroll = function(){
+                var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                if (winScroll > 50) {
+                    $("#header").addClass("scrolled-header");
+                } else {
+                    $("#header").removeClass("scrolled-header");
+                }
+            };
+        });
+
     </script>
+
     <!-- ads-script -->
     <!-- ga-script -->
     <!-- hit-ua -->

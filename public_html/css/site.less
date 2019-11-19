@@ -401,19 +401,13 @@ body {
     padding-top: 64px;
 }
 
-@heroPrimaryColor: rgb(140, 12, 29);
-@heroSecondaryColor: rgb(217, 85, 85);
+@heroPrimaryColor: #E25825;
 
 .bg-hero {background-color: @heroPrimaryColor;}
 .fg-react {color: #61dafb!important;}
 
-.hero-bg {
-    background: rgb(140, 12, 29);
-    background: linear-gradient(to bottom, @heroPrimaryColor 0%, @heroSecondaryColor 100%);
-}
-
 .hero-bg-img {
-    background: url("../images/bg.jpg") top left no-repeat;
+    background: url("../images/bg.png") top left no-repeat;
     background-size: cover;
 }
 
@@ -424,6 +418,22 @@ body {
 .hero-image-holder {
     background: url("../images/m-four.png") center right no-repeat;
     background-size: contain;
+}
+
+#header {
+    transition: background-color .3s linear;
+    background-color: #E25825 !important;
+}
+
+.scrolled-header {
+    background-color: #E25825 !important;
+    color: #fff;
+}
+
+@media screen and (min-width: 768px) {
+    #header:not(.scrolled-header) {
+        background-color: transparent !important;
+    }
 }
 
 .neb-commercial {
@@ -457,7 +467,7 @@ body {
 }
 
 .neb-hero::after {
-    border-color: @heroSecondaryColor transparent transparent transparent;
+    border-color: #FD6518 transparent transparent transparent;
 }
 
 .neb-white::after {
