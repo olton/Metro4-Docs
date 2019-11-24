@@ -352,16 +352,10 @@ body {
 }
 #header {
   transition: background-color 0.3s linear;
-  background-color: #E25825 !important;
 }
 .scrolled-header {
   background-color: #E25825 !important;
   color: #fff;
-}
-@media screen and (min-width: 768px) {
-  #header:not(.scrolled-header) {
-    background-color: transparent !important;
-  }
 }
 .neb-commercial {
   z-index: 2;

@@ -1,7 +1,7 @@
 /*
  * Metro 4 Components Library v4.3.4  (https://metroui.org.ua)
  * Copyright 2012-2019 Sergey Pimenov
- * Built at 16/11/2019 11:36:52
+ * Built at 24/11/2019 13:31:35
  * Licensed under MIT
  */
 
@@ -25,6 +25,10 @@ window.hideM4QVersion = true;
 // Source: src/func.js
 
 var numProps = ['opacity', 'zIndex'];
+
+function isSimple(v){
+    return typeof v === "string" || typeof v === "boolean" || typeof v === "number";
+}
 
 function isVisible(elem) {
     return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
@@ -134,6 +138,7 @@ function iif(val1, val2, val3){
 function normalizeEventName(name) {
     return typeof name !== "string" ? undefined : name.replace(/\-/g, "").toLowerCase();
 }
+
 
 // Source: src/setimmediate.js
 
@@ -253,7 +258,7 @@ function normalizeEventName(name) {
         return;
     }
 
-    // console.log("Promise polyfill v1.2.0");
+    // 
 
     var PENDING = 'pending';
     var SEALED = 'sealed';
@@ -558,7 +563,7 @@ function normalizeEventName(name) {
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.4. Built at 14/11/2019 23:46:29";
+var m4qVersion = "v1.0.4. Built at 24/11/2019 13:28:24";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -612,7 +617,7 @@ $.extend = $.fn.extend = function(){
     return target;
 };
 
-if (typeof window["hideM4QVersion"] === "undefined") console.log("m4q "+$.version);
+if (typeof window["hideM4QVersion"] === "undefined") console.info("m4q "+$.version);
 
 // Source: src/interval.js
 
@@ -1523,8 +1528,65 @@ $.extend({
     isVisible: function(elem) {return isVisible(elem)},
     isHidden: function(elem) {return isHidden(elem)},
     iif: function(v1, v2, v3){return iif(v1, v2, v3);},
-    matches: function(el, s) {
-        return matches.call(el, s);
+    matches: function(el, s) {return matches.call(el, s);},
+
+    serializeToArray: function(form){
+        var _form = $(form)[0];
+        if (!_form || _form.nodeName !== "FORM") {
+            console.warn("Element is not a HTMLFromElement");
+            return;
+        }
+        var i, j, q = [];
+        for (i = _form.elements.length - 1; i >= 0; i = i - 1) {
+            if (_form.elements[i].name === "") {
+                continue;
+            }
+            switch (_form.elements[i].nodeName) {
+                case 'INPUT':
+                    switch (_form.elements[i].type) {
+                        case 'checkbox':
+                        case 'radio':
+                            if (_form.elements[i].checked) {
+                                q.push(_form.elements[i].name + "=" + encodeURIComponent(_form.elements[i].value));
+                            }
+                            break;
+                        case 'file':
+                            break;
+                        default: q.push(_form.elements[i].name + "=" + encodeURIComponent(_form.elements[i].value));
+                    }
+                    break;
+                case 'TEXTAREA':
+                    q.push(_form.elements[i].name + "=" + encodeURIComponent(_form.elements[i].value));
+                    break;
+                case 'SELECT':
+                    switch (_form.elements[i].type) {
+                        case 'select-one':
+                            q.push(_form.elements[i].name + "=" + encodeURIComponent(_form.elements[i].value));
+                            break;
+                        case 'select-multiple':
+                            for (j = _form.elements[i].options.length - 1; j >= 0; j = j - 1) {
+                                if (_form.elements[i].options[j].selected) {
+                                    q.push(_form.elements[i].name + "=" + encodeURIComponent(_form.elements[i].options[j].value));
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                case 'BUTTON':
+                    switch (_form.elements[i].type) {
+                        case 'reset':
+                        case 'submit':
+                        case 'button':
+                            q.push(_form.elements[i].name + "=" + encodeURIComponent(_form.elements[i].value));
+                            break;
+                    }
+                    break;
+            }
+        }
+        return q;
+    },
+    serialize: function(form){
+        return $.serializeToArray(form).join("&");
     }
 });
 
@@ -1574,7 +1636,7 @@ $.extend({
     eventUID: -1,
 
     /*
-    * el, eventName, handler, selector, ns, id
+    * el, eventName, handler, selector, ns, id, options
     * */
     setEventHandler: function(obj){
         var i, freeIndex = -1, eventObj, resultIndex;
@@ -1593,7 +1655,8 @@ $.extend({
             handler: obj.handler,
             selector: obj.selector,
             ns: obj.ns,
-            id: obj.id
+            id: obj.id,
+            options: obj.options
         };
 
         if (freeIndex === -1) {
@@ -1617,7 +1680,7 @@ $.extend({
 
     off: function(){
         $.each(this.events, function(){
-            this.element.removeEventListener(this.event, this.handler);
+            this.element.removeEventListener(this.event, this.handler, true);
         });
         this.events = [];
         return this;
@@ -1739,7 +1802,8 @@ $.fn.extend({
                     handler: h,
                     selector: sel,
                     ns: ns,
-                    id: $.eventUID
+                    id: $.eventUID,
+                    options: !isEmptyObject(options) ? options : false
                 });
                 $(el).origin('event-'+originEvent, index);
             });
@@ -1757,13 +1821,14 @@ $.fn.extend({
     },
 
     off: function(eventsList, sel, options){
-        if (!isPlainObject(options)) {
-            options = {};
-        }
 
         if (isPlainObject(sel)) {
             options = sel;
             sel = null;
+        }
+
+        if (!isPlainObject(options)) {
+            options = {};
         }
 
         if (not(eventsList) || eventsList.toLowerCase() === 'all') {
@@ -1772,7 +1837,7 @@ $.fn.extend({
                 $.each($.events, function(){
                     var e = this;
                     if (e.element === el) {
-                        el.removeEventListener(e.event, e.handler);
+                        el.removeEventListener(e.event, e.handler, e.options);
                         e.handler = null;
                         $(el).origin("event-"+name+(e.selector ? ":"+e.selector:"")+(e.ns ? ":"+e.ns:""), null);
                     }
@@ -1792,7 +1857,7 @@ $.fn.extend({
                 index = $(el).origin(originEvent);
 
                 if (index !== undefined && $.events[index].handler) {
-                    el.removeEventListener(name, $.events[index].handler);
+                    el.removeEventListener(name, $.events[index].handler, $.events[index].options);
                     $.events[index].handler = null;
                 }
 
@@ -1863,8 +1928,8 @@ $.fn.extend( {
     }
 });
 
-$.ready = function(fn){
-    document.addEventListener('DOMContentLoaded', fn);
+$.ready = function(fn, options){
+    document.addEventListener('DOMContentLoaded', fn, (options || false));
 };
 
 $.load = function(fn){
@@ -1922,6 +1987,19 @@ $.ajax = function(p){
             }
         };
 
+        var isGet = function(method){
+            return ["GET", "JSON"].indexOf(method) !== -1;
+        };
+
+        var plainObjectToData = function(obj){
+            var _data = [];
+            $.each(p.data, function(k, v){
+                var _v = isSimple(v) ? v : JSON.stringify(v);
+                _data.push(k+"=" + _v);
+            });
+            return _data.join("&");
+        };
+
         if (p.data instanceof HTMLFormElement) {
             var _action = p.data.getAttribute("action");
             var _method = p.data.getAttribute("method");
@@ -1940,29 +2018,25 @@ $.ajax = function(p){
         }
 
         if (p.data instanceof HTMLFormElement) {
-            data = new FormData(p.data);
-        } else if (p.data instanceof HTMLElement && p.data.getAttribute("type").toLowerCase() === "file") {
+            data = $.serialize(p.data);
+        } else if (p.data instanceof HTMLElement && p.data.getAttribute("type") && p.data.getAttribute("type").toLowerCase() === "file") {
             var _name = p.data.getAttribute("name");
             data = new FormData();
             for (var i = 0; i < p.data.files.length; i++) {
                 data.append(_name, p.data.files[i]);
             }
         } else if (isPlainObject(p.data)) {
-            var _data = [];
-            $.each(p.data, function(k, v){
-                // _data.push(k+"=" + (isPlainObject(v) ? JSON.stringify(v) : v));
-                var _v = (typeof v !== "string" && typeof v !== "boolean" && typeof v !== "number" ? JSON.stringify(v) : v);
-                _data.push(k+"=" + _v);
-            });
-            data = _data.join("&");
+            data = plainObjectToData(p.data);
         } else if (p.data instanceof FormData) {
+            data = p.data;
+        } else if (typeof p.data === "string") {
             data = p.data;
         } else {
             data = new FormData();
             data.append("_data", JSON.stringify(p.data));
         }
 
-        if (method !== "POST") {
+        if (isGet(method)) {
             url += (typeof data === "string" ? "?"+data : isEmptyObject(data) ? "" : "?"+JSON.stringify(data));
         }
 
@@ -1973,7 +2047,7 @@ $.ajax = function(p){
                 headers.push(k);
             });
         }
-        if (method === "POST") {
+        if (!isGet(method)) {
             if (headers.indexOf("Content-type") === -1) {
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             }
@@ -2480,7 +2554,7 @@ $.fn.extend({
                 });
             } else {
                 el.setAttribute(name, val);
-                // console.log(name, val);
+                // 
             }
         });
     },
@@ -3719,7 +3793,7 @@ var normalizeComponentName = function(name){
 var Metro = {
 
     version: "4.3.4",
-    compileTime: "16/11/2019 11:36:59",
+    compileTime: "24/11/2019 13:31:43",
     buildNumber: "742",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
@@ -3881,8 +3955,8 @@ var Metro = {
     hotkeys: {},
 
     about: function(){
-        console.log("Metro 4 - v" + Metro.version +". "+ Metro.showCompileTime());
-        console.log("m4q - " + m4q.version);
+        console.info("Metro 4 - v" + Metro.version +". "+ Metro.showCompileTime());
+        console.info("m4q - " + m4q.version);
     },
 
     showCompileTime: function(){
@@ -3960,7 +4034,7 @@ var Metro = {
                     }
 
                 } else  {
-                    //console.log(mutation);
+                    //
                 }
             });
         };
@@ -4011,8 +4085,6 @@ var Metro = {
             var element = $(this);
             var hotkey = element.attr('data-hotkey') ? element.attr('data-hotkey').toLowerCase() : false;
             var fn = element.attr('data-hotkey-func') ? element.attr('data-hotkey-func') : false;
-
-            //console.log(element);
 
             if (hotkey === false) {
                 return;
@@ -4123,7 +4195,7 @@ var Metro = {
             element["msRequestFullscreen"]();
         } else {
             element.requestFullscreen().catch( function(err){
-                console.log("Error attempting to enable full-screen mode: "+err.message+" "+err.name);
+                console.warn("Error attempting to enable full-screen mode: "+err.message+" "+err.name);
             });
         }
     },
@@ -4139,7 +4211,7 @@ var Metro = {
             document["msExitFullscreen"]();
         } else {
             document.exitFullscreen().catch( function(err){
-                console.log("Error attempting to disable full-screen mode: "+err.message+" "+err.name);
+                console.warn("Error attempting to disable full-screen mode: "+err.message+" "+err.name);
             });
         }
     },
@@ -5053,7 +5125,7 @@ var Colors = {
         hsv = this.toHSV(color);
 
         if (this.isHSV(hsv) === false) {
-            console.log("The value is a not supported color format!");
+            console.warn("The value is a not supported color format!");
             return false;
         }
 
@@ -5225,7 +5297,7 @@ var Colors = {
                 scheme.push({h: h, s: s, v: v});
                 break;
 
-            default: console.log("Unknown scheme name");
+            default: console.warn("Unknown scheme name " + name);
         }
 
         return convert(scheme, format);
@@ -6523,6 +6595,10 @@ var Utils = {
         return Utils.isJQuery(el) || Utils.isM4Q(el);
     },
 
+    isIE11: function(){
+        return !!window.MSInputMethodContext && !!document["documentMode"];
+    },
+
     embedObject: function(val){
         return "<div class='embed-container'>" + $(val)[0].outerHTML + "</div>";
     },
@@ -7623,6 +7699,10 @@ var AppBarDefaultConfig = {
     expand: false,
     expandPoint: null,
     duration: 100,
+    onMenuOpen: Metro.noop,
+    onMenuClose: Metro.noop,
+    onMenuCollapse: Metro.noop,
+    onMenuExpand: Metro.noop,
     onAppBarCreate: Metro.noop
 };
 
@@ -7742,8 +7822,12 @@ var AppBar = {
             if (o.expand !== true) {
                 if (Utils.isValue(o.expandPoint) && Utils.mediaExist(o.expandPoint)) {
                     element.addClass("app-bar-expand");
+                    Utils.exec(o.onMenuExpand, null, element[0]);
+                    element.fire("menuexpand");
                 } else {
                     element.removeClass("app-bar-expand");
+                    Utils.exec(o.onMenuCollapse, null, element[0]);
+                    element.fire("menucollapse");
                 }
             }
 
@@ -7774,6 +7858,11 @@ var AppBar = {
             menu.addClass("collapsed").removeClass("opened");
             hamburger.removeClass("active");
         });
+
+        Utils.exec(o.onMenuClose, [menu[0]], element[0]);
+        element.fire("menuclose", {
+            menu: menu[0]
+        });
     },
 
     open: function(){
@@ -7784,6 +7873,11 @@ var AppBar = {
         menu.slideDown(o.duration, function(){
             menu.removeClass("collapsed").addClass("opened");
             hamburger.addClass("active");
+        });
+
+        Utils.exec(o.onMenuOpen, [menu[0]], element[0]);
+        element.fire("menuopen", {
+            menu: menu[0]
         });
     },
 
@@ -8999,8 +9093,6 @@ var Calendar = {
             var target;
             var list = element.find(".months-list");
 
-            console.log("ku");
-
             list.find(".active").removeClass("active");
             list.scrollTop(0);
             element.find(".calendar-months").addClass("open");
@@ -9233,12 +9325,10 @@ var Calendar = {
 
             d.data('day', first.getTime());
 
-            // console.log(this.show.getTime() === first.getTime());
             if (this.show.getTime() === first.getTime()) {
                 d.addClass("showed");
             }
 
-            // console.log(this.today.getTime() === first.getTime());
             if (this.today.getTime() === first.getTime()) {
                 d.addClass("today").addClass(o.clsToday);
             }
@@ -12302,7 +12392,7 @@ var Cube = {
                 this.rules = JSON.parse(rules);
                 return true;
             } catch (err) {
-                console.log("Unknown or empty rules for cell flashing!");
+                console.warn("Unknown or empty rules for cell flashing!");
                 return false;
             }
         }
@@ -19236,7 +19326,7 @@ var Panel = {
         }
 
         if (title.length === 0) {
-            console.log("No place for custom buttons");
+            console.warn("No place for custom buttons");
             return ;
         }
 
@@ -23497,8 +23587,9 @@ var Splitter = {
     _createEvents: function(){
         var that = this, element = this.element, o = this.options;
         var gutters = element.children(".gutter");
+        var id = element.attr("id");
 
-        gutters.on(Metro.events.start, function(e){
+        gutters.on(Metro.events.startAll, function(e){
             var w = o.splitMode === "horizontal" ? element.width() : element.height();
             var gutter = $(this);
             var prev_block = gutter.prev(".split-block");
@@ -23520,7 +23611,7 @@ var Splitter = {
                 nextBlock: next_block[0]
             });
 
-            $(window).on(Metro.events.move, function(e){
+            $(window).on(Metro.events.moveAll, function(e){
                 var pos = Utils.getCursorPosition(element[0], e);
                 var new_pos;
 
@@ -23541,10 +23632,11 @@ var Splitter = {
                     prevBlock: prev_block[0],
                     nextBlock: next_block[0]
                 });
-            }, {ns: element.attr("id")});
+            }, {ns: id});
 
-            $(window).on(Metro.events.stop, function(e){
+            $(window).on(Metro.events.stopAll, function(e){
                 var cur_pos;
+
 
                 prev_block.removeClass("stop-pointer");
                 next_block.removeClass("stop-pointer");
@@ -23553,8 +23645,8 @@ var Splitter = {
 
                 gutter.removeClass("active");
 
-                $(window).off(Metro.events.move,{ns: element.attr("id")});
-                $(window).off(Metro.events.stop,{ns: element.attr("id")});
+                $(window).off(Metro.events.moveAll,{ns: id});
+                $(window).off(Metro.events.stopAll,{ns: id});
 
                 cur_pos = Utils.getCursorPosition(element[0], e);
 
@@ -23565,7 +23657,7 @@ var Splitter = {
                     prevBlock: prev_block[0],
                     nextBlock: next_block[0]
                 });
-            }, {ns: element.attr("id")})
+            }, {ns: id})
         });
     },
 
@@ -24361,8 +24453,6 @@ var Streamer = {
                 var dir = ev.deltaY < 0 ? -1 : 1;
                 var step = 100;
 
-                //console.log(ev.deltaY);
-
                 if (ev.deltaY === undefined) {
                     return ;
                 }
@@ -25124,7 +25214,6 @@ var Table = {
 
             $.json(viewPath, (viewPath !== o.viewSavePath ? null : {id: id}))
             .then(function(view){
-                console.log("view", view);
                 if (Utils.isValue(view) && Utils.objectLength(view) === Utils.objectLength(that.view)) {
                     that.view = view;
                     Utils.exec(o.onViewGet, [view], element[0]);
@@ -25988,7 +26077,6 @@ var Table = {
                 id : element.attr("id"),
                 view : view
             };
-            console.log(view);
             $.post(viewPath, post_data)
                 .then(function(data){
                     Utils.exec(o.onViewSave, [o.viewSavePath, view, post_data, data], element[0]);
@@ -26349,7 +26437,7 @@ var Table = {
             });
         }
         if (Utils.isNull(fieldIndex)) {
-            console.log('Item is undefined for update. Field ' + field + ' not found in data structure');
+            console.warn('Item is undefined for update. Field ' + field + ' not found in data structure');
             return this;
         }
 
@@ -31602,7 +31690,6 @@ var Window = {
 
             element.append(o.content);
             o.content = element;
-            // console.log(o.content);
         }
 
         if (o._runtime === true) {
@@ -31752,7 +31839,7 @@ var Window = {
             } else if (typeof o.customButtons === "object" && Utils.objectLength(o.customButtons) > 0) {
                 customButtons = o.customButtons;
             } else {
-                console.log("Unknown format for custom buttons");
+                console.warn("Unknown format for custom buttons");
             }
 
             $.each(customButtons, function(){
@@ -32218,7 +32305,7 @@ Metro['window'] = {
 
         w_options._runtime = true;
 
-        return w.window(w_options);
+        return Metro.makePlugin(w, "window", w_options);
     }
 };
 

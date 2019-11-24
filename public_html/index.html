@@ -304,6 +304,17 @@
                     $("#header").removeClass("scrolled-header");
                 }
             };
+
+            var appBar = $(".app-bar");
+
+            appBar.on("menuopen", function(){
+                $(this.parentNode).addClass("scrolled-header");
+            });
+
+            appBar.on("menuclose", function(){
+                if (!(document.body.scrollTop || document.documentElement.scrollTop))
+                    $(this.parentNode).removeClass("scrolled-header");
+            });
         });
 
     </script>
