@@ -101,18 +101,24 @@
                 </code></pre>
 
                 <h3 id="_input_tag_trigger">Tag trigger</h3>
+                <div class="text-small">
+                    New from 4.3.5
+                </div>
                 <p>
                     To set trigger for creating tags, use attribute <code>data-tag-trigger</code>.
-                    By default this attribute have a next value <code>13, 188</code> - <kbd>Enter</kbd>, <kbd>,</kbd>.
-                    You can set your own trigger with this attribute.
+                    By default this attribute have a next values <code>Enter, Space, Comma</code> - <kbd>&#x23ce;</kbd>, <kbd>&#x20;</kbd>, <kbd>,</kbd>.
+                    You can set your own trigger with this attribute. For all keys values read <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">this post</a>.
+                </p>
+                <p class="remark warning">
+                    For use <kbd>space</kbd> or <kbd>comma</kbd> you must use next key words: <code>Space</code> or <code>Spacebar</code> and <code>Comma</code>.
                 </p>
 
                 <div class="example">
-                    <input type="text" data-role="taginput" data-tag-trigger="32">
+                    <input type="text" data-role="taginput" data-tag-trigger="Space">
                     <p class="text-small">Use <kbd>Space</kbd> to add tags</p>
                 </div>
                 <pre><code>
-                    &lt;input type="text" data-role="taginput" data-tag-trigger="32"&gt;
+                    &lt;input type="text" data-role="taginput" data-tag-trigger="Space"&gt;
                 </code></pre>
 
                 <h3 id="_input_max_tags">Max tags</h3>
@@ -176,7 +182,7 @@
                         <td><code>tagTrigger</code></td>
                         <td><code>data-tag-trigger</code></td>
                         <td>13, 188</td>
-                        <td>Key codes for triggering tags creating, Default - <kbd>Enter</kbd>, <kbd>,</kbd></td>
+                        <td>Key codes for triggering tags creating, Default - <kbd>Enter</kbd>, <kbd>Space</kbd>, <kbd>Comma</kbd></td>
                     </tr>
                     </tbody>
                 </table>
