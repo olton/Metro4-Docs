@@ -1,7 +1,7 @@
 /*
  * Metro 4 Components Library v4.3.5  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 07/01/2020 18:30:44
+ * Built at 07/01/2020 20:34:10
  * Licensed under MIT
  */
 
@@ -3775,7 +3775,7 @@ var normalizeComponentName = function(name){
 var Metro = {
 
     version: "4.3.5",
-    compileTime: "07/01/2020 18:30:51",
+    compileTime: "07/01/2020 20:34:17",
     buildNumber: "743",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
@@ -14018,6 +14018,7 @@ Metro.plugin('dragitems', DragItems);
 var DraggableDefaultConfig = {
     dragElement: 'self',
     dragArea: "parent",
+    timeout: 0,
     onCanDrag: Metro.noop_true,
     onDragStart: Metro.noop,
     onDragStop: Metro.noop,
@@ -14073,8 +14074,11 @@ var Draggable = {
     },
 
     _create: function(){
-        this._createStructure();
-        this._createEvents();
+        var that = this;
+        setTimeout(function(){
+            that._createStructure();
+            that._createEvents();
+        }, this.options.timeout);
     },
 
     _createStructure: function(){
