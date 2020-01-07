@@ -71,7 +71,7 @@ pre {
     background-color: #ffffff;
 }
 
-.toc-wrapper, #sidenav {
+.toc-wrapper, #sidenav, .doc-nav-item {
 
     & > h5 {
         color: @darkGray;
@@ -100,6 +100,14 @@ pre {
 
             a {
                 color: @dark;
+                font-weight: bolder;
+            }
+
+            &::before {
+                content: "\2192";
+                display: block;
+                position: absolute;
+                top: 4px;
             }
         }
 
@@ -112,13 +120,6 @@ pre {
     & > .toc-nav {
         margin-left: 0;
     }
-
-    .toc-nav-title {
-        font-size: .9em;
-        color: @gray;
-        position: relative;
-        margin: .5rem 1rem .2rem -.5rem;
-    }
 }
 
 ul.toc-nav {
@@ -126,8 +127,12 @@ ul.toc-nav {
 }
 
 #doc-nav {
-    max-height: ~"calc(100vh - 140px)";
+    //max-height: ~"calc(100vh - 140px)";
     overflow-y: auto;
+}
+
+.doc-nav-item {
+    padding: 0 8px;
 }
 
 .doc-nav-item > a {
@@ -200,7 +205,7 @@ footer {
 }
 
 #doc-nav {
-    display: none;
+    //display: none;
 }
 @media screen and (min-width: 768px) {
     #sidenav {
@@ -405,7 +410,11 @@ body {
 @heroPrimaryColor: rgb(140, 12, 29);
 @heroSecondaryColor: rgb(217, 85, 85);
 
+@heroPrimaryColor2: rgb(73, 77, 140);
+@heroSecondaryColor2: rgb(129, 133, 220);
+
 .bg-hero {background-color: @heroPrimaryColor;}
+.bg-hero2 {background-color: @heroPrimaryColor2;}
 .fg-react {color: #61dafb!important;}
 
 .hero-bg-img {
@@ -414,8 +423,13 @@ body {
 }
 
 .hero-bg {
-    background: rgb(140, 12, 29);
+    background: @heroPrimaryColor;
     background: linear-gradient(to bottom, @heroPrimaryColor 0%, @heroSecondaryColor 100%);
+}
+
+.hero-bg2 {
+    background: @heroPrimaryColor2;
+    background: linear-gradient(to bottom, @heroPrimaryColor2 0%, @heroSecondaryColor2 100%);
 }
 
 .hero {
@@ -598,4 +612,73 @@ h1 + .text-leader {
 
 .toc-entry ul {
     margin-top: 0;
+}
+
+.app-bar {
+    width: auto;
+    right: 0;
+}
+
+.sidebar-header > .title {
+    top: 0;
+    line-height: 53px;
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.sidebar > .sidebar-header {
+    height: 53px;
+}
+
+.sidebar-header ~ .sidebar-menu {
+    height: ~"calc(100% - 140px)";
+}
+
+.sidebar-menu li a {
+    height: auto;
+    line-height: 1.2;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.toc-nav {
+    margin: 0!important;
+}
+
+.toc-nav-title {
+    font-size: .7em;
+    font-weight: bold;
+    color: #707882 !important;
+    position: relative;
+    margin: .5rem 1rem .2rem .2rem;
+    z-index: 1;
+    background: white;
+    display: flex!important;
+    flex-flow: row nowrap;
+    align-items: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &::before {
+        display: block;
+        content: "";
+        position: relative;
+        height: 1px;
+        width: 100%;
+        top: 50%;
+        background: #eaeaea;
+        z-index: -1;
+        order: 2;
+        margin-left: 10px;
+    }
+
+    &:hover {
+        background: transparent!important;
+        cursor: default;
+    }
+}
+
+.docs-content {
+
 }

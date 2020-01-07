@@ -1,7 +1,7 @@
 /*
  * Metro 4 Components Library v4.3.5  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 07/01/2020 13:23:06
+ * Built at 07/01/2020 18:30:44
  * Licensed under MIT
  */
 
@@ -3775,7 +3775,7 @@ var normalizeComponentName = function(name){
 var Metro = {
 
     version: "4.3.5",
-    compileTime: "07/01/2020 13:23:13",
+    compileTime: "07/01/2020 18:30:51",
     buildNumber: "743",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
@@ -15141,11 +15141,13 @@ var HtmlContainer = {
         var that = this, element = this.element, o = this.options;
 
         $[o.method](this.htmlSource, this.data, this.opt).then(function(data){
+            var _data = $(data);
             switch (o.insertMode.toLowerCase()) {
-                case "prepend": element.prepend(data); break;
-                case "append": element.append(data); break;
+                case "prepend": element.prepend(_data); break;
+                case "append": element.append(_data); break;
+                case "replace": _data.insertBefore(element).script(); element.remove(); break;
                 default: {
-                    element.html(data);
+                    element.html(_data);
                 }
             }
             Utils.exec(o.onHtmlLoad, [data, o.htmlSource, that.data, that.opt], element[0]);
@@ -21696,9 +21698,15 @@ var Sidebar = {
         var toggle = this.toggle_element;
 
         if (toggle !== null) {
-            toggle.on(Metro.events.click, function(){
+            toggle.on(Metro.events.click, function(e){
                 that.toggle();
+                e.stopPropagation();
             });
+        } else if (o.toggle) {
+            $.document().on("click", o.toggle, function (e) {
+                that.toggle();
+                e.stopPropagation();
+            })
         }
 
         if (o.static !== null && ["fs", "sm", "md", "lg", "xl", "xxl"].indexOf(o.static) > -1) {
@@ -21708,13 +21716,19 @@ var Sidebar = {
         }
 
         if (o.menuItemClick === true) {
-            element.on(Metro.events.click, ".sidebar-menu li > a", function(){
+            element.on(Metro.events.click, ".sidebar-menu li > a", function(e){
                 that.close();
+                e.stopPropagation();
             });
         }
 
-        element.on(Metro.events.click, ".sidebar-menu .js-sidebar-close", function(){
+        element.on(Metro.events.click, ".sidebar-menu .js-sidebar-close", function(e){
             that.close();
+            e.stopPropagation();
+        });
+
+        element.on(Metro.events.click, function(e){
+            e.stopPropagation();
         });
     },
 
