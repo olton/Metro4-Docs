@@ -38,18 +38,34 @@
 </head>
 <body class="m4-cloak" style="padding-top: 0">
     <div class="container-fluid pos-fixed fixed-top z-top" id="header">
-        <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
+        <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand="true">
+            <button class="nav-button">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
             <a href="index.html" class="brand fg-white no-hover text-bold">METRO 4</a>
-            <ul class="app-bar-menu ml-auto" data-role="htmlcontainer" data-html-source="main-menu.html"></ul>
+            <div class="app-bar-container ml-auto d-none d-flex-md">
+                <a href="#" class="app-bar-item">Documentation</a>
+                <a href="#" class="app-bar-item">Builder</a>
+                <a href="#" class="app-bar-item">Examples</a>
+                <a href="#" class="app-bar-item">Support</a>
+                <a href="#" class="app-bar-item">GitHub</a>
+            </div>
+<!--            <ul class="app-bar-menu ml-auto d-none b-block-md" data-role="htmlcontainer" data-html-source="main-menu.html"></ul>-->
         </header>
     </div>
 
-    <div class="hero hero-bg-img text-center neb1 neb-hero" id="hero">
+    <div class="hero hero-bg text-center neb1 neb-hero" id="hero">
 
-        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro</span><img src="images/four.png" class="d-inline-block va-bottom" style="height: 150px;"></div>
+        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro_4</span></div>
 
         <h4 class="text-center fg-white text-upper text-light">Impressive components library<span class="d-none-md1"><br></span> built on HTML, CSS, JavaScript</h4>
 
+        <div class="text-center m-8">
+            <a href="intro.html" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Get started</a>
+            <a href="https://github.com/olton/Metro-UI-CSS" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Get source</a>
+        </div>
 
         <div class="d-flex flex-justify-center flex-align-center mt-6 mb-6 text-small">
             <a href="https://github.com/olton/Metro-UI-CSS/watchers" class="m-1 fg-gray no-decor fg-white-hover transition"><span class="mif-eye"></span> <span id="github-watchers" data-role="counter" data-step="5">0</span></a>

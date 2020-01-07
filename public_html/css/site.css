@@ -40,7 +40,6 @@ pre {
 }
 .toc-wrapper,
 #sidenav {
-  position: -webkit-sticky;
   position: sticky;
   top: 64px;
   max-height: calc(100vh - 64px);
@@ -171,7 +170,6 @@ footer p a {
 }
 @media screen and (min-width: 768px) {
   #sidenav {
-    position: -webkit-sticky;
     position: sticky;
     top: 64px;
   }
@@ -238,11 +236,8 @@ footer p a {
   width: 4rem;
 }
 .icon-list {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 .icon-list li {
   width: 100%;
@@ -307,12 +302,8 @@ pre .copy-button {
 }
 .special-thanks,
 .who-uses {
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
 .special-thanks [class*=cell-],
 .who-uses [class*=cell-] {
@@ -328,12 +319,8 @@ pre .copy-button {
   margin-bottom: 10px;
 }
 .who-uses .slide {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
 .who-uses img {
   width: auto;
@@ -347,7 +334,7 @@ body {
   padding-top: 64px;
 }
 .bg-hero {
-  background-color: #E25825;
+  background-color: #8c0c1d;
 }
 .fg-react {
   color: #61dafb !important;
@@ -355,6 +342,10 @@ body {
 .hero-bg-img {
   background: url("../images/bg.png") top left no-repeat;
   background-size: cover;
+}
+.hero-bg {
+  background: #8c0c1d;
+  background: linear-gradient(to bottom, #8c0c1d 0%, #d95555 100%);
 }
 .hero {
   padding: 40px;
@@ -364,13 +355,10 @@ body {
   background-size: contain;
 }
 #header {
-  -webkit-transition: background-color 0.3s linear;
-  -o-transition: background-color 0.3s linear;
   transition: background-color 0.3s linear;
 }
 .scrolled-header {
-  background-color: #E25825 !important;
-  color: #fff;
+  background-color: #8c0c1d !important;
 }
 .neb-commercial {
   z-index: 2;
@@ -396,9 +384,7 @@ body {
   position: absolute;
   top: 100%;
   left: 50%;
-  -webkit-transform: translateX(-50%);
-      -ms-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
   z-index: 11;
 }
 .neb-hero::after {
@@ -497,3 +483,4 @@ h1 + .text-leader {
 .toc-entry ul {
   margin-top: 0;
 }
+/*# sourceMappingURL=site.css.map */

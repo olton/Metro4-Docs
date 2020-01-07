@@ -401,7 +401,9 @@ body {
     padding-top: 64px;
 }
 
-@heroPrimaryColor: #E25825;
+//@heroPrimaryColor: #E25825;
+@heroPrimaryColor: rgb(140, 12, 29);
+@heroSecondaryColor: rgb(217, 85, 85);
 
 .bg-hero {background-color: @heroPrimaryColor;}
 .fg-react {color: #61dafb!important;}
@@ -409,6 +411,11 @@ body {
 .hero-bg-img {
     background: url("../images/bg.png") top left no-repeat;
     background-size: cover;
+}
+
+.hero-bg {
+    background: rgb(140, 12, 29);
+    background: linear-gradient(to bottom, @heroPrimaryColor 0%, @heroSecondaryColor 100%);
 }
 
 .hero {
@@ -426,8 +433,8 @@ body {
 }
 
 .scrolled-header {
-    background-color: #E25825 !important;
-    color: #fff;
+    background-color: @heroPrimaryColor !important;
+    //color: #fff;
 }
 
 @media screen and (min-width: 768px) {

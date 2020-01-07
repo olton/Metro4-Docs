@@ -1,7 +1,7 @@
 /*
  * Metro 4 Components Library v4.3.5  (https://metroui.org.ua)
- * Copyright 2012-2019 Sergey Pimenov
- * Built at 04/12/2019 15:23:17
+ * Copyright 2012-2020 Sergey Pimenov
+ * Built at 07/01/2020 13:23:06
  * Licensed under MIT
  */
 
@@ -129,10 +129,6 @@ function dataAttr(elem, key, data){
         }
     }
     return data;
-}
-
-function iif(val1, val2, val3){
-    return val1 ? val1 : val2 ? val2 : val3;
 }
 
 function normalizeEventName(name) {
@@ -563,7 +559,7 @@ function normalizeEventName(name) {
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.4. Built at 24/11/2019 13:28:24";
+var m4qVersion = "v1.0.5. Built at 17/12/2019 14:02:31";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -1221,6 +1217,10 @@ $.fn.extend({
         return this.each(function(){
             if (typeof this.innerHTML !== "undefined") this.innerHTML = "";
         });
+    },
+
+    clear: function(){
+        return this.empty();
     }
 });
 
@@ -1527,7 +1527,6 @@ $.extend({
     unit: function(str, out){return parseUnit(str, out)},
     isVisible: function(elem) {return isVisible(elem)},
     isHidden: function(elem) {return isHidden(elem)},
-    iif: function(v1, v2, v3){return iif(v1, v2, v3);},
     matches: function(el, s) {return matches.call(el, s);},
 
     serializeToArray: function(form){
@@ -1867,24 +1866,7 @@ $.fn.extend({
     },
 
     trigger: function(name, data){
-        var _name;
-
-        if (this.length === 0) {
-            return ;
-        }
-
-        _name = normalizeEventName(name);
-
-        if (['focus', 'blur'].indexOf(_name) > -1) {
-            this[0][_name]();
-            return this;
-        }
-
-        var e = new CustomEvent(_name, data || {});
-
-        return this.each(function(){
-            this.dispatchEvent(e);
-        });
+        return this.fire(name, data);
     },
 
     fire: function(name, data){
@@ -1918,7 +1900,7 @@ $.fn.extend({
         $.fn[ name ] = function( sel, fn, opt ) {
             return arguments.length > 0 ?
                 this.on( name, sel, fn, opt ) :
-                this.trigger( name );
+                this.fire( name );
         };
 });
 
@@ -3793,7 +3775,7 @@ var normalizeComponentName = function(name){
 var Metro = {
 
     version: "4.3.5",
-    compileTime: "04/12/2019 15:23:24",
+    compileTime: "07/01/2020 13:23:13",
     buildNumber: "743",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
@@ -10094,6 +10076,7 @@ Metro.plugin('calendarpicker', CalendarPicker);
 
 $(document).on(Metro.events.click, ".overlay.for-calendar-picker",function(){
     $(this).remove();
+    $(".calendar-for-picker.open").removeClass("open open-up");
 });
 
 $(document).on(Metro.events.click, function(){
@@ -13795,6 +13778,9 @@ var DragItemsDefaultConfig = {
     onDragStartItem: Metro.noop,
     onDragMoveItem: Metro.noop,
     onDragDropItem: Metro.noop,
+    onTarget: Metro.noop,
+    onTargetIn: Metro.noop, //TODO
+    onTargetOut: Metro.noop, //TODO
     onDragItemsCreate: Metro.noop
 };
 
@@ -13884,6 +13870,11 @@ var DragItems = {
                 return;
             }
 
+            Utils.exec(o.onTarget, [target], element[0]);
+            element.fire("target", {
+                target: target
+            });
+
             var sibling = document.elementsFromPoint(x, y).filter(function(el){
                 var $el = $(el);
                 return $.matches(el, o.dragItem) && !$el.hasClass("dragged-item-avatar");
@@ -13896,14 +13887,14 @@ var DragItems = {
                 var $sibling_offset = $sibling.offset();
                 var offsetY = y - $sibling_offset.top;
                 var offsetX = x - $sibling_offset.left;
-                var side;// = (offsetY >= $sibling.height() / 2) ? "bottom" : "top";
+                var side;
                 var dim = {w: $sibling.width(), h: $sibling.height()};
 
-                if (offsetX < dim.w * 1 / 3 && (offsetY < dim.h * 1 / 2 || offsetY > dim.h * 1 / 2)) {
+                if (offsetX < dim.w / 3 && (offsetY < dim.h / 2 || offsetY > dim.h / 2)) {
                     side = 'left';
-                } else if (offsetX > dim.w * 2 / 3 && (offsetY < dim.h * 1 / 2 || offsetY > dim.h * 1 / 2)) {
+                } else if (offsetX > dim.w * 2 / 3 && (offsetY < dim.h / 2 || offsetY > dim.h / 2)) {
                     side = 'right';
-                } else if (offsetX > dim.w * 1 / 3 && offsetX < dim.w * 2 / 3 && offsetY > dim.h / 2) {
+                } else if (offsetX > dim.w / 3 && offsetX < dim.w * 2 / 3 && offsetY > dim.h / 2) {
                     side = 'bottom';
                 } else {
                     side = "top";
@@ -17022,7 +17013,7 @@ var ListDefaultConfig = {
     sortTarget: "li",
     sortClass: null,
     sortDir: "asc",
-    sortInitial: false,
+    sortInitial: true,
     filterClass: null,
     filter: null,
     filterString: "",
@@ -17352,7 +17343,10 @@ var List = {
 
         this.currentPage = 1;
 
-        this.sorting(o.sortClass, o.sortDir, true);
+        if (o.sortInitial !== false)
+            this.sorting(o.sortClass, o.sortDir, true);
+        else
+            this.draw();
     },
 
     _createEvents: function(){
@@ -17853,7 +17847,7 @@ var List = {
 
         var changeFilterString = function(){
             var filter = element.attr("data-filter-string");
-            if (!Utils.isValue(target)) {
+            if (!Utils.isValue(filter)) {
                 return ;
             }
             o.filterString = filter;
@@ -17868,7 +17862,7 @@ var List = {
     },
 
     destroy: function(){
-        var that = this, element = this.element;
+        var element = this.element;
         var component = element.parent();
         var search = component.find(".list-search-block input");
         var customSearch;
@@ -21129,8 +21123,10 @@ var Select = {
 
     _createOptions: function(){
         var that = this, element = this.element, o = this.options, select = element.parent();
-        var list = select.find("ul").html("");
+        var list = select.find("ul").empty();
         var selected = element.find("option[selected]").length > 0;
+
+        element.siblings(".select-input").empty();
 
         if (o.addEmptyValue === true) {
             element.prepend($("<option "+(!selected ? 'selected' : '')+" value='"+o.emptyValue+"' class='d-none'></option>"));
@@ -21521,7 +21517,7 @@ var Select = {
         var element = this.element;
         var option_group;
 
-        element.html("");
+        element.empty();
 
         if (typeof op === 'string') {
             element.html(op);
@@ -27544,6 +27540,7 @@ var Tabs = {
 Metro.plugin('tabs', Tabs);
 
 var TagInputDefaultConfig = {
+    static: false,
     clearButton: true,
     clearButtonIcon: "<span class='default-icon-cross'></span>",
 
@@ -27551,6 +27548,7 @@ var TagInputDefaultConfig = {
     maxTags: 0,
     tagSeparator: ",",
     tagTrigger: "Enter, Space, Comma",
+    backspace: true,
 
     clsComponent: "",
     clsInput: "",
@@ -27564,6 +27562,7 @@ var TagInputDefaultConfig = {
     onTagRemove: Metro.noop,
     onTag: Metro.noop,
     onClear: Metro.noop,
+    onTagTrigger: Metro.noop,
     onTagInputCreate: Metro.noop
 };
 
@@ -27657,6 +27656,10 @@ var TagInput = {
         } else {
             this.enable();
         }
+
+        if (o.static === true || element.attr("readonly") !== undefined) {
+            container.addClass("static-mode");
+        }
     },
 
     _createEvents: function(){
@@ -27676,9 +27679,19 @@ var TagInput = {
             input.attr("size", Math.ceil(input.val().length / 2) + 2);
         });
 
-        input.on(Metro.events.keyup, function(e){
+        input.on(Metro.events.keydown, function(e){
             var val = input.val().trim();
             var key = e.key;
+
+            if (key === "Enter") e.preventDefault();
+
+            if (o.backspace === true && key === "Backspace" && val.length === 0) {
+                if (that.values.length > 0) {
+                    that.values.splice(-1,1);
+                    element.siblings(".tag").last().remove();
+                }
+                return ;
+            }
 
             if (val === "") {return ;}
 
@@ -27686,14 +27699,22 @@ var TagInput = {
                 return ;
             }
 
-            if (key !== " " && key !== "Spacebar" && key !== "Enter") val = val.slice(0, -1);
+            Utils.exec(o.onTagTrigger, [key], element[0]);
+            element.fire("tagtrigger", {
+                key: key
+            });
 
             input.val("");
             that._addTag(val);
             input.attr("size", 1);
+        });
 
-            if (key === "Enter") {
-                e.preventDefault();
+        input.on(Metro.events.keyup, function(e){
+            var val = input.val();
+            var key = e.key;
+
+            if (that.triggers.contains(key) && val[val.length - 1] === key) {
+                input.val(val.slice(0, -1));
             }
         });
 
@@ -27856,6 +27877,23 @@ var TagInput = {
         }
     },
 
+    toggleStatic: function(val){
+        var container = this.element.closest(".tag-input");
+        var staticMode;
+
+        if (Utils.isValue(val)) {
+            staticMode = Utils.bool(val);
+        } else {
+            staticMode = !container.hasClass("static-mode");
+        }
+
+        if (staticMode) {
+            container.addClass("static-mode");
+        } else {
+            container.removeClass("static-mode");
+        }
+    },
+
     changeAttribute: function(attributeName){
         var that = this, element = this.element, o = this.options;
 
@@ -27871,6 +27909,7 @@ var TagInput = {
         switch (attributeName) {
             case "value": changeValue(); break;
             case "disabled": this.toggleState(); break;
+            case "static": this.toggleStatic(); break;
         }
     },
 
