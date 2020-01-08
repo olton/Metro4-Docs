@@ -619,7 +619,7 @@ h1 + .text-leader {
     right: 0;
 }
 
-.sidebar-header > .title {
+#sidebar .sidebar-header > .title {
     top: 0;
     line-height: 53px;
     font-weight: 700;
@@ -627,15 +627,15 @@ h1 + .text-leader {
     font-size: 14px;
 }
 
-.sidebar > .sidebar-header {
+#sidebar .sidebar-header {
     height: 53px;
 }
 
-.sidebar-header ~ .sidebar-menu {
+#sidebar .sidebar-header ~ .sidebar-menu {
     height: ~"calc(100% - 140px)";
 }
 
-.sidebar-menu li a {
+#sidebar .sidebar-menu li a {
     height: auto;
     line-height: 1.2;
     padding: 8px 16px;
@@ -681,4 +681,10 @@ h1 + .text-leader {
 
 .docs-content {
 
+}
+
+.example {
+    .sidebar {
+        z-index: 2!important;
+    }
 }

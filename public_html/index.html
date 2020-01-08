@@ -36,8 +36,8 @@
     <title>Metro 4 - Popular HTML, CSS and JS library</title>
 
 </head>
-<body class="m4-cloak" style="padding-top: 0">
-    <div class="container-fluid pos-fixed fixed-top z-top" id="header">
+<body class="m4-cloak" style="padding-top: 52px">
+    <div class="container-fluid pos-fixed fixed-top z-top bg-hero" id="header">
         <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
             <a href="index.html" class="brand fg-white no-hover text-bold">METRO_4</a>
             <ul class="app-bar-menu ml-auto text-upper">
@@ -56,7 +56,7 @@
 
         <h4 class="text-center fg-white text-upper text-light">Impressive components library<span class="d-none-md1"><br></span> built on HTML, CSS, JavaScript</h4>
 
-        <div class="text-center m-8">
+        <div class="text-center mt-8">
             <a href="intro.html" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Get started</a>
             <a href="https://github.com/olton/Metro-UI-CSS" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Source Files</a>
             <a href="https://builder.metroui.org.ua" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Build own set</a>
@@ -68,7 +68,11 @@
             <a href="https://github.com/olton/Metro-UI-CSS/network/members" class="m-1 fg-gray no-decor fg-white-hover transition"><span class="mif-flow-tree"></span> <span id="github-forks" data-role="counter" data-step="10">0</span></a>
         </div>
 
-        <p class="fg-white text-small">v<span class="version-number text-bold"></span></p>
+        <div class="text-center">
+            <img class="m-1" src="https://img.shields.io/github/v/release/olton/Metro-UI-CSS?color=darkLime&style=for-the-badge"/>
+            <img class="m-1" src="https://img.shields.io/nuget/v/Metro4.svg?color=darklime&style=for-the-badge"/>
+            <img class="m-1" src="https://img.shields.io/npm/v/metro4?color=darkLime&label=npm&style=for-the-badge"/>
+        </div>
     </div>
 
     <div class="container-fluid bg-white fg-dark pt-10 pb-20 neb neb-white">
@@ -279,7 +283,7 @@
             </div>
 
             <div class="text-center mt-10 reduce-1">
-                Metro 4 (Metro UI CSS) &copy; 2012-2019 by <a href="https://pimenov.com.ua" class="no-wrap">Sergey Pimenov</a>.
+                Metro 4 (Metro UI CSS) &copy; 2012-2020 by <a href="https://pimenov.com.ua" class="no-wrap">Serhii Pimenov</a>.
                 <br />
                 <span class="no-wrap">Domain by <a href="https://imena.ua/">Imena.ua</a>.</span>
                 <span class="no-wrap">Hosting by <a href="https://mirohost.net/">Mirohost</a>.</span>
@@ -288,7 +292,7 @@
                 <br/>
                 <span class="no-wrap">IDE PhpStorm by <a href="https://www.jetbrains.com/">JetBrains</a>.</span>
                 <br />
-                Currently <span class="version-number-full"></span>. Code licensed <a href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+                Docs version <span class="docs-version">2020.1</span>. Code licensed <a href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
             </div>
         </div>
     </footer>
@@ -299,33 +303,32 @@
     <script src="metro/js/metro.js?ver=@@b-version"></script>
     <script>
         $(function(){
-            $(".version-number").html(Metro.ver());
-            $(".version-number-full").html(Metro.ver(true));
+
             if (!Metro.utils.isLocalhost()) Metro.utils.github("olton/Metro-UI-CSS", function(data){
                 $("#github-forks").attr("data-value", data.forks).data("counter").start();
                 $("#github-stars").attr("data-value", data.stargazers_count).data("counter").start();
                 $("#github-watchers").attr("data-value", data.subscribers_count).data("counter").start();
             });
 
-            window.onscroll = function(){
-                var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                if (winScroll > 50) {
-                    $("#header").addClass("scrolled-header");
-                } else {
-                    $("#header").removeClass("scrolled-header");
-                }
-            };
-
-            var appBar = $(".app-bar");
-
-            appBar.on("menuopen", function(){
-                $(this.parentNode).addClass("scrolled-header");
-            });
-
-            appBar.on("menuclose", function(){
-                if (!(document.body.scrollTop || document.documentElement.scrollTop))
-                    $(this.parentNode).removeClass("scrolled-header");
-            });
+            // window.onscroll = function(){
+            //     var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            //     if (winScroll > 50) {
+            //         $("#header").addClass("scrolled-header");
+            //     } else {
+            //         $("#header").removeClass("scrolled-header");
+            //     }
+            // };
+            //
+            // var appBar = $(".app-bar");
+            //
+            // appBar.on("menuopen", function(){
+            //     $(this.parentNode).addClass("scrolled-header");
+            // });
+            //
+            // appBar.on("menuclose", function(){
+            //     if (!(document.body.scrollTop || document.documentElement.scrollTop))
+            //         $(this.parentNode).removeClass("scrolled-header");
+            // });
         });
 
     </script>
