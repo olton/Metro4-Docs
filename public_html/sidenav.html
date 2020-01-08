@@ -1,11 +1,14 @@
-<form class="d-flex flex-align-center flex-justify-between flex-nowrap p-1 pr-2">
-    <input type="text" placeholder="Search..." data-role="search" data-clear-button="false" class="mb-0" id="search_input">
-    <button type="button" class="expand-button ml-2 d-block d-none-md" id="doc-nav-toggle"><span></span></button>
-</form>
-
-<hr/>
-
 <nav id="doc-nav" class="pt-1" data-role="collapse" data-toggle-element="#doc-nav-toggle">
+    <div class="doc-nav-item d-block d-none-md">
+        <a href="index.html">General</a>
+        <ul class="">
+            <li class="done"><a href="index.html">Home</a></li>
+            <li class="done"><a href="intro.html">Get Started</a></li>
+            <li class="done"><a href="m4q-about.html">Components</a></li>
+            <li class="done"><a href="support.html">Support</a></li>
+            <li class="done"><a href="https://github.com/olton/Metro-UI-CSS">GitHub</a></li>
+        </ul>
+    </div>
     <div class="doc-nav-item">
         <a href="intro.html">Getting started</a>
         <ul class="toc-nav">
@@ -153,7 +156,7 @@
         </ul>
     </div>
     <div class="doc-nav-item">
-        <a href="ani-elements.html">Utilities</a>
+        <a href="border.html">Utilities</a>
         <ul class="toc-nav">
             <li class="done"><a href="border.html">Border</a></li>
             <li class="done"><a href="clear.html">Clear float</a></li>
@@ -184,9 +187,10 @@
         <ul class="toc-nav">
             <li class="done"><a href="icons.html">Metro Icon Font</a></li>
             <li class="done"><a href="color-schemes.html">Color Schemes</a></li>
-            <li><a href="#">Builder</a></li>
+            <li><a href="https://builder.metroui.org.ua">Builder</a></li>
         </ul>
     </div>
+
 </nav>
 
 <script>
@@ -194,17 +198,17 @@
     var link = $("#doc-nav a[href='"+href+"']");
     var item = link.closest(".doc-nav-item");
     var menu = item.find(".toc-nav");
-    var dov_nav = $("#doc-nav");
+    var sb_menu = $(".sidebar-menu");
 
-    dov_nav.find(".toc-nav").hide();
+    sb_menu.find(".toc-nav").hide();
     menu.show(function(){
         link.parent().addClass("active");
-        dov_nav.animate({
-            scrollTop: link.offset().top - dov_nav.offset().top
+        sb_menu.animate({
+            scrollTop: link.offset().top - sb_menu.offset().top
         });
     });
 
-    if (Metro.utils.detectIE() !== 11) docsearch({
+    if (Metro.utils.detectIE() !== 11 && docsearch) docsearch({
         apiKey: '00a53b92ba6ed063bec0a9320e60d4e6',
         indexName: 'metroui',
         inputSelector: '#search_input',

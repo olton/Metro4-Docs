@@ -48,17 +48,32 @@
         }
     </style>
 </head>
-<body class="m4-cloak" style="padding-top: 0">
-    <div class="container-fluid bg-hero fg-white pos-fixed fixed-top z-top" id="header">
+<body class="m4-cloak" style="padding-top: 52px">
+
+    <div class="container-fluid pos-fixed fixed-top z-top bg-hero" id="header">
         <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
-            <a href="index.html" class="brand fg-white no-hover text-bold">METRO 4</a>
-            <ul class="app-bar-menu ml-auto" data-role="htmlcontainer" data-html-source="main-menu.html"></ul>
+            <a href="index.html" class="brand fg-white no-hover text-bold">METRO_4</a>
+            <ul class="app-bar-menu ml-auto text-upper">
+                <li><a href="index.html" class="app-bar-item">Home</a></li>
+                <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
+                <li><a href="m4q-about.html" class="app-bar-item">Components</a></li>
+                <li><a href="examples.html" class="app-bar-item">Examples</a></li>
+                <li><a href="support.html" class="app-bar-item">Support</a></li>
+                <li><a href="https://github.com/olton/Metro-UI-CSS" class="app-bar-item">GitHub</a></li>
+            </ul>
         </header>
     </div>
 
-    <div class="hero hero-bg-img text-center">
+    <div class="hero hero-bg text-center">
 
-        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro</span><img src="images/four.png" class="d-inline-block va-bottom" style="height: 150px;"></div>
+        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro_4</span></div>
+
+        <div class="text-center m-8">
+            <a href="intro.html" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Get started</a>
+            <a href="https://github.com/olton/Metro-UI-CSS" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Source Files</a>
+            <a href="https://builder.metroui.org.ua" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Build own set</a>
+        </div>
+
         <h2 class="fg-white mt-10"><span class="reduce-1 enlarge-md">Support Development</span></h2>
         <div class="container mt-10 text-leader fg-white pl-5-fs pr-5-fs pl-20-md pr-20-md">
             <p class=" reduce-1 enlarge-1-md">
@@ -207,13 +222,13 @@
             <ul class="mt-5 unstyled-list d-block flex-justify-center">
                 <li class="m-4"><a href="https://www.patreon.com/user/creators?u=20614229" style="font-size: 42px" class="text-bold fg-dark no-decor">M. Bezuidenhout</a></li>
                 <li class="m-4"><a href="https://www.zapsi.eu" style="font-size: 42px" class="text-bold fg-dark no-decor">Petr Jahoda <small class="text-muted">from www.zapsi.eu</small></a></li>
+                <li class="m-4"><a href="https://www.patreon.com/user/creators?u=27819336" style="font-size: 42px" class="text-bold fg-dark no-decor">Steve</a></li>
             </ul>
 
             <h6 class="mt-10">Backers</h6>
             <ul class="mt-5 unstyled-list h5">
                 <li><a href="https://www.patreon.com/user/creators?u=10019621">Jonathan</a></li>
                 <li><a href="https://www.patreon.com/user/creators?u=13947239">Arnaud Dagnelies</a></li>
-                <li><a href="https://www.patreon.com/user/creators?u=16353488">Marcel Wehrstedt</a></li>
             </ul>
 
             <hr>
@@ -235,6 +250,8 @@
                 <li>Interactivity</li>
                 <li>Matthew Bezuidenhout</li>
                 <li>Petr Jahoda</li>
+                <li>Marcel Wehrstedt</li>
+                <li>Steve</li>
             </ul>
 
 
@@ -330,16 +347,16 @@
     <script src="metro/js/metro.js?ver=@@b-version"></script>
     <script>
         $(".version-number").html(Metro.ver());
-        $(function(){
-            window.onscroll = function(){
-                var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                if (winScroll > 50) {
-                    $("#header").addClass("scrolled-header");
-                } else {
-                    $("#header").removeClass("scrolled-header");
-                }
-            };
-        });
+        // $(function(){
+        //     window.onscroll = function(){
+        //         var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        //         if (winScroll > 50) {
+        //             $("#header").addClass("scrolled-header");
+        //         } else {
+        //             $("#header").removeClass("scrolled-header");
+        //         }
+        //     };
+        // });
     </script>
     <!-- ads-script -->
     <!-- ga-script -->

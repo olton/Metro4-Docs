@@ -35,64 +35,65 @@
 
     <title>About Animation - Metro 4 :: Popular HTML, CSS and JS library</title>
 </head>
-<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend">
-<div class="container-fluid">
+<body class="m4-cloak">
+
+<header data-role="html-container" data-insert-mode="replace" data-html-source="header.html"></header>
+
+<div data-role="html-container" data-insert-mode="replace" data-html-source="sidebar-menu.html"></div>
+
+<div class="container-fluid docs-content">
 
     <div class="row flex-xl-nowrap">
-        <div class="cell-md-3 cell-xl-2 pr-0 border-right bd-light" id="sidenav" data-role="htmlcontainer" data-html-source="sidenav.html" data-insert-mode="replace"  ></div>
-
-            <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
-                <h5>Table of contents</h5>
-                <hr/>
-                <ul class="toc-nav">
-                    <li class="toc-entry"><a href="#_about">About</a></li>
-                </ul>
-
-            </div>
-
-            <main class="cell-md-9 cell-xl-8 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
-                <div class="place-right d-none d-block-lg" style="width: 200px;">
-                    <img src="images/logo.png" class="w-100">
-                </div>
-
-                <h1>Animation intro</h1>
-                <p class="text-leader">
-                    Use builtin animations for your object and elements to create different animation effects.
-                </p>
-
-                <!-- ads-html -->
-
-                <h3 id="_about">About Animation</h3>
-                <p>
-                    Metro 4 contains classes and routines to create different animation effects.
-                    All classes stored in <code>metro-animation.css</code> or built in <code>metro-all.css</code>.
-                    To use animation classes, you must include file <code>metro-animation.css</code> in head of your page or use <code>metro-all.css</code>.
-                </p>
-                <pre><code>
-                    &lt;!DOCTYPE html&gt;
-                    &lt;head&gt;
-                        ...
-                        &lt;link href="path_to_metro/metro.css" rel="stylesheet"&gt;
-                        &lt;link href="path_to_metro/metro-animation.css" rel="stylesheet"&gt;
-                        ...
-                    &lt;/head&gt;
-                </code></pre>
-
-                <div>or</div>
-
-                <pre><code>
-                    &lt;!DOCTYPE html&gt;
-                    &lt;head&gt;
-                        ...
-                        &lt;link href="path_to_metro/metro-all.css" rel="stylesheet"&gt;
-                        ...
-                    &lt;/head&gt;
-                </code></pre>
-
-            </main>
+        <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
+            <h5>Table of contents</h5>
+            <hr/>
+            <ul class="toc-nav">
+                <li class="toc-entry"><a href="#_about">About</a></li>
+            </ul>
         </div>
 
+        <main class="cell-xl-10 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+            <div class="place-right d-none d-block-lg" style="width: 200px;">
+                <img src="images/logo.png" class="w-100">
+            </div>
+
+            <h1>Animation intro</h1>
+            <p class="text-leader">
+                Use builtin animations for your object and elements to create different animation effects.
+            </p>
+
+            <!-- ads-html -->
+
+            <h3 id="_about">About Animation</h3>
+            <p>
+                Metro 4 contains classes and routines to create different animation effects.
+                All classes stored in <code>metro-animation.css</code> or built in <code>metro-all.css</code>.
+                To use animation classes, you must include file <code>metro-animation.css</code> in head of your page or use <code>metro-all.css</code>.
+            </p>
+            <pre><code>
+                &lt;!DOCTYPE html&gt;
+                &lt;head&gt;
+                    ...
+                    &lt;link href="path_to_metro/metro.css" rel="stylesheet"&gt;
+                    &lt;link href="path_to_metro/metro-animation.css" rel="stylesheet"&gt;
+                    ...
+                &lt;/head&gt;
+            </code></pre>
+
+            <div>or</div>
+
+            <pre><code>
+                &lt;!DOCTYPE html&gt;
+                &lt;head&gt;
+                    ...
+                    &lt;link href="path_to_metro/metro-all.css" rel="stylesheet"&gt;
+                    ...
+                &lt;/head&gt;
+            </code></pre>
+        </main>
     </div>
+
+</div>
 
     <script src="docsearch/docsearch.min.js"></script>
 

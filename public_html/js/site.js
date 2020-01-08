@@ -21,5 +21,12 @@
     });
 
     Metro.utils.cleanPreCode("pre code, textarea");
+
+    $.document().on("click", function(){
+        var sidebar = Metro.getPlugin("#sidebar", "sidebar");
+        if (sidebar.isOpen()) {
+            sidebar.close();
+        }
+    });
 }());
 

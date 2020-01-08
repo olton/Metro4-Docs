@@ -35,11 +35,15 @@
 
     <title>Draggable - Metro 4 :: Popular HTML, CSS and JS library</title>
 </head>
-<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend">
-<div class="container-fluid">
+<body class="m4-cloak">
+
+<header data-role="html-container" data-insert-mode="replace" data-html-source="header.html"></header>
+
+<div data-role="html-container" data-insert-mode="replace" data-html-source="sidebar-menu.html"></div>
+
+<div class="container-fluid docs-content">
 
     <div class="row flex-xl-nowrap">
-        <div class="cell-md-3 cell-xl-2 pr-0 border-right bd-light" id="sidenav" data-role="htmlcontainer" data-html-source="sidenav.html" data-insert-mode="replace"  ></div>
 
             <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
                 <h5>Table of contents</h5>
@@ -54,7 +58,7 @@
 
             </div>
 
-            <main class="cell-md-9 cell-xl-8 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+            <main class="cell-xl-10 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
                 <div class="place-right d-none d-block-lg" style="width: 200px;">
                     <img src="images/logo.png" class="w-100">
                 </div>
@@ -104,7 +108,7 @@
                     By default, the item is restricted to move by its parent. You can set set drag area with <code>data-drag-area</code> attribute.
                 </p>
                 <div class="example" style="height: 300px ">
-                    <div style="width: 100px; height: 100px;" class="bg-cyan" data-role="draggable" data-drag-area="body"></div>
+                    <div id="drag-on-body" style="width: 100px; height: 100px;" class="bg-cyan z-fixed" data-role="draggable" data-drag-area="body" data-draggable-deferred="1000"></div>
                 </div>
                 <pre><code class="html">
                     &lt;div data-role="draggable" data-drag-area="body"&gt;&lt;/div&gt;

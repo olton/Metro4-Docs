@@ -35,117 +35,117 @@
 
     <title>Download Metro 4 :: Popular HTML, CSS and JS library</title>
 </head>
-<body class="m4-cloak" data-role="htmlcontainer" data-html-source="header.html" data-insert-mode="prepend">
-<div class="container-fluid">
+<body class="m4-cloak">
+
+<header data-role="html-container" data-insert-mode="replace" data-html-source="header.html"></header>
+
+<div data-role="html-container" data-insert-mode="replace" data-html-source="sidebar-menu.html"></div>
+
+<div class="container-fluid docs-content">
 
     <div class="row flex-xl-nowrap">
-        <div class="cell-md-3 cell-xl-2 pr-0 border-right bd-light" id="sidenav" data-role="htmlcontainer" data-html-source="sidenav.html" data-insert-mode="replace"  ></div>
-
-            <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
-                <h5>Table of contents</h5>
-                <hr/>
-                <ul class="toc-nav">
-                    <li class="toc-entry"><a href="#">Download</a></li>
-                    <li class="toc-entry"><a href="#_compiled_version">Compiled version</a></li>
-                    <li class="toc-entry"><a href="#_source_files">Source files</a></li>
-                    <li class="toc-entry"><a href="#_cdn">Metro CDN</a></li>
-                    <li class="toc-entry">
-                        <a href="#_package_managers">Package managers</a>
-                        <ul>
-                            <li><a href="#_pm_npm">npm</a></li>
-                            <li><a href="#_pm_yarn">Yarn</a></li>
-                            <li><a href="#_pm_nuget">NuGet</a></li>
-                        </ul>
-                    </li>
-                    <li class="toc-entry"><a href="#_custom_builder">Custom builder</a></li>
-                </ul>
-
-            </div>
-
-            <main class="cell-md-9 cell-xl-8 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
-                <div class="place-right d-none d-block-lg" style="width: 200px;">
-                    <img src="images/logo.png" class="w-100">
-                </div>
-
-                <h1>Download</h1>
-                <p class="text-leader">
-                    Download Metro 4 to get the compiled CSS and JavaScript, source code, or include it with your favorite package managers like npm, Bower, Yarn, and more.
-                </p>
-
-                <!-- ads-html -->
-
-                <h3 id="_source_files">Full Package</h3>
-                <p>
-                    Package contains compiled and source files. You can use precompiled files or compile Metro 4 with your own asset pipeline by downloading our source Less, JavaScript, and documentation files.
-                    This option requires some additional tooling:
-                </p>
-                <ul>
-                    <li>Less compiler for compiling your CSS</li>
-                    <li><a href="https://github.com/postcss/autoprefixer">Autoprefixer</a> for CSS vendor prefixing</li>
-                    <li>Build tools for compiling js files</li>
-                </ul>
-                <p class="text-small mb-2">
-                    * Author use Grunt with required modules.
-                </p>
-                <a href="https://github.com/olton/Metro-UI-CSS/archive/master.zip" class="button">Download source</a>
-
-                <h3 id="_cdn">Metro CDN</h3>
-                <p>
-                    Use Metro CDN to deliver cached version of Metro 4 with compiled CSS and JS to your project.
-                </p>
-                <pre class=""><code>
-                    &lt;link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css"&gt;
-                    &lt;script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"&gt;&lt;/script&gt;
-                </code></pre>
-                <p class="text-small">
-                    * Metro CDN, provided for free by the folks at <a href="https://www.keycdn.com/">KeyCDN</a>
-                </p>
-
-                <h3 id="_package_managers">Package managers</h3>
-                <p>
-                    Pull in Metro 4 source files into nearly any project with some of the most popular package managers.
-                </p>
-                <br>
-
-                <h5 id="_pm_npm">npm</h5>
-                <pre class=""><code>
-                    $ npm install metro4@latest // full
-                    $ npm install metro4-dist@latest // short
-                </code></pre>
-
-
-                <h5 id="_pm_yarn">Yarn</h5>
-                <pre class=""><code>
-                    $ yarn add metro4@latest // full
-                    $ yarn add metro4-dist@latest // short
-                </code></pre>
-
-                <h5 id="_pm_nuget">NuGet</h5>
-                <p>Package manager</p>
-                <pre class=""><code>
-                    PM> Install-Package metro4 -Version {number}
-                </code></pre>
-
-                <p>.NET CLI</p>
-                <pre class=""><code>
-                    > dotnet add package Metro4 -Version {number}
-                </code></pre>
-
-                <p>Packet CLI</p>
-                <pre class=""><code>
-                    > packet add package Metro4 -Version {number}
-                </code></pre>
-
-                <!-- ads-html -->
-
-                <h3 id="_custom_builder">Custom builder</h3>
-                <p>
-                    Use <a href="https://builder.metroui.org.ua">Builder</a> to create your own set of components.
-                </p>
-            </main>
+        <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
+            <h5>Table of contents</h5>
+            <hr/>
+            <ul class="toc-nav">
+                <li class="toc-entry"><a href="#">Download</a></li>
+                <li class="toc-entry"><a href="#_source_files">Source files</a></li>
+                <li class="toc-entry"><a href="#_cdn">Metro CDN</a></li>
+                <li class="toc-entry">
+                    <a href="#_package_managers">Package managers</a>
+                    <ul>
+                        <li><a href="#_pm_npm">npm</a></li>
+                        <li><a href="#_pm_yarn">Yarn</a></li>
+                        <li><a href="#_pm_nuget">NuGet</a></li>
+                    </ul>
+                </li>
+                <li class="toc-entry"><a href="#_custom_builder">Custom builder</a></li>
+            </ul>
         </div>
 
+        <main class="cell-xl-10 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+            <div class="place-right d-none d-block-lg" style="width: 200px;">
+                <img src="images/logo.png" class="w-100">
+            </div>
+
+            <h1>Download</h1>
+            <p class="text-leader">
+                Download Metro 4 to get the compiled CSS and JavaScript, source code, or include it with your favorite package managers like npm, Bower, Yarn, and more.
+            </p>
+
+            <!-- ads-html -->
+
+            <h3 id="_source_files">Full Package</h3>
+            <p>
+                Package contains compiled and source files. You can use precompiled files or compile Metro 4 with your own asset pipeline by downloading our source Less, JavaScript, and documentation files.
+                This option requires some additional tooling:
+            </p>
+            <ul>
+                <li>Less compiler for compiling your CSS</li>
+                <li><a href="https://github.com/postcss/autoprefixer">Autoprefixer</a> for CSS vendor prefixing</li>
+                <li>Build tools for compiling js files</li>
+            </ul>
+            <p class="text-small mb-2">
+                * Author use Grunt with required modules.
+            </p>
+            <a href="https://github.com/olton/Metro-UI-CSS/archive/master.zip" class="button">Download source</a>
+
+            <h3 id="_cdn">Metro CDN</h3>
+            <p>
+                Use Metro CDN to deliver cached version of Metro 4 with compiled CSS and JS to your project.
+            </p>
+            <pre class=""><code>
+                &lt;link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css"&gt;
+                &lt;script href="https://cdn.metroui.org.ua/v4/js/metro.min.js"&gt;&lt;/script&gt;
+            </code></pre>
+            <p class="text-small">
+                * Metro CDN, provided for free by the folks at <a href="https://www.keycdn.com/">KeyCDN</a>
+            </p>
+
+            <h3 id="_package_managers">Package managers</h3>
+            <p>
+                Pull in Metro 4 source files into nearly any project with some of the most popular package managers.
+            </p>
+            <br>
+
+            <h5 id="_pm_npm">npm</h5>
+            <pre class=""><code>
+                $ npm install metro4@latest // full
+                $ npm install metro4-dist@latest // short
+            </code></pre>
+
+
+            <h5 id="_pm_yarn">Yarn</h5>
+            <pre class=""><code>
+                $ yarn add metro4@latest // full
+                $ yarn add metro4-dist@latest // short
+            </code></pre>
+
+            <h5 id="_pm_nuget">NuGet</h5>
+            <p>Package manager</p>
+            <pre class=""><code>
+                PM> Install-Package metro4 -Version {number}
+            </code></pre>
+
+            <p>.NET CLI</p>
+            <pre class=""><code>
+                > dotnet add package Metro4 -Version {number}
+            </code></pre>
+
+            <p>Packet CLI</p>
+            <pre class=""><code>
+                > packet add package Metro4 -Version {number}
+            </code></pre>
+
+            <!-- ads-html -->
+
+            <h3 id="_custom_builder">Custom builder</h3>
+            <p>
+                Use <a href="https://builder.metroui.org.ua">Builder</a> to create your own set of components.
+            </p>
+        </main>
     </div>
+</div>
 
     <script src="docsearch/docsearch.min.js"></script>
 

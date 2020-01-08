@@ -36,6 +36,7 @@
     <div class="container mt-10">
         <button class="button" onclick="updateSelect('select.html')">Update from HTML</button>
         <button class="button" onclick="updateSelect('select.json')">Update from JSON</button>
+        <button class="button" onclick="updateSelect('empty')">Update from Empty</button>
         <select id="select1" data-role="select" class="mt-4">
             <option value="1">Value 1</option>
             <option value="2" selected>Value 2</option>
@@ -46,11 +47,16 @@
     <script src="../../metro/js/metro.js"></script>
     <script>
         function updateSelect(v){
-            $.get("data/"+v).then(function(response){
-                console.log(response);
-                var select = $("#select1").data("select");
-                select.data(v.indexOf("json") === -1 ? response : JSON.parse(response));
-            });
+            var select = Metro.getPlugin("#select1", 'select');
+
+            if (v === 'empty') {
+                select.data([]);
+            } else {
+                $.get("data/" + v).then(function (response) {
+                    console.log(response);
+                    select.data(v.indexOf("json") === -1 ? response : JSON.parse(response));
+                });
+            }
         }
     </script>
 </body>
