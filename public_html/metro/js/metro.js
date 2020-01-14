@@ -1,7 +1,7 @@
 /*
  * Metro 4 Components Library v4.3.5  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 08/01/2020 16:52:08
+ * Built at 14/01/2020 12:35:08
  * Licensed under MIT
  */
 
@@ -559,7 +559,7 @@ function normalizeEventName(name) {
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.5. Built at 17/12/2019 14:02:31";
+var m4qVersion = "v1.0.5. Built at 14/01/2020 12:29:41";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -3775,7 +3775,7 @@ var normalizeComponentName = function(name){
 var Metro = {
 
     version: "4.3.5",
-    compileTime: "08/01/2020 16:52:15",
+    compileTime: "14/01/2020 12:35:15",
     buildNumber: "743",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
@@ -14631,7 +14631,7 @@ var File = {
 
     _createStructure: function(){
         var element = this.element, o = this.options;
-        var container = $("<label>").addClass((o.mode === "input" ? " file " : " drop-zone ") + element[0].className).addClass(o.clsComponent);
+        var container = $("<label>").addClass((o.mode === "input" ? " file " : o.mode === "button" ? " file-button " : " drop-zone ") + element[0].className).addClass(o.clsComponent);
         var caption = $("<span>").addClass("caption").addClass(o.clsCaption);
         var files = $("<span>").addClass("files").addClass(o.clsCaption);
         var icon, button;
@@ -14640,7 +14640,17 @@ var File = {
         container.insertBefore(element);
         element.appendTo(container);
 
-        if (o.mode === "input") {
+        if (o.mode === 'drop' || o.mode === 'dropzone') {
+            icon = $(o.dropIcon).addClass("icon").appendTo(container);
+            caption.html(o.dropTitle).insertAfter(icon);
+            files.html("0" + " " + o.filesTitle).insertAfter(caption);
+        } else if (o.mode === 'button') {
+
+            button = $("<span>").addClass("button").attr("tabindex", -1).html(o.buttonTitle);
+            button.appendTo(container);
+            button.addClass(o.clsButton);
+
+        } else {
             caption.insertBefore(element);
 
             button = $("<span>").addClass("button").attr("tabindex", -1).html(o.buttonTitle);
@@ -14655,10 +14665,6 @@ var File = {
                 var prepend = $("<div>").html(o.prepend);
                 prepend.addClass("prepend").addClass(o.clsPrepend).appendTo(container);
             }
-        } else {
-            icon = $(o.dropIcon).addClass("icon").appendTo(container);
-            caption.html(o.dropTitle).insertAfter(icon);
-            files.html("0" + " " + o.filesTitle).insertAfter(caption);
         }
 
         element[0].className = '';
@@ -14744,8 +14750,14 @@ var File = {
     },
 
     clear: function(){
-        var element = this.element;
-        element.siblings(".caption").html("");
+        var element = this.element, o = this.options;
+        if (o.mode === "input") {
+            element.siblings(".caption").html("");
+        } else {
+            element.siblings(".caption").html(o.dropTitle);
+            element.siblings(".files").html("0" + " " + o.filesTitle);
+        }
+
         element.val("");
     },
 
@@ -21346,7 +21358,7 @@ var Select = {
         var multiple = element[0].multiple;
         var select_id = Utils.elementId("select");
         var buttons = $("<div>").addClass("button-group");
-        var input, drop_container, list, filter_input, placeholder, dropdown_toggle;
+        var input, drop_container, drop_container_input, list, filter_input, placeholder, dropdown_toggle;
 
         this.placeholder = $("<span>").addClass("placeholder").html(o.placeholder);
 
@@ -21365,18 +21377,19 @@ var Select = {
 
         input = $("<div>").addClass("select-input").addClass(o.clsSelectInput).attr("name", "__" + select_id + "__");
         drop_container = $("<div>").addClass("drop-container");
+        drop_container_input = $("<div>").appendTo(drop_container);
         list = $("<ul>").addClass( o.clsDropList === "" ? "d-menu" : o.clsDropList).css({
             "max-height": o.dropHeight
         });
-        filter_input = $("<input type='text' data-role='input'>").attr("placeholder", o.filterPlaceholder);
+        filter_input = $("<input type='text' data-role='input'>").attr("placeholder", o.filterPlaceholder).appendTo(drop_container_input);
 
         container.append(input);
         container.append(drop_container);
 
-        drop_container.append(filter_input);
+        drop_container.append(drop_container_input);
 
         if (o.filter !== true) {
-            filter_input.hide();
+            drop_container_input.hide();
         }
 
         drop_container.append(list);
