@@ -1,7 +1,7 @@
 /*
- * Metro 4 Components Library v4.3.6  (https://metroui.org.ua)
+ * Metro 4 Components Library v4.3.7  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 15/03/2020 11:45:15
+ * Built at 20/04/2020 12:57:55
  * Licensed under MIT
  */
 
@@ -559,7 +559,7 @@ function normalizeEventName(name) {
 
 // Source: src/core.js
 
-var m4qVersion = "v1.0.6. Built at 14/02/2020 19:08:43";
+var m4qVersion = "v1.0.6. Built at 20/04/2020 12:38:24";
 var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
 var matches = Element.prototype.matches
@@ -606,6 +606,32 @@ $.extend = $.fn.extend = function(){
         if ( ( options = arguments[ i ] ) != null ) {
             for ( name in options ) {
                 if (options.hasOwnProperty(name)) target[ name ] = options[ name ];
+            }
+        }
+    }
+
+    return target;
+};
+
+$.assign = function(){
+    var options, name,
+        target = arguments[ 0 ] || {},
+        i = 1,
+        length = arguments.length;
+
+    if ( typeof target !== "object" && typeof target !== "function" ) {
+        target = {};
+    }
+
+    if ( i === length ) {
+        target = this;
+        i--;
+    }
+
+    for ( ; i < length; i++ ) {
+        if ( ( options = arguments[ i ] ) != null ) {
+            for ( name in options ) {
+                if (options.hasOwnProperty(name) && options[name] !== undefined) target[ name ] = options[ name ];
             }
         }
     }
@@ -1524,10 +1550,12 @@ $.extend({
     acceptData: function(owner){return acceptData(owner);},
     not: function(val){return not(val)},
     parseUnit: function(str, out){return parseUnit(str, out)},
+    getUnit: function(str, und){return _getUnit(str, und)},
     unit: function(str, out){return parseUnit(str, out)},
     isVisible: function(elem) {return isVisible(elem)},
     isHidden: function(elem) {return isHidden(elem)},
     matches: function(el, s) {return matches.call(el, s);},
+    random: function(from, to) {return Math.floor(Math.random()*(to-from+1)+from);},
 
     serializeToArray: function(form){
         var _form = $(form)[0];
@@ -2846,337 +2874,507 @@ $.fn.extend({
 
 // Source: src/animation.js
 
-var cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window["mozCancelAnimationFrame"];
+var transformProps = ['translateX', 'translateY', 'translateZ', 'rotate', 'rotateX', 'rotateY', 'rotateZ', 'scale', 'scaleX', 'scaleY', 'scaleZ', 'skew', 'skewX', 'skewY'];
+var numberProps = ['opacity', 'zIndex'];
+var floatProps = ['opacity', 'volume'];
+var scrollProps = ["scrollLeft", "scrollTop"];
+var reverseProps = ["opacity", "volume"];
+
+function _validElement(el) {
+    return el instanceof HTMLElement || el instanceof SVGElement;
+}
+
+/**
+ *
+ * @param val
+ * @param und
+ * @returns {any}
+ */
+function _getUnit(val, und){
+    var split = /[+-]?\d*\.?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(val);
+    return typeof split[1] !== "undefined" ? split[1] : und;
+}
+
+/**
+ *
+ * @param to
+ * @param from
+ * @returns {*}
+ * @private
+ */
+function _getRelativeValue (to, from) {
+    var operator = /^(\*=|\+=|-=)/.exec(to);
+    if (!operator) return to;
+    var u = _getUnit(to) || 0;
+    var x = parseFloat(from);
+    var y = parseFloat(to.replace(operator[0], ''));
+    switch (operator[0][0]) {
+        case '+':
+            return x + y + u;
+        case '-':
+            return x - y + u;
+        case '*':
+            return x * y + u;
+    }
+}
+
+/**
+ *
+ * @param el
+ * @param prop
+ * @param pseudo
+ * @returns {*|number|string}
+ * @private
+ */
+function _getStyle (el, prop, pseudo){
+    if (typeof el[prop] !== "undefined") {
+        if (scrollProps.indexOf(prop) > -1) {
+            return prop === "scrollLeft" ? el === window ? pageXOffset : el.scrollLeft : el === window ? pageYOffset : el.scrollTop
+        } else {
+            return el[prop] || 0;
+        }
+    }
+
+    var result = el.style[prop] || getComputedStyle(el, pseudo)[prop];
+    return result;
+    // return isNaN(parseInt(result)) && prop.toLowerCase().indexOf("color") === -1 ? 0 : result;
+}
+
+/**
+ *
+ * @param el
+ * @param key
+ * @param val
+ * @param unit
+ * @param toInt
+ * @private
+ */
+function _setStyle (el, key, val, unit, toInt) {
+
+    if (not(toInt)) {
+        toInt = false;
+    }
+
+    key = camelCase(key);
+
+    if (toInt) {
+        val  = parseInt(val);
+    }
+
+    if (_validElement(el)) {
+        if (typeof el[key] !== "undefined") {
+            el[key] = val;
+        } else {
+            el.style[key] = key === "transform" || key.toLowerCase().includes('color') ? val : val + unit;
+        }
+    } else {
+        el[key] = val;
+    }
+}
+
+/**
+ *
+ * @param el
+ * @param mapProps
+ * @param p
+ * @private
+ */
+function _applyStyles (el, mapProps, p) {
+    $.each(mapProps, function (key, val) {
+        _setStyle(el, key, val[0] + (val[2] * p), val[3], val[4]);
+    })
+}
+
+/**
+ *
+ * @param el
+ * @returns {{}}
+ * @private
+ */
+function _getElementTransforms (el) {
+    if (!_validElement(el)) return {};
+    var str = el.style.transform || '';
+    var reg = /(\w+)\(([^)]*)\)/g;
+    var transforms = {};
+    var m;
+
+    while (m = reg.exec(str))
+        transforms[m[1]] = m[2];
+
+    return transforms;
+}
+
+/**
+ *
+ * @param val
+ * @returns {number[]}
+ * @private
+ */
+function _getColorArrayFromHex (val){
+    var a = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(val ? val : "#000000");
+    return a.slice(1).map(function(v) {
+            return parseInt(v, 16)
+    })
+}
+
+/**
+ *
+ * @param el
+ * @param key
+ * @returns {number[]}
+ * @private
+ */
+function _getColorArrayFromElement (el, key) {
+    return getComputedStyle(el)[key].replace(/[^\d.,]/g, '').split(',').map(function(v) {
+        return parseInt(v)
+    });
+}
+
+/**
+ *
+ * @param el
+ * @param mapProps
+ * @param p
+ * @private
+ */
+function _applyTransform (el, mapProps, p) {
+    var t = [];
+    var elTransforms = _getElementTransforms(el);
+
+    $.each(mapProps, function(key, val) {
+        var from = val[0], to = val[1], delta = val[2], unit = val[3];
+        key = "" + key;
+
+        if ( key.indexOf("rotate") > -1 || key.indexOf("skew") > -1) {
+            if (unit === "") unit = "deg";
+        }
+
+        if (key.indexOf('scale') > -1) {
+            unit = '';
+        }
+
+        if (key.indexOf('translate') > -1 && unit === '') {
+            unit = 'px';
+        }
+
+        if (unit === "turn") {
+            t.push(key+"(" + (to * p) + unit + ")");
+        } else {
+            t.push(key +"(" + (from + (delta * p)) + unit+")");
+        }
+    });
+
+    $.each(elTransforms, function(key, val) {
+        if (mapProps[key] === undefined) {
+            t.push(key+"("+val+")");
+        }
+    })
+
+    el.style['transform'] = t.join(" ");
+}
+
+/**
+ *
+ * @param el
+ * @param mapProps
+ * @param p
+ * @private
+ */
+function _applyColors (el, mapProps, p) {
+    $.each(mapProps, function (key, val) {
+        var i, result = [0, 0, 0], v;
+        for (i = 0; i < 3; i++) {
+            result[i] = Math.floor(val[0][i] + (val[2][i] * p));
+        }
+        v = "rgb("+(result.join(","))+")";
+        el.style[key] = v;
+    })
+}
+
+/**
+ *
+ * @param val
+ * @returns {string|*}
+ * @private
+ */
+function _expandColorValue (val) {
+    var regExp = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    if (val[0] === "#" && val.length === 4) {
+        return "#" + val.replace(regExp, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+    }
+    return val[0] === "#" ? val : "#"+val;
+}
+
+/**
+ *
+ * @param el
+ * @param map
+ * @param p
+ */
+function applyProps (el, map, p) {
+    _applyStyles(el, map.props, p);
+    _applyTransform(el, map.transform, p);
+    _applyColors(el, map.color, p);
+}
+
+/**
+ *
+ * @param el
+ * @param draw
+ * @param dir
+ * @returns {{transform: {}, color: {}, props: {}}}
+ */
+function createAnimationMap (el, draw, dir) {
+    var map = {
+        props: {},
+        transform: {},
+        color: {}
+    };
+    var i, from, to, delta, unit, temp;
+    var elTransforms = _getElementTransforms(el);
+
+    if (not(dir)) {
+        dir = "normal";
+    }
+
+    $.each(draw, function(key, val) {
+
+        var isTransformProp = transformProps.indexOf(""+key) > -1;
+        var isNumProp = numberProps.indexOf(""+key) > -1;
+        var isColorProp = (""+key).toLowerCase().indexOf("color") > -1;
+
+        if (Array.isArray(val) && val.length === 1) {
+            val = val[0];
+        }
+
+        if (!Array.isArray(val)) {
+            if (isTransformProp) {
+                from = elTransforms[key] || 0;
+            } else if (isColorProp) {
+                from = _getColorArrayFromElement(el, key);
+            } else {
+                from = _getStyle(el, key);
+            }
+            from = !isColorProp ? parseUnit(from) : from;
+            to = !isColorProp ? parseUnit(_getRelativeValue(val, Array.isArray(from) ? from[0] : from)) : _getColorArrayFromHex(val);
+        } else {
+            from = !isColorProp ? parseUnit(val[0]) : _getColorArrayFromHex(_expandColorValue(val[0]));
+            to = !isColorProp ? parseUnit(val[1]) : _getColorArrayFromHex(_expandColorValue(val[1]));
+        }
+
+        if (reverseProps.indexOf(""+key) > -1 && from[0] === to[0]) {
+            from[0] = to[0] > 0 ? 0 : 1;
+        }
+
+        if (dir === "reverse") {
+            temp = from;
+            from = to;
+            to = temp;
+        }
+
+        unit = el instanceof HTMLElement && to[1] === '' && !isNumProp && !isTransformProp ? 'px' : to[1];
+
+        if (isColorProp) {
+            delta = [0, 0, 0];
+            for (i = 0; i < 3; i++) {
+                delta[i] = to[i] - from[i];
+            }
+        } else {
+            delta = to[0] - from[0];
+        }
+
+        if (isTransformProp) {
+            map.transform[key] = [from[0], to[0], delta, unit];
+        } else if (isColorProp) {
+            map.color[key] = [from, to, delta, unit];
+        } else {
+            map.props[key] = [from[0], to[0], delta, unit, floatProps.indexOf(""+key) === -1];
+        }
+    });
+
+    return map;
+}
+
+function minMax(val, min, max) {
+    return Math.min(Math.max(val, min), max);
+}
 
 var Easing = {
+    linear: function(){return function(t) {return t}}
+}
 
-    def: "linear",
+Easing.default = Easing.linear;
 
-    linear: function( t ) {
-        return t;
-    },
-
-    easeInSine: function( t ) {
-        return -1 * Math.cos( t * ( Math.PI / 2 ) ) + 1;
-    },
-
-    easeOutSine: function( t ) {
-        return Math.sin( t * ( Math.PI / 2 ) );
-    },
-
-    easeInOutSine: function( t ) {
-        return -0.5 * ( Math.cos( Math.PI * t ) - 1 );
-    },
-
-    easeInQuad: function( t ) {
-        return t * t;
-    },
-
-    easeOutQuad: function( t ) {
-        return t * ( 2 - t );
-    },
-
-    easeInOutQuad: function( t ) {
-        return t < 0.5 ? 2 * t * t : - 1 + ( 4 - 2 * t ) * t;
-    },
-
-    easeInCubic: function( t ) {
-        return t * t * t;
-    },
-
-    easeOutCubic: function( t ) {
-        var t1 = t - 1;
-        return t1 * t1 * t1 + 1;
-    },
-
-    easeInOutCubic: function( t ) {
-        return t < 0.5 ? 4 * t * t * t : ( t - 1 ) * ( 2 * t - 2 ) * ( 2 * t - 2 ) + 1;
-    },
-
-    easeInQuart: function( t ) {
-        return t * t * t * t;
-    },
-
-    easeOutQuart: function( t ) {
-        var t1 = t - 1;
-        return 1 - t1 * t1 * t1 * t1;
-    },
-
-    easeInOutQuart: function( t ) {
-        var t1 = t - 1;
-        return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * t1 * t1 * t1 * t1;
-    },
-
-    easeInQuint: function( t ) {
-        return t * t * t * t * t;
-    },
-
-    easeOutQuint: function( t ) {
-        var t1 = t - 1;
-        return 1 + t1 * t1 * t1 * t1 * t1;
-    },
-
-    easeInOutQuint: function( t ) {
-        var t1 = t - 1;
-        return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * t1 * t1 * t1 * t1 * t1;
-    },
-
-    easeInExpo: function( t ) {
-        if( t === 0 ) {
-            return 0;
-        }
-        return Math.pow( 2, 10 * ( t - 1 ) );
-    },
-
-    easeOutExpo: function( t ) {
-        if( t === 1 ) {
-            return 1;
-        }
-
-        return ( -Math.pow( 2, -10 * t ) + 1 );
-    },
-
-    easeInOutExpo: function( t ) {
-        if( t === 0 || t === 1 ) {
-            return t;
-        }
-
-        var scaledTime = t * 2;
-        var scaledTime1 = scaledTime - 1;
-
-        if( scaledTime < 1 ) {
-            return 0.5 * Math.pow( 2, 10 * ( scaledTime1 ) );
-        }
-
-        return 0.5 * ( -Math.pow( 2, -10 * scaledTime1 ) + 2 );
-    },
-
-    easeInCirc: function( t ) {
-        var scaledTime = t / 1;
-        return -1 * ( Math.sqrt( 1 - scaledTime * t ) - 1 );
-    },
-
-    easeOutCirc: function( t ) {
-        var t1 = t - 1;
-        return Math.sqrt( 1 - t1 * t1 );
-    },
-
-    easeInOutCirc: function( t ) {
-        var scaledTime = t * 2;
-        var scaledTime1 = scaledTime - 2;
-
-        if( scaledTime < 1 ) {
-            return -0.5 * ( Math.sqrt( 1 - scaledTime * scaledTime ) - 1 );
-        }
-
-        return 0.5 * ( Math.sqrt( 1 - scaledTime1 * scaledTime1 ) + 1 );
-    },
-
-    easeInBack: function(t, m) {
-        m = m || 1.70158;
-        return t * t * ( ( m + 1 ) * t - m );
-    },
-
-    easeOutBack: function(t, m) {
-        m = m || 1.70158;
-        var scaledTime = ( t / 1 ) - 1;
-
-        return (
-            scaledTime * scaledTime * ( ( m + 1 ) * scaledTime + m )
-        ) + 1;
-    },
-
-    easeInOutBack: function( t, m ) {
-        m = m || 1.70158;
-        var scaledTime = t * 2;
-        var scaledTime2 = scaledTime - 2;
-        var s = m * 1.525;
-
-        if( scaledTime < 1) {
-            return 0.5 * scaledTime * scaledTime * (
-                ( ( s + 1 ) * scaledTime ) - s
-            );
-        }
-
-        return 0.5 * (
-            scaledTime2 * scaledTime2 * ( ( s + 1 ) * scaledTime2 + s ) + 2
-        );
-    },
-
-    easeInElastic: function( t, m ) {
-        m  = m || 0.7;
-        if( t === 0 || t === 1 ) {
-            return t;
-        }
-
-        var scaledTime = t / 1;
-        var scaledTime1 = scaledTime - 1;
-
-        var p = 1 - m;
-        var s = p / ( 2 * Math.PI ) * Math.asin( 1 );
-
-        return -(
-            Math.pow( 2, 10 * scaledTime1 ) *
-            Math.sin( ( scaledTime1 - s ) * ( 2 * Math.PI ) / p )
-        );
-    },
-
-    easeOutElastic: function( t, m ) {
-        m = m || 0.7;
-        var p = 1 - m;
-        var scaledTime = t * 2;
-
-        if( t === 0 || t === 1 ) {
-            return t;
-        }
-
-        var s = p / ( 2 * Math.PI ) * Math.asin( 1 );
-        return (
-            Math.pow( 2, -10 * scaledTime ) *
-            Math.sin( ( scaledTime - s ) * ( 2 * Math.PI ) / p )
-        ) + 1;
-
-    },
-
-    easeInOutElastic: function( t, m ) {
-        m = m || 0.65;
-        var p = 1 - m;
-
-        if( t === 0 || t === 1 ) {
-            return t;
-        }
-
-        var scaledTime = t * 2;
-        var scaledTime1 = scaledTime - 1;
-
-        var s = p / ( 2 * Math.PI ) * Math.asin( 1 );
-
-        if( scaledTime < 1 ) {
-            return -0.5 * (
-                Math.pow( 2, 10 * scaledTime1 ) *
-                Math.sin( ( scaledTime1 - s ) * ( 2 * Math.PI ) / p )
-            );
-        }
-
-        return (
-            Math.pow( 2, -10 * scaledTime1 ) *
-            Math.sin( ( scaledTime1 - s ) * ( 2 * Math.PI ) / p ) * 0.5
-        ) + 1;
-
-    },
-
-    easeOutBounce: function( t ) {
-        var scaledTime2, scaledTime = t / 1;
-
-        if( scaledTime < ( 1 / 2.75 ) ) {
-
-            return 7.5625 * scaledTime * scaledTime;
-
-        } else if( scaledTime < ( 2 / 2.75 ) ) {
-
-            scaledTime2 = scaledTime - ( 1.5 / 2.75 );
-            return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.75;
-
-        } else if( scaledTime < ( 2.5 / 2.75 ) ) {
-
-            scaledTime2 = scaledTime - ( 2.25 / 2.75 );
-            return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.9375;
-
-        } else {
-
-            scaledTime2 = scaledTime - ( 2.625 / 2.75 );
-            return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.984375;
-
+var eases = {
+    Sine: function(){
+        return function(t){
+            return 1 - Math.cos(t * Math.PI / 2);
         }
     },
-
-    easeInBounce: function( t ) {
-        return 1 - Easing.easeOutBounce( 1 - t );
-    },
-
-    easeInOutBounce: function( t ) {
-        if( t < 0.5 ) {
-            return Easing.easeInBounce( t * 2 ) * 0.5;
+    Circ: function(){
+        return function(t){
+            return 1 - Math.sqrt(1 - t * t);
         }
-        return ( Easing.easeOutBounce( ( t * 2 ) - 1 ) * 0.5 ) + 0.5;
+    },
+    Back: function(){
+        return function(t){
+            return t * t * (3 * t - 2);
+        }
+    },
+    Bounce: function(){
+        return function(t){
+            var pow2, b = 4;
+            while (t < (( pow2 = Math.pow(2, --b)) - 1) / 11) {}
+            return 1 / Math.pow(4, 3 - b) - 7.5625 * Math.pow(( pow2 * 3 - 2 ) / 22 - t, 2)
+        }
+    },
+    Elastic: function(amplitude, period){
+        if (not(amplitude)) {
+            amplitude = 1;
+        }
+
+        if (not(period)) {
+            period = .5;
+        }
+        var a = minMax(amplitude, 1, 10);
+        var p = minMax(period, .1, 2);
+        return function(t){
+            return (t === 0 || t === 1) ? t :
+                -a * Math.pow(2, 10 * (t - 1)) * Math.sin((((t - 1) - (p / (Math.PI * 2) * Math.asin(1 / a))) * (Math.PI * 2)) / p);
+        }
     }
 };
 
-$.easing = {};
+['Quad', 'Cubic', 'Quart', 'Quint', 'Expo'].forEach(function(name, i) {
+    eases[name] = function(){
+        return function(t){
+            return Math.pow(t, i + 2);
+        }
+    }
+});
 
-$.extend($.easing, Easing);
+Object.keys(eases).forEach(function(name) {
+    var easeIn = eases[name];
+    Easing['easeIn' + name] = easeIn;
+    Easing['easeOut' + name] = function(a, b){
+        return function(t){
+            return 1 - easeIn(a, b)(1 - t);
+        }
+    }
+    Easing['easeInOut' + name] = function(a, b){
+        return function(t){
+            return t < 0.5 ? easeIn(a, b)(t * 2) / 2 : 1 - easeIn(a, b)(t * -2 + 2) / 2;
+        }
+    }
+});
 
-$.extend({
-    animate: function(el, draw, dur, timing, cb){
-        var $el = $(el), start = performance.now();
-        var key, from, to, delta, unit, mapProps = {};
+var defaultProps = {
+    id: null,
+    el: null,
+    draw: {},
+    dur: 1000,
+    ease: "linear",
+    loop: 0,
+    pause: 0,
+    dir: "normal",
+    defer: 0,
+    onFrame: function(){},
+    onDone: function(){}
+}
 
-        if (dur === 0 || $.fx.off) {
+var Animation = {
+    elements: {}
+};
+
+function animate(args){
+    return new Promise(function(resolve){
+        var that = this, start;
+        var props = $.assign({}, defaultProps, args);
+        var id = props.id, el = props.el, draw = props.draw, dur = props.dur, ease = props.ease, loop = props.loop, onFrame = props.onFrame, onDone = props.onDone, pause = props.pause, dir = props.dir, defer = props.defer;
+        var map = {};
+        var easeName = "linear", easeArgs = [], easeFn = Easing.linear, matchArgs;
+        var direction = dir === "alternate" ? "normal" : dir;
+        var replay = false;
+        var animationID = id ? id : +(performance.now() * Math.pow(10, 14));
+
+        if (not(el)) {
+            throw new Error("Unknown element!");
+        }
+
+        if (typeof el === "string") {
+            el = document.querySelector(el);
+        }
+
+        if (typeof draw !== "function" && typeof draw !== "object") {
+            throw new Error("Unknown draw object. Must be a function or object!");
+        }
+
+        if (dur === 0) {
             dur = 1;
         }
 
-        dur = dur || 300;
-        timing = timing || this.easing.def;
-
-        if (typeof dur === "function") {
-            cb = dur;
-            dur = 300;
-            timing = "linear";
+        if (dir === "alternate" && typeof loop === "number") {
+            loop *= 2;
         }
 
-        if (typeof timing === "function") {
-            cb = timing;
-            timing = this.easing.def
+        if (typeof ease === "string") {
+            matchArgs = /\(([^)]+)\)/.exec(ease);
+            easeName = ease.split("(")[0];
+            easeArgs = matchArgs ? matchArgs[1].split(',').map(function(p){return parseFloat(p)}) : [];
+            easeFn = Easing[easeName] || Easing.linear;
+        } else if (typeof ease === "function") {
+            easeFn = ease;
+        } else {
+            easeFn = Easing.linear;
         }
 
-        $el.origin("animation-stop", 0);
+        Animation.elements[animationID] = {
+            element: el,
+            id: null,
+            stop: 0,
+            pause: 0,
+            loop: 0
+        };
 
-        if (isPlainObject(draw)) {
-            // TODO add prop value as array [from, to]
-            for (key in draw) {
-                if (draw.hasOwnProperty(key)) {
-                    if (!Array.isArray(draw[key])) {
-                        from = parseUnit($el.style(key));
-                        to = parseUnit(draw[key]);
-                    } else {
-                        from = parseUnit(draw[key][0]);
-                        to = parseUnit(draw[key][1]);
-                    }
-                    unit = to[1] === '' && numProps.indexOf(key)===-1 ? 'px' : to[1];
-                    delta = to[0] - from[0];
-                    mapProps[key] = [from[0], to[0], delta, unit];
-                }
+        var play = function() {
+            if (typeof draw === "object") {
+                map = createAnimationMap(el, draw, direction);
             }
-        }
+            start = performance.now();
+            Animation.elements[animationID].loop += 1;
+            Animation.elements[animationID].id = requestAnimationFrame(animate);
+        };
 
-        $el.origin("animation", requestAnimationFrame(function animate(time) {
+        var done = function() {
+            cancelAnimationFrame(Animation.elements[animationID].id);
+            delete Animation.elements[id];
+
+            if (typeof onDone === "function") {
+                onDone.apply(el);
+            }
+
+            resolve(that);
+        };
+
+        var animate = function(time) {
             var p, t;
-            var stop = $el.origin("animation-stop");
+            var stop = Animation.elements[animationID].stop;
 
             if ( stop > 0) {
-
                 if (stop === 2) {
                     if (typeof draw === "function") {
-                        $.proxy(draw, $el[0])(1, 1);
-                    } else if (isPlainObject(draw)) {
-                        (function(t, p){
 
-                            for (key in mapProps) {
-                                if (mapProps.hasOwnProperty(key)) {
-                                    $el.css(key, mapProps[key][0] + (mapProps[key][2] * p) + mapProps[key][3]);
-                                }
-                            }
+                        draw.bind(el)(1, 1);
 
-                        })(1, 1);
+                    } else {
+
+                        applyProps(el, map, 1);
+
                     }
                 }
-
-                cancelAnimationFrame($(el).origin("animation"));
-
-                if (typeof cb === "function") {
-                    $.proxy(cb, $el[0])();
-                }
-
+                done();
                 return;
             }
 
@@ -3185,60 +3383,175 @@ $.extend({
             if (t > 1) t = 1;
             if (t < 0) t = 0;
 
-            var fn = typeof timing === "string" ? $.easing[timing] ? $.easing[timing] : $.easing[$.easing.def] : timing;
-
-            p = fn(t);
+            p = easeFn.apply(null, easeArgs)(t);
 
             if (typeof draw === "function") {
 
-                $.proxy(draw, $el[0])(t, p);
-
-            } else if (isPlainObject(draw)) {
-
-                (function(t, p){
-
-                    for (key in mapProps) {
-                        if (mapProps.hasOwnProperty(key)) {
-                            $el.css(key, mapProps[key][0] + (mapProps[key][2] * p) + mapProps[key][3]);
-                        }
-                    }
-
-                })(t, p);
+                draw.bind(el)(t, p);
 
             } else {
-                throw new Error("Unknown draw object. Must be a function or plain object");
+
+                applyProps(el, map, p);
+
             }
 
-            if (t === 1 && typeof cb === "function") {
-                $.proxy(cb, $el[0])();
+            if (typeof onFrame === 'function') {
+                onFrame.apply(el, [t, p]);
             }
+
             if (t < 1) {
-                $el.origin("animation", requestAnimationFrame(animate));
+                Animation.elements[animationID].id = requestAnimationFrame(animate);
             }
-        }));
-        return this;
-    },
 
-    stop: function(el, done){
-        $(el).origin("animation-stop", done === true ? 2 : 1);
+            if (parseInt(t) === 1) {
+                if (loop) {
+                    if (dir === "alternate") {
+                        direction = direction === "normal" ? "reverse" : "normal";
+                    }
+
+                    if (typeof loop === "boolean") {
+                        setTimeout(function () {
+                            play();
+                        }, pause);
+                    } else {
+                        if (loop > Animation.elements[animationID].loop) {
+                            setTimeout(function () {
+                                play();
+                            }, pause);
+                        } else {
+                            done();
+                        }
+                    }
+                } else {
+                    if (dir === "alternate" && !replay) {
+                        direction = direction === "normal" ? "reverse" : "normal";
+                        replay = true;
+                        play();
+                    } else {
+                        done();
+                    }
+                }
+            }
+        };
+        if (defer > 0) {
+            setTimeout(function() {
+                play();
+            }, defer);
+        } else {
+            play();
+        }
+    });
+}
+
+function stop(id, done){
+    if (not(done)) {
+        done = true;
     }
-});
+    Animation.elements[id].stop = done === true ? 2 : 1;
+}
+
+function chain(arr, loop){
+    if (not(loop)) loop = false;
+    if (!Array.isArray(arr)) {
+        console.warn("Chain array is not defined!");
+        return false;
+    }
+
+    var reducer = function(acc, item){
+        return acc.then(function(){
+            return animate(item)
+        });
+    }
+
+    arr.reduce(reducer, Promise.resolve()).then(function(){
+        if (loop) {
+            if (typeof loop === "boolean") {
+                chain(arr, loop);
+            } else {
+                loop--;
+                chain(arr, loop);
+            }
+        }
+    });
+}
+
+$.easing = {};
+
+$.extend($.easing, Easing);
+
+$.extend({
+    animate: animate,
+    stop: stop,
+    chain: chain
+})
 
 $.fn.extend({
-    animate: function (draw, dur, timing, cb) {
+    /**
+     *
+
+     args = {
+         draw: {} | function,
+         dur: 1000,
+         ease: "linear",
+         loop: 0,
+         pause: 0,
+         dir: "normal",
+         defer: 0,
+         onFrame: function,
+         onDone: function
+     }
+
+     * @returns {this}
+     */
+    animate: function(args){
+        var that = this;
+        if (Array.isArray(args)) {
+            $.each(args, function(){
+                var a = this;
+                that.each(function(){
+                    a['el'] = this;
+                    $.animate(a);
+                })
+            })
+            return this;
+        }
+
+        var a = args;
         return this.each(function(){
-            return $.animate(this, draw, dur, timing, cb);
+            a['el'] = this;
+            $.animate(a);
         })
     },
 
-    stop: function(done){
+    chain: function(arr, loop){
         return this.each(function(){
-            return $.stop(this, done);
+            var el = this;
+            $.each(arr, function(){
+                this['el'] = el;
+            });
+            $.chain(arr, loop);
         })
+    },
+
+    /**
+     *
+     * @param done
+     * @returns {this}
+     */
+    stop: function(done){
+        var elements = Animation.elements;
+        return this.each(function(){
+            var el = this;
+            $.each(elements, function(k, o){
+                if (o['element'] === el) {
+                    stop(k, done);
+                }
+            })
+        });
     }
-});
+})
 
-
+// Переделать effects
 
 // Source: src/visibility.js
 
@@ -3366,175 +3679,305 @@ $.fn.extend({
 
 // Source: src/effects.js
 
+var DEFAULT_DURATION = 1000;
+var DEFAULT_EASING = "linear";
+
 $.extend({
     fx: {
         off: false
-    },
-
-    fadeIn: function(el, dur, easing, cb) {
-        var $el = $(el);
-
-        if (!isVisible($el[0]) || (isVisible($el[0]) && parseInt($el.style('opacity')) === 0)) {
-
-            if (not(dur) && not(easing) && not(cb)) {
-                cb = null;
-                dur = 1000;
-            } else if (typeof dur === "function") {
-                cb = dur;
-                dur = 1000;
-            }
-
-            if (typeof easing === "function") {
-                cb = easing;
-                easing = "linear";
-            }
-
-            var originDisplay = $(el).origin("display", undefined, 'block');
-
-            el.style.opacity = "0";
-            el.style.display = originDisplay;
-
-            return this.animate(el, {
-                opacity: 1
-            }, dur, easing, function () {
-                this.style.removeProperty('opacity');
-
-                if (typeof cb === 'function') {
-                    $.proxy(cb, this)();
-                }
-            });
-        }
-
-        return this;
-    },
-
-    fadeOut: function(el, dur, easing, cb){
-        var $el = $(el);
-
-        if ( !isVisible($el[0]) ) return ;
-
-        if (not(dur) && not(easing) && not(cb)) {
-            cb = null;
-            dur = 1000;
-        } else
-        if (typeof dur === "function") {
-            cb = dur;
-            dur = 1000;
-        }
-        if (typeof easing === "function") {
-            cb = easing;
-            easing = "linear";
-        }
-
-        $el.origin("display", $(el).style('display'));
-
-        return this.animate(el, {
-            opacity: 0
-        }, dur, easing, function(){
-            this.style.display = 'none';
-            this.style.removeProperty('opacity');
-
-            if (typeof cb === 'function') {
-                $.proxy(cb, this)();
-            }
-        });
-    },
-
-    slideDown: function(el, dur, easing, cb) {
-        var $el = $(el);
-        var targetHeight, originDisplay;
-
-        if (!isNaN($el.height()) && $el.height() !== 0) return ;
-
-        if (not(dur) && not(easing) && not(cb)) {
-            cb = null;
-            dur = 100;
-        } else
-        if (typeof dur === "function") {
-            cb = dur;
-            dur = 100;
-        }
-        if (typeof easing === "function") {
-            cb = easing;
-            easing = "linear";
-        }
-
-        $el.show().visible(false);
-        targetHeight = $el.origin("height", undefined, $el.height());
-        originDisplay = $el.origin("display", $(el).style('display'), "block");
-        $el.height(0).visible(true);
-
-        $el.css({
-            overflow: "hidden",
-            display: originDisplay === "none" ? "block" : originDisplay
-        });
-
-        return this.animate(el, function(t, p){
-            el.style.height = (targetHeight * p) + "px";
-            if (t === 1) {
-                $(el).removeStyleProperty("overflow, height, visibility");
-            }
-        }, dur, easing, cb);
-    },
-
-    slideUp: function(el, dur, easing, cb) {
-        var $el = $(el);
-        var currHeight;
-
-        if ($el.height() === 0) return ;
-
-        if (not(dur) && not(easing) && not(cb)) {
-            cb = null;
-            dur = 100;
-        } else
-        if (typeof dur === "function") {
-            cb = dur;
-            dur = 100;
-        }
-        if (typeof easing === "function") {
-            cb = easing;
-            easing = "linear";
-        }
-
-        currHeight = $el.height();
-        $el.origin("height", currHeight);
-        $el.origin("display", $(el).style('display'));
-
-        $el.css({
-            overflow: "hidden"
-        });
-
-        return this.animate(el, function(t, p){
-            el.style.height = (1 - p) * currHeight + 'px';
-            if (t === 1) {
-                $el.hide().removeStyleProperty("overflow, height");
-            }
-        }, dur, easing, cb);
     }
 });
 
 $.fn.extend({
     fadeIn: function(dur, easing, cb){
         return this.each(function(){
-            $.fadeIn(this, dur, easing, cb);
+            var el = this;
+            var $el = $(el);
+            var visible = !(!isVisible(el) || (isVisible(el) && +($el.style('opacity')) === 0));
+
+            if (visible) {
+                return this;
+            }
+
+            if (not(dur) && not(easing) && not(cb)) {
+                cb = null;
+                dur = DEFAULT_DURATION;
+            } else if (typeof dur === "function") {
+                cb = dur;
+                dur = DEFAULT_DURATION;
+            }
+
+            if (typeof easing === "function") {
+                cb = easing;
+                easing = DEFAULT_EASING;
+            }
+
+            if ($.fx.off) {
+                dur = 0;
+            }
+
+            var originDisplay = $el.origin("display", undefined, 'block');
+
+            el.style.opacity = "0";
+            el.style.display = originDisplay;
+
+            return $.animate({
+                el: el,
+                draw: {
+                    opacity: 1
+                },
+                dur: dur,
+                ease: easing,
+                onDone: function(){
+                    if (typeof cb === 'function') {
+                        $.proxy(cb, this)();
+                    }
+                }
+            })
         })
     },
 
     fadeOut: function(dur, easing, cb){
         return this.each(function(){
-            $.fadeOut(this, dur, easing, cb);
+            var el = this;
+            var $el = $(el);
+
+            if ( !isVisible(el) ) return ;
+
+            if (not(dur) && not(easing) && not(cb)) {
+                cb = null;
+                dur = DEFAULT_DURATION;
+            } else
+            if (typeof dur === "function") {
+                cb = dur;
+                dur = DEFAULT_DURATION;
+            }
+            if (typeof easing === "function") {
+                cb = easing;
+                easing = DEFAULT_EASING;
+            }
+
+            $el.origin("display", $el.style('display'));
+
+            return $.animate({
+                el: el,
+                draw: {
+                    opacity: 0
+                },
+                dur: dur,
+                ease: easing,
+                onDone: function(){
+                    this.style.display = 'none';
+
+                    if (typeof cb === 'function') {
+                        $.proxy(cb, this)();
+                    }
+                }
+            })
         })
     },
 
     slideUp: function(dur, easing, cb){
         return this.each(function(){
-            $.slideUp(this, dur, easing, cb);
+            var el = this;
+            var $el = $(el);
+            var currHeight;
+
+            if ($el.height() === 0) return ;
+
+            if (not(dur) && not(easing) && not(cb)) {
+                cb = null;
+                dur = DEFAULT_DURATION;
+            } else
+            if (typeof dur === "function") {
+                cb = dur;
+                dur = DEFAULT_DURATION;
+            }
+            if (typeof easing === "function") {
+                cb = easing;
+                easing = DEFAULT_EASING;
+            }
+
+            currHeight = $el.height();
+            $el.origin("height", currHeight);
+            $el.origin("display", $(el).style('display'));
+
+            $el.css({
+                overflow: "hidden"
+            });
+
+            return $.animate({
+                el: el,
+                draw: {
+                    height: 0
+                },
+                dur: dur,
+                ease: easing,
+                onDone: function(){
+                    $el.hide().removeStyleProperty("overflow, height");
+                    if (typeof cb === 'function') {
+                        $.proxy(cb, this)();
+                    }
+                }
+            })
         })
     },
 
     slideDown: function(dur, easing, cb){
         return this.each(function(){
-            $.slideDown(this, dur, easing, cb);
+            var el = this;
+            var $el = $(el);
+            var targetHeight, originDisplay;
+
+            if (not(dur) && not(easing) && not(cb)) {
+                cb = null;
+                dur = DEFAULT_DURATION;
+            } else
+            if (typeof dur === "function") {
+                cb = dur;
+                dur = DEFAULT_DURATION;
+            }
+            if (typeof easing === "function") {
+                cb = easing;
+                easing = DEFAULT_EASING;
+            }
+
+            $el.show().visible(false);
+            targetHeight = +$el.origin("height", undefined, $el.height());
+            if (parseInt(targetHeight) === 0) {
+                targetHeight = el.scrollHeight;
+            }
+            originDisplay = $el.origin("display", $el.style('display'), "block");
+            $el.height(0).visible(true);
+
+            $el.css({
+                overflow: "hidden",
+                display: originDisplay === "none" ? "block" : originDisplay
+            });
+
+            return $.animate({
+                el: el,
+                draw: {
+                    height: targetHeight
+                },
+                dur: dur,
+                ease: easing,
+                onDone: function(){
+                    $(el).removeStyleProperty("overflow, height, visibility");
+                    if (typeof cb === 'function') {
+                        $.proxy(cb, this)();
+                    }
+                }
+            })
+        })
+    },
+
+    moveTo: function(x, y, dur, easing, cb){
+        var draw = {
+            top: y,
+            left: x
+        }
+
+        if (typeof dur === "function") {
+            cb = dur;
+            dur = DEFAULT_DURATION;
+            easing = DEFAULT_EASING;
+        }
+
+        if (typeof easing === "function") {
+            cb = easing;
+            easing = DEFAULT_EASING;
+        }
+
+        return this.each(function(){
+            $.animate({
+                el: this,
+                draw: draw,
+                dur: dur,
+                ease: easing,
+                onDone: cb
+            })
+        })
+    },
+
+    centerTo: function(x, y, dur, easing, cb){
+        if (typeof dur === "function") {
+            cb = dur;
+            dur = DEFAULT_DURATION;
+            easing = DEFAULT_EASING;
+        }
+
+        if (typeof easing === "function") {
+            cb = easing;
+            easing = DEFAULT_EASING;
+        }
+
+        return this.each(function(){
+            var draw = {
+                left: x - this.clientWidth / 2,
+                top: y - this.clientHeight / 2
+            };
+            $.animate({
+                el: this,
+                draw: draw,
+                dur: dur,
+                ease: easing,
+                onDone: cb
+            })
+        })
+    },
+
+    colorTo: function(color, dur, easing, cb){
+        var draw = {
+            color: color
+        }
+
+        if (typeof dur === "function") {
+            cb = dur;
+            dur = DEFAULT_DURATION;
+            easing = DEFAULT_EASING;
+        }
+
+        if (typeof easing === "function") {
+            cb = easing;
+            easing = DEFAULT_EASING;
+        }
+
+        return this.each(function(){
+            $.animate({
+                el: this,
+                draw: draw,
+                dur: dur,
+                ease: easing,
+                onDone: cb
+            })
+        })
+    },
+
+    backgroundTo: function(color, dur, easing, cb){
+        var draw = {
+            backgroundColor: color
+        }
+
+        if (typeof dur === "function") {
+            cb = dur;
+            dur = DEFAULT_DURATION;
+            easing = DEFAULT_EASING;
+        }
+
+        if (typeof easing === "function") {
+            cb = easing;
+            easing = DEFAULT_EASING;
+        }
+
+        return this.each(function(){
+            $.animate({
+                el: this,
+                draw: draw,
+                dur: dur,
+                ease: easing,
+                onDone: cb
+            })
         })
     }
 });
@@ -3779,9 +4222,9 @@ var normalizeComponentName = function(name){
 
 var Metro = {
 
-    version: "4.3.6",
-    compileTime: "15/03/2020 11:45:22",
-    buildNumber: "744",
+    version: "4.3.7",
+    compileTime: "20/04/2020 12:58:02",
+    buildNumber: "745",
     isTouchable: isTouch,
     fullScreenEnabled: document.fullscreenEnabled,
     sheet: null,
@@ -4060,10 +4503,14 @@ var Metro = {
             $(".m4-cloak").removeClass("m4-cloak");
         } else {
             $(".m4-cloak").animate({
-                opacity: 1
-            }, METRO_CLOAK_DURATION, function(){
-                $(".m4-cloak").removeClass("m4-cloak");
-            })
+                draw: {
+                    opacity: 1
+                },
+                dur: 300,
+                onDone: function(){
+                    $(".m4-cloak").removeClass("m4-cloak");
+                }
+            });
         }
     },
 
@@ -4210,7 +4657,7 @@ var Metro = {
 
     checkRuntime: function(el, name){
         var element = $(el);
-        var _name = name.replace(/\-/g, "");
+        var _name = normalizeComponentName(name);
         if (!element.attr("data-role-"+_name)) {
             Metro.makeRuntime(element, _name);
         }
@@ -4290,92 +4737,151 @@ var Animation = {
         var h = current.parent().outerHeight(true);
         if (duration === undefined) {duration = this.duration;}
         if (func === undefined) {func = this.func;}
-        current.css("z-index", 1).animate({
-            top: -h,
-            opacity: 0
-        }, duration, func);
 
-        next.css({
-            top: h,
-            left: 0,
-            zIndex: 2
-        }).animate({
-            top: 0,
-            opacity: 1
-        }, duration, func);
+        current
+            .css("z-index", 1)
+            .animate({
+                draw: {
+                    top: -h,
+                    opacity: 0
+                },
+                dur: duration,
+                ease: func
+            });
+
+        next
+            .css({
+                top: h,
+                left: 0,
+                zIndex: 2
+            })
+            .animate({
+                draw: {
+                    top: 0,
+                    opacity: 1
+                },
+                dur: duration,
+                ease: func
+            });
     },
 
     slideDown: function(current, next, duration, func){
         var h = current.parent().outerHeight(true);
         if (duration === undefined) {duration = this.duration;}
         if (func === undefined) {func = this.func;}
-        current.css("z-index", 1).animate({
-            top: h,
-            opacity: 0
-        }, duration, func);
 
-        next.css({
-            left: 0,
-            top: -h,
-            zIndex: 2
-        }).animate({
-            top: 0,
-            opacity: 1
-        }, duration, func);
+        current
+            .css("z-index", 1)
+            .animate({
+                draw: {
+                    top: h,
+                    opacity: 0
+                },
+                dur: duration,
+                ease: func
+            });
+
+        next
+            .css({
+                left: 0,
+                top: -h,
+                zIndex: 2
+            })
+            .animate({
+                draw: {
+                    top: 0,
+                    opacity: 1
+                },
+                dur: duration,
+                ease: func
+            });
     },
 
     slideLeft: function(current, next, duration, func){
         var w = current.parent().outerWidth(true);
         if (duration === undefined) {duration = this.duration;}
         if (func === undefined) {func = this.func;}
-        current.css("z-index", 1).animate({
-            left: -w,
-            opacity: 0
-        }, duration, func);
+        current
+            .css("z-index", 1)
+            .animate({
+                draw: {
+                    left: -w,
+                    opacity: 0
+                },
+                dur: duration,
+                ease: func
+            });
 
-        next.css({
-            left: w,
-            zIndex: 2
-        }).animate({
-            left: 0,
-            opacity: 1
-        }, duration, func);
+        next
+            .css({
+                left: w,
+                zIndex: 2
+            })
+            .animate({
+                draw: {
+                    left: 0,
+                    opacity: 1
+                },
+                dur: duration,
+                ease: func
+            });
     },
 
     slideRight: function(current, next, duration, func){
         var w = current.parent().outerWidth(true);
         if (duration === undefined) {duration = this.duration;}
         if (func === undefined) {func = this.func;}
-        current.css("z-index", 1).animate({
-            left: w,
-            opacity: 0
-        }, duration, func);
 
-        next.css({
-            left: -w,
-            zIndex: 2
-        }).animate({
-            left: 0,
-            opacity: 1
-        }, duration, func);
+        current
+            .css("z-index", 1)
+            .animate({
+                draw: {
+                    left:  w,
+                    opacity: 0
+                },
+                dur: duration,
+                ease: func
+            });
+
+        next
+            .css({
+                left: -w,
+                zIndex: 2
+            })
+            .animate({
+                draw: {
+                    left: 0,
+                    opacity: 1
+                },
+                dur: duration,
+                ease: func
+            });
     },
 
     fade: function(current, next, duration){
         if (duration === undefined) {duration = this.duration;}
 
-        current.animate({
-            opacity: 0
-        }, duration);
+        current
+            .animate({
+                draw: {
+                    opacity: 0
+                },
+                dur: duration
+            });
 
-        next.css({
-            top: 0,
-            left: 0,
-            opacity: 0
-        }).animate({
-            opacity: 1
-        }, duration);
+        next
+            .css({
+                top: 0,
+                left: 0,
+                opacity: 0
+            })
+            .animate({
+                draw: {
+                    opacity: 1
+                },
+                dur: duration
+            });
     }
-
 };
 
 Metro['animation'] = Animation;
@@ -6499,7 +7005,7 @@ var Utils = {
     },
 
     isFloat: function(n){
-        return !isNaN(n) && +n % 1 !== 0;
+        return (!isNaN(n) && +n % 1 !== 0) || /^\d*\.\d+$/.test(n);
     },
 
     isTouchDevice: function() {
@@ -6932,6 +7438,11 @@ var Utils = {
         }
     },
 
+    /**
+     *
+     * @param {TouchEvent|Event|MouseEvent} e
+     * @returns {{x: (*), y: (*)}}
+     */
     clientXY: function(e){
         return {
             x: e.changedTouches ? e.changedTouches[0].clientX : e.clientX,
@@ -6939,6 +7450,11 @@ var Utils = {
         };
     },
 
+    /**
+     *
+     * @param {TouchEvent|Event|MouseEvent} e
+     * @returns {{x: (*), y: (*)}}
+     */
     screenXY: function(e){
         return {
             x: e.changedTouches ? e.changedTouches[0].screenX : e.screenX,
@@ -6946,6 +7462,11 @@ var Utils = {
         };
     },
 
+    /**
+     *
+     * @param {TouchEvent|Event|MouseEvent} e
+     * @returns {{x: (*), y: (*)}}
+     */
     pageXY: function(e){
         return {
             x: e.changedTouches ? e.changedTouches[0].pageX : e.pageX,
@@ -7914,6 +8435,135 @@ var AppBar = {
 
 Metro.plugin('appbar', AppBar);
 
+var AudioButtonDefaultConfig = {
+    audioSrc: "",
+    onAudioStart: Metro.noop,
+    onAudioEnd: Metro.noop,
+    onAudioButtonCreate: Metro.noop
+};
+
+Metro.audioButtonSetup = function (options) {
+    AudioButtonDefaultConfig = $.extend({}, AudioButtonDefaultConfig, options);
+};
+
+if (typeof window["metroAudioButtonSetup"] !== undefined) {
+    Metro.audioButtonSetup(window["metroAudioButtonSetup"]);
+}
+
+var AudioButton = {
+    init: function( options, elem ) {
+        this.options = $.extend( {}, AudioButtonDefaultConfig, options );
+        this.elem  = elem;
+        this.element = $(elem);
+        this.audio = null;
+        this.canPlay = false;
+        this.id = Utils.elementId("audioButton")
+
+        this._setOptionsFromDOM();
+        this._create();
+
+        return this;
+    },
+
+    _setOptionsFromDOM: function(){
+        var element = this.element, o = this.options;
+
+        $.each(element.data(), function(key, value){
+            if (key in o) {
+                try {
+                    o[key] = JSON.parse(value);
+                } catch (e) {
+                    o[key] = value;
+                }
+            }
+        });
+    },
+
+    _create: function(){
+        var element = this.element, o = this.options;
+
+        Metro.checkRuntime(element, "audio-button");
+
+        this._createStructure();
+        this._createEvents();
+
+        Utils.exec(o.onAudioButtonCreate, null, element[0]);
+        element.fire('audiobuttoncreate');
+    },
+
+    _createStructure: function(){
+        var o = this.options;
+        this.audio = new Audio(o.audioSrc);
+    },
+
+    _createEvents: function(){
+        var that = this, element = this.element, o = this.options;
+        var audio = this.audio;
+
+        audio.addEventListener('loadeddata', function(){
+            that.canPlay = true;
+        });
+
+        audio.addEventListener('ended', function(){
+            Utils.exec(o.onAudioEnd, [o.audioSrc, audio], element[0]);
+            element.fire("audioend", {
+                src: o.audioSrc,
+                audio: audio
+            });
+        })
+
+        element.on(Metro.events.click, function(){
+            if (o.audioSrc !== "" && that.audio.duration && that.canPlay) {
+                Utils.exec(o.onAudioStart, [o.audioSrc, audio], element[0]);
+                element.fire("audiostart", {
+                    src: o.audioSrc,
+                    audio: audio
+                });
+                audio.pause();
+                audio.currentTime = 0;
+                audio.play();
+            }
+        }, {ns: this.id});
+    },
+
+    changeAttribute: function(attributeName){
+        var element = this.element, o = this.options;
+        var audio = this.audio;
+
+        var changeSrc = function(){
+            var src = element.attr('data-audio-src');
+            if (src && src.trim() !== "") {
+                o.audioSrc = src;
+                audio.src = src;
+            }
+        }
+
+        if (attributeName === 'data-audio-src') {
+            changeSrc();
+        }
+    },
+
+    destroy: function(){
+        var element = this.element;
+
+        element.off(Metro.events.click, {ns: this.id});
+    }
+};
+
+Metro.plugin('audio-button', AudioButton);
+
+Metro["playSound"] = function(src, cb){
+    var audio = new Audio(src);
+
+    audio.addEventListener('loadeddata', function(){
+        audio.play();
+    });
+
+    audio.addEventListener('ended', function(){
+        Utils.exec(cb, [src], null);
+    })
+}
+
 var AudioDefaultConfig = {
     audioDeferred: 0,
     playlist: null,
@@ -7978,7 +8628,7 @@ if (typeof window["metroAudioSetup"] !== undefined) {
     Metro.audioSetup(window["metroAudioSetup"]);
 }
 
-var Audio = {
+var AudioPlayer = {
     name: "Audio",
 
     init: function( options, elem ) {
@@ -8371,14 +9021,14 @@ var Audio = {
         element.off("all");
         player.off("all");
 
-        Metro.getPlugin(this.stream[0], "slider").destroy();
-        Metro.getPlugin(this.volume[0], "slider").destroy();
+        Metro.getPlugin(this.stream, "slider").destroy();
+        Metro.getPlugin(this.volume, "slider").destroy();
 
         return element;
     }
 };
 
-Metro.plugin('audio', Audio);
+Metro.plugin('audio', AudioPlayer);
 
 var BottomSheetDefaultConfig = {
     bottomsheetDeferred: 0,
@@ -9134,8 +9784,11 @@ var Calendar = {
 
             setTimeout(function(){
                 list.animate({
-                    scrollTop: target.position().top - ( (list.height() - target.height() )/ 2)
-                }, 200);
+                    draw: {
+                        scrollTop: target.position().top - ( (list.height() - target.height() )/ 2)
+                    },
+                    dur: 200
+                })
             }, 300);
 
             e.preventDefault();
@@ -9166,8 +9819,11 @@ var Calendar = {
 
             setTimeout(function(){
                 list.animate({
-                    scrollTop: target.position().top - ( (list.height() - target.height() )/ 2)
-                }, 200);
+                    draw: {
+                        scrollTop: target.position().top - ( (list.height() - target.height() )/ 2)
+                    },
+                    dur: 200
+                })
             }, 300);
 
             e.preventDefault();
@@ -11102,8 +11758,11 @@ var Chat = {
         });
 
         messages.animate({
-            scrollTop: messages[0].scrollHeight
-        }, 1000);
+            draw: {
+                scrollTop: messages[0].scrollHeight
+            },
+            dur: 1000
+        });
 
         this.lastMessage = msg;
 
@@ -11664,7 +12323,7 @@ var CountdownDefaultConfig = {
     countdownDeferred: 0,
     stopOnBlur: true,
     animate: "none",
-    animationFunc: "line",
+    animationFunc: "linear",
     inputFormat: null,
     locale: METRO_LOCALE,
     days: 0,
@@ -11962,79 +12621,107 @@ var Countdown = {
         var slideDigit = function(digit){
             var digit_copy, height = digit.height();
 
-            digit.siblings(".-old-digit").remove();
+            digit.siblings("-old-digit").remove();
             digit_copy = digit.clone().appendTo(digit.parent());
             digit_copy.css({
                 top: -1 * height + 'px'
             });
 
-            digit.addClass("-old-digit").animate(function(t, p){
-                $(this).css({
-                    top: (height * p) + 'px',
-                    opacity: 1 - p
+            digit
+                .addClass("-old-digit")
+                .animate({
+                    draw: {
+                        top: height,
+                        opacity: 0
+                    },
+                    dur: duration,
+                    ease: o.animationFunc,
+                    onDone: function(){
+                        $(this).remove();
+                    }
                 });
-            }, duration, o.animationFunc, function(){
-                $(this).remove();
-            });
 
-            digit_copy.html(digit_value).animate(function(t, p){
-                $(this).css({
-                    top: (-height + (height * p)) + 'px',
-                    opacity: p
-                })
-            }, duration, o.animationFunc);
+            digit_copy
+                .html(digit_value)
+                .animate({
+                    draw: {
+                        top: 0,
+                        opacity: 1
+                    },
+                    dur: duration,
+                    ease: o.animationFunc
+                });
         };
 
         var fadeDigit = function(digit){
             var digit_copy;
-            digit.siblings(".-old-digit").remove();
+            digit.siblings("-old-digit").remove();
             digit_copy = digit.clone().appendTo(digit.parent());
             digit_copy.css({
                 opacity: 0
             });
 
-            digit.addClass("-old-digit").animate(function(t, p){
-                $(this).css({
-                    opacity: 1 - p
+            digit
+                .addClass("-old-digit")
+                .animate({
+                    draw: {
+                        opacity: 0
+                    },
+                    dur: duration / 2,
+                    ease: o.animationFunc,
+                    onDone: function(){
+                        $(this).remove();
+                    }
                 });
-            }, duration / 2, o.animationFunc, function(){
-                $(this).remove();
-            });
 
-            digit_copy.html(digit_value).animate(function(t, p){
-                $(this).css({
-                    opacity: p
-                })
-            }, duration, o.animationFunc);
+            digit_copy
+                .html(digit_value)
+                .animate({
+                    draw: {
+                        opacity: 1
+                    },
+                    dur: duration,
+                    ease: o.animationFunc
+                });
         };
 
         var zoomDigit = function(digit){
             var digit_copy, height = digit.height(), fs = parseInt(digit.style("font-size"));
 
-            digit.siblings(".-old-digit").remove();
+            digit.siblings("-old-digit").remove();
             digit_copy = digit.clone().appendTo(digit.parent());
             digit_copy.css({
                 top: 0,
-                left: 0
+                left: 0,
+                opacity: 1
             });
 
-            digit.addClass("-old-digit").animate(function(t, p){
-                $(this).css({
-                    top: (height * p) + 'px',
-                    opacity: 1 - p,
-                    fontSize: fs * (1 - p) + 'px'
+            digit
+                .addClass("-old-digit")
+                .animate({
+                    draw: {
+                        top: height,
+                        opacity: 0,
+                        fontSize: 0
+                    },
+                    dur: duration,
+                    ease: o.animationFunc,
+                    onDone: function(){
+                        $(this).remove();
+                    }
                 });
-            }, duration, o.animationFunc, function(){
-                $(this).remove();
-            });
 
-            digit_copy.html(digit_value).animate(function(t, p){
-                $(this).css({
-                    top: (-height + (height * p)) + 'px',
-                    opacity: p,
-                    fontSize: fs * p + 'px'
-                })
-            }, duration, o.animationFunc);
+            digit_copy
+                .html(digit_value)
+                .animate({
+                    draw: {
+                        top: 0,
+                        opacity: 1,
+                        fontSize: [0, fs]
+                    },
+                    dur: duration,
+                    ease: o.animationFunc
+                });
         };
 
         value = ""+value;
@@ -12276,6 +12963,14 @@ var Counter = {
         }
 
         if (o.startOnViewport === true) {
+
+            if (Utils.inViewport(element[0]) && !that.started) {
+                that.started = true;
+                setTimeout(function () {
+                    that.start();
+                }, o.timeout);
+            }
+
             $.window().on("scroll", function(e){
                 if (Utils.inViewport(element[0]) && !that.started) {
                     that.started = true;
@@ -13198,21 +13893,36 @@ var DatePicker = {
 
         if (o.month === true) {
             m_list = picker.find(".sel-month");
-            m_list.scrollTop(0).animate({
-                scrollTop: m_list.find("li.js-month-" + m).addClass("active").position().top - (40 * o.distance)
-            }, 100);
+            m_list
+                .scrollTop(0)
+                .animate({
+                    draw: {
+                        scrollTop: m_list.find("li.js-month-" + m).addClass("active").position().top - (40 * o.distance)
+                    },
+                    dur: 100
+                });
         }
         if (o.day === true) {
             d_list = picker.find(".sel-day");
-            d_list.scrollTop(0).animate({
-                scrollTop: d_list.find("li.js-day-" + d).addClass("active").position().top - (40 * o.distance)
-            }, 100);
+            d_list
+                .scrollTop(0)
+                .animate({
+                    draw: {
+                        scrollTop: d_list.find("li.js-day-" + d).addClass("active").position().top - (40 * o.distance)
+                    },
+                    dur: 100
+                });
         }
         if (o.year === true) {
             y_list = picker.find(".sel-year");
-            y_list.scrollTop(0).animate({
-                scrollTop: y_list.find("li.js-year-real-" + y).addClass("active").position().top - (40 * o.distance)
-            }, 100);
+            y_list
+                .scrollTop(0)
+                .animate({
+                    draw: {
+                        scrollTop: y_list.find("li.js-year-real-" + y).addClass("active").position().top - (40 * o.distance)
+                    },
+                    dur: 100
+                });
         }
 
         this.isOpen = true;
@@ -13849,9 +14559,8 @@ var Donut = {
         var title = element.find(".donut-title");
         var r = o.radius  * (1 - (1 - o.hole) / 2);
         var circumference = 2 * Math.PI * r;
-        // var title_value = (o.showValue ? o.value : Math.round(((v * 1000 / o.total) / 10)))+(o.cap);
         var title_value = (o.showValue ? v : Utils.percent(o.total, v, true))  + (o.cap);
-        var fill_value = ((v * circumference) / o.total) + ' ' + circumference;
+        var fill_value = ((+v * circumference) / o.total) + ' ' + circumference;
 
         fill.attr("stroke-dasharray", fill_value);
         title.html(title_value);
@@ -13892,7 +14601,7 @@ var Donut = {
         }
 
         this.value = v;
-        //element.attr("data-value", v);
+
         Utils.exec(o.onChange, [this.value], element[0]);
         element.fire("change", {
             value: this.value
@@ -15634,6 +16343,7 @@ var ImageMagnifier = {
         this.elem  = elem;
         this.element = $(elem);
         this.zoomElement = null;
+        this.id = Utils.elementId("magnifier");
 
         this._setOptionsFromDOM();
         Metro.createExec(this);
@@ -15758,6 +16468,18 @@ var ImageMagnifier = {
         var zoomElement = this.zoomElement;
         var cx, cy;
 
+        $(window).on(Metro.events.resize, function(){
+            var x = element.width() / 2 - o.lensSize / 2;
+            var y = element.height() / 2 - o.lensSize / 2;
+
+            if (o.magnifierMode === "glass") {
+                glass.css({
+                    backgroundPosition: "-" + ((x * o.magnifierZoom) - o.lensSize / 4 + 4) + "px -" + ((y * o.magnifierZoom) - o.lensSize / 4 + 4) + "px",
+                    backgroundSize: (image.width * o.magnifierZoom) + "px " + (image.height * o.magnifierZoom) + "px"
+                });
+            }
+        }, {ns: this.id})
+
         if (o.magnifierMode !== "glass") {
             cx = zoomElement[0].offsetWidth / glass_size / 2;
             cy = zoomElement[0].offsetHeight / glass_size / 2;
@@ -15835,7 +16557,10 @@ var ImageMagnifier = {
             var y = element.height() / 2 - o.lensSize / 2;
 
             glass.animate({
-                top: y, left: x
+                draw: {
+                    top: y,
+                    left: x
+                }
             });
 
             lens_move({
@@ -18822,7 +19547,9 @@ var Master = {
 
         setTimeout(function(){
             pages.animate({
-                height: next.outerHeight(true) + 2
+                draw: {
+                    height: next.outerHeight(true) + 2
+                }
             });
         },0);
 
@@ -18843,19 +19570,35 @@ var Master = {
         }
 
         function _slide(){
-            current.stop(true).animate({
-                left: to === "next" ? -out : out
-            }, o.duration, o.effectFunc, function(){
-                current.hide(0);
-            });
+            current
+                .stop(true)
+                .animate({
+                    draw: {
+                        left: to === "next" ? -out : out
+                    },
+                    dur: o.duration,
+                    ease: o.effectFunc,
+                    onDone: function(){
+                        current.hide(0);
+                    }
+                });
 
-            next.stop(true).css({
-                left: to === "next" ? out : -out
-            }).show(0).animate({
-                left: 0
-            }, o.duration, o.effectFunc, function(){
-                finish();
-            });
+            next
+                .stop(true)
+                .css({
+                    left: to === "next" ? out : -out
+                })
+                .show(0)
+                .animate({
+                    draw: {
+                        left: 0
+                    },
+                    dur: o.duration,
+                    ease: o.effectFunc,
+                    onDone: function(){
+                        finish();
+                    }
+                });
         }
 
         function _switch(){
@@ -19180,7 +19923,7 @@ var NotifyDefaultConfig = {
     width: 220,
     timeout: METRO_TIMEOUT,
     duration: METRO_ANIMATION_DURATION,
-    distance: "100vh",
+    distance: "max",
     animation: "linear",
     onClick: Metro.noop,
     onClose: Metro.noop,
@@ -19227,7 +19970,7 @@ var Notify = {
             width: 220,
             timeout: METRO_TIMEOUT,
             duration: METRO_ANIMATION_DURATION,
-            distance: "100vh",
+            distance: "max",
             animation: "linear"
         };
         this.options = $.extend({}, NotifyDefaultConfig, reset_options);
@@ -19295,29 +20038,37 @@ var Notify = {
 
             Utils.exec(Utils.isValue(options.onAppend) ? options.onAppend : o.onAppend, null, notify[0]);
 
-            notify.css({
-                marginTop: Utils.isValue(options.distance) ? options.distance : o.distance
-            }).fadeIn(100, function(){
-                var duration = Utils.isValue(options.duration) ? options.duration : o.duration;
-                var animation = Utils.isValue(options.animation) ? options.animation : o.animation;
+            var duration = Utils.isValue(options.duration) ? options.duration : o.duration;
+            var animation = Utils.isValue(options.animation) ? options.animation : o.animation;
+            var distance = Utils.isValue(options.distance) ? options.distance : o.distance;
 
-                notify.animate({
-                    marginTop: 4
-                }, duration, animation, function(){
+            if (distance === "max" || isNaN(distance)) {
+                distance = $(window).height();
+            }
 
-                    Utils.exec(o.onNotifyCreate, null, this);
+            notify
+                .show()
+                .animate({
+                    draw: {
+                        marginTop: [distance, 4],
+                        opacity: [0, 1]
+                    },
+                    dur: duration,
+                    ease: animation,
+                    onDone: function(){
+                        Utils.exec(o.onNotifyCreate, null, this);
 
-                    if (options !== undefined && options.keepOpen === true) {
-                    } else {
-                        setTimeout(function(){
-                            that.kill(notify, Utils.isValue(options.onClose) ? options.onClose : o.onClose);
-                        }, o.timeout);
+                        if (options !== undefined && options.keepOpen === true) {
+                        } else {
+                            setTimeout(function(){
+                                that.kill(notify, Utils.isValue(options.onClose) ? options.onClose : o.onClose);
+                            }, o.timeout);
+                        }
+
+                        Utils.exec(Utils.isValue(options.onShow) ? options.onShow : o.onShow, null, notify[0]);
                     }
-
-                    Utils.exec(Utils.isValue(options.onShow) ? options.onShow : o.onShow, null, notify[0]);
-
                 });
-            });
+
         });
     },
 
@@ -21147,6 +21898,62 @@ if (typeof window["metroRippleSetup"] !== undefined) {
     Metro.rippleSetup(window["metroRippleSetup"]);
 }
 
+var getRipple = function(target, color, alpha, event){
+    var el = target ? $(target) : this.element;
+    var timer = null;
+    var rect = el[0].getBoundingClientRect();
+    var x, y;
+
+    if (!Utils.isValue(color)) {
+        color = "#fff";
+    }
+
+    if (!Utils.isValue(alpha)) {
+        alpha = .4;
+    }
+
+    if (el.css('position') === 'static') {
+        el.css('position', 'relative');
+    }
+
+    el.css({
+        overflow: 'hidden'
+    });
+
+    $(".ripple").remove();
+
+    var size = Math.max(el.outerWidth(), el.outerHeight());
+
+    // Add the element
+    var ripple = $("<span class='ripple'></span>").css({
+        width: size,
+        height: size
+    });
+
+    el.prepend(ripple);
+
+    // Get the center of the element
+    if (event) {
+        x = event.pageX - el.offset().left - ripple.width()/2;
+        y = event.pageY - el.offset().top - ripple.height()/2;
+    } else {
+        x = rect.x - el.offset().left;
+        y = rect.y - el.offset().top;
+    }
+
+    ripple.css({
+        background: Utils.hex2rgba(color, alpha),
+        width: size,
+        height: size,
+        top: y + 'px',
+        left: x + 'px'
+    }).addClass("rippleEffect");
+    timer = setTimeout(function(){
+        timer = null;
+        ripple.remove();
+    }, 400);
+};
+
 var Ripple = {
     name: "Ripple",
 
@@ -21176,52 +21983,13 @@ var Ripple = {
     },
 
     _create: function(){
-        var element = this.element, o = this.options;
-
+        var that = this, element = this.element, o = this.options;
         var target = o.rippleTarget === 'default' ? null : o.rippleTarget;
 
         Metro.checkRuntime(element, "ripple");
 
         element.on(Metro.events.click, target, function(e){
-            var el = $(this);
-            var timer = null;
-
-            if (el.css('position') === 'static') {
-                el.css('position', 'relative');
-            }
-
-            el.css({
-                overflow: 'hidden'
-            });
-
-            $(".ripple").remove();
-
-            var size = Math.max(el.outerWidth(), el.outerHeight());
-
-            // Add the element
-            var ripple = $("<span class='ripple'></span>").css({
-                width: size,
-                height: size
-            });
-
-            el.prepend(ripple);
-
-            // Get the center of the element
-            var x = e.pageX - el.offset().left - ripple.width()/2;
-            var y = e.pageY - el.offset().top - ripple.height()/2;
-
-            // Add the ripples CSS and start the animation
-            ripple.css({
-                background: Utils.hex2rgba(o.rippleColor, o.rippleAlpha),
-                width: size,
-                height: size,
-                top: y + 'px',
-                left: x + 'px'
-            }).addClass("rippleEffect");
-            timer = setTimeout(function(){
-                timer = null;
-                $(".ripple").remove();
-            }, 400);
+            getRipple(this, o.rippleColor, o.rippleAlpha, e);
         });
 
         Utils.exec(o.onRippleCreate, null, element[0]);
@@ -21229,7 +21997,28 @@ var Ripple = {
     },
 
     changeAttribute: function(attributeName){
+        var element = this.element, o = this.options;
 
+        function changeColor(){
+            var color = element.attr("data-ripple-color");
+            if (!Utils.isColor(color)) {
+                return;
+            }
+            o.rippleColor = color;
+        }
+
+        function changeAlpha(){
+            var alpha = +element.attr("data-ripple-alpha");
+            if (isNaN(alpha)) {
+                return;
+            }
+            o.rippleColor = alpha;
+        }
+
+        switch (attributeName) {
+            case "data-ripple-color": changeColor(); break;
+            case "data-ripple-alpha": changeAlpha(); break;
+        }
     },
 
     destroy: function(){
@@ -21240,6 +22029,7 @@ var Ripple = {
 };
 
 Metro.plugin('ripple', Ripple);
+Metro.ripple = getRipple;
 
 var SelectDefaultConfig = {
     selectDeferred: 0,
@@ -21506,12 +22296,12 @@ var Select = {
             buttons.addClass("d-none");
         }
 
-        if (o.prepend !== "") {
+        if (o.prepend !== "" && !multiple) {
             var prepend = $("<div>").html(o.prepend);
             prepend.addClass("prepend").addClass(o.clsPrepend).appendTo(container);
         }
 
-        if (o.append !== "") {
+        if (o.append !== "" && !multiple) {
             var append = $("<div>").html(o.append);
             append.addClass("append").addClass(o.clsAppend).appendTo(container);
         }
@@ -22019,7 +22809,13 @@ var Sidebar = {
             element.data("opened", false).removeClass('open');
             if (o.shift !== null) {
                 $.each(o.shift.split(","), function(){
-                    $(""+this).animate({left: 0}, o.duration);
+                    $(this)
+                        .animate({
+                            draw: {
+                                left: 0
+                            },
+                            dur: o.duration
+                        })
                 });
             }
             Utils.exec(o.onStaticSet, null, element[0]);
@@ -22046,9 +22842,13 @@ var Sidebar = {
         element.data("opened", true).addClass('open');
 
         if (o.shift !== null) {
-            $(o.shift).animate({
-                left: element.outerWidth()
-            }, o.duration);
+            $(o.shift)
+                .animate({
+                    draw: {
+                        left: element.outerWidth()
+                    },
+                    dur: o.duration
+                });
         }
 
         Utils.exec(o.onOpen, null, element[0]);
@@ -22065,9 +22865,13 @@ var Sidebar = {
         element.data("opened", false).removeClass('open');
 
         if (o.shift !== null) {
-            $(o.shift).animate({
-                left: 0
-            }, o.duration);
+            $(o.shift)
+                .animate({
+                    draw: {
+                        left: 0
+                    },
+                    dur: o.duration
+                });
         }
 
         Utils.exec(o.onClose, null, element[0]);
@@ -23768,6 +24572,7 @@ var SplitterDefaultConfig = {
     onResizeStart: Metro.noop,
     onResizeStop: Metro.noop,
     onResizeSplit: Metro.noop,
+    onResizeWindow: Metro.noop,
     onSplitterCreate: Metro.noop
 };
 
@@ -23788,6 +24593,7 @@ var Splitter = {
         this.element = $(elem);
         this.storage = Utils.isValue(Metro.storage) ? Metro.storage : null;
         this.storageKey = "SPLITTER:";
+        this.id = Utils.elementId("splitter");
 
         this._setOptionsFromDOM();
         Metro.createExec(this);
@@ -23826,10 +24632,6 @@ var Splitter = {
         var children = element.children(o.children).addClass("split-block");
         var i, children_sizes = [];
         var resizeProp = o.splitMode === "horizontal" ? "width" : "height";
-
-        if (!Utils.isValue(element.attr("id"))) {
-            element.attr("id", Utils.elementId("splitter"));
-        }
 
         element.addClass("splitter");
         if (o.splitMode.toLowerCase() === "vertical") {
@@ -23885,7 +24687,6 @@ var Splitter = {
     _createEvents: function(){
         var that = this, element = this.element, o = this.options;
         var gutters = element.children(".gutter");
-        var id = element.attr("id");
 
         gutters.on(Metro.events.startAll, function(e){
             var w = o.splitMode === "horizontal" ? element.width() : element.height();
@@ -23930,7 +24731,7 @@ var Splitter = {
                     prevBlock: prev_block[0],
                     nextBlock: next_block[0]
                 });
-            }, {ns: id});
+            }, {ns: that.id});
 
             $(window).on(Metro.events.stopAll, function(e){
                 var cur_pos;
@@ -23943,8 +24744,8 @@ var Splitter = {
 
                 gutter.removeClass("active");
 
-                $(window).off(Metro.events.moveAll,{ns: id});
-                $(window).off(Metro.events.stopAll,{ns: id});
+                $(window).off(Metro.events.moveAll,{ns: that.id});
+                $(window).off(Metro.events.stopAll,{ns: that.id});
 
                 cur_pos = Utils.getCursorPosition(element[0], e);
 
@@ -23955,13 +24756,28 @@ var Splitter = {
                     prevBlock: prev_block[0],
                     nextBlock: next_block[0]
                 });
-            }, {ns: id})
+            }, {ns: that.id})
         });
+
+        $(window).on(Metro.events.resize, function(e){
+            var gutter = element.children(".gutter");
+            var prev_block = gutter.prev(".split-block");
+            var next_block = gutter.next(".split-block");
+            // var prev_block_size = 100 * (o.splitMode === "horizontal" ? prev_block.outerWidth(true) : prev_block.outerHeight(true)) / w;
+            // var next_block_size = 100 * (o.splitMode === "horizontal" ? next_block.outerWidth(true) : next_block.outerHeight(true)) / w;
+
+            Utils.exec(o.onResizeWindow, [prev_block[0], next_block[0]], element[0]);
+            element.fire("resizewindow", {
+                prevBlock: prev_block[0],
+                nextBlock: next_block[0]
+            });
+        }, {ns: that.id});
     },
 
     _saveSize: function(){
         var element = this.element, o = this.options;
         var storage = this.storage, itemsSize = [];
+        var id = element.attr("id") || this.id;
 
         if (o.saveState === true && storage !== null) {
 
@@ -23970,7 +24786,7 @@ var Splitter = {
                 itemsSize.push(item.css("flex-basis"));
             });
 
-            storage.setItem(this.storageKey + element.attr("id"), itemsSize);
+            storage.setItem(this.storageKey + id, itemsSize);
         }
 
     },
@@ -23978,10 +24794,11 @@ var Splitter = {
     _getSize: function(){
         var element = this.element, o = this.options;
         var storage = this.storage, itemsSize = [];
+        var id = element.attr("id") || this.id;
 
         if (o.saveState === true && storage !== null) {
 
-            itemsSize = storage.getItem(this.storageKey + element.attr("id"));
+            itemsSize = storage.getItem(this.storageKey + id);
 
             $.each(element.children(".split-block"), function(i, v){
                 var item = $(v);
@@ -24863,9 +25680,14 @@ var Streamer = {
             target = $(element.find(".streamer-timeline .js-time-point-" + time.replace(":", "-"))[0]);
         }
 
-        element.find(".events-area").animate({
-            scrollLeft: target[0].offsetLeft - element.find(".streams .stream").outerWidth()
-        }, o.duration);
+        element
+            .find(".events-area")
+            .animate({
+                draw: {
+                    scrollLeft: target[0].offsetLeft - element.find(".streams .stream").outerWidth()
+                },
+                dur: o.duration
+            });
     },
 
     enableStream: function(stream){
@@ -25255,6 +26077,7 @@ var TableDefaultConfig = {
     paginationShortMode: true,
     showActivity: true,
     muteTable: true,
+    showSkip: false,
 
     rows: 10,
     rowsSteps: "10,25,50,100",
@@ -25274,6 +26097,7 @@ var TableDefaultConfig = {
     paginationNextTitle: "Next",
     allRecordsTitle: "All",
     inspectorTitle: "Inspector",
+    tableSkipTitle: "Go to page",
 
     activityType: "cycle",
     activityStyle: "color",
@@ -25283,6 +26107,7 @@ var TableDefaultConfig = {
     rowsWrapper: null,
     infoWrapper: null,
     paginationWrapper: null,
+    skipWrapper: null,
 
     cellWrapper: false,
 
@@ -25312,6 +26137,9 @@ var TableDefaultConfig = {
     clsTablePagination: "",
 
     clsPagination: "",
+    clsTableSkip: "",
+    clsTableSkipInput: "",
+    clsTableSkipButton: "",
 
     clsEvenRow: "",
     clsOddRow: "",
@@ -25341,7 +26169,8 @@ var TableDefaultConfig = {
     onViewSave: Metro.noop,
     onViewGet: Metro.noop,
     onViewCreated: Metro.noop,
-    onTableCreate: Metro.noop
+    onTableCreate: Metro.noop,
+    onSkip: Metro.noop
 };
 
 Metro.tableSetup = function(options){
@@ -25371,6 +26200,7 @@ var Table = {
         this.wrapperSearch = null;
         this.wrapperRows = null;
         this.wrapperPagination = null;
+        this.wrapperSkip = null;
         this.filterIndex = null;
         this.filtersIndexes = [];
         this.component = null;
@@ -25457,6 +26287,7 @@ var Table = {
             o.showRowsSteps = false;
             o.showSearch = false;
             o.showTableInfo = false;
+            o.showSkip = false;
             o.rows = -1;
         }
 
@@ -26046,7 +26877,7 @@ var Table = {
     _createBottomBlock: function (){
         var element = this.element, o = this.options;
         var bottom_block = $("<div>").addClass("table-bottom").addClass(o.clsTableBottom).insertAfter(element.parent());
-        var info, pagination;
+        var info, pagination, skip;
 
         info = Utils.isValue(this.wrapperInfo) ? this.wrapperInfo : $("<div>").addClass("table-info").appendTo(bottom_block);
         info.addClass(o.clsTableInfo);
@@ -26060,18 +26891,33 @@ var Table = {
             pagination.hide();
         }
 
+        skip = Utils.isValue(this.wrapperSkip) ? this.wrapperSkip : $("<div>").addClass("table-skip").appendTo(bottom_block);
+        skip.addClass(o.clsTableSkip);
+
+        $("<input type='text'>").addClass("input").addClass(o.clsTableSkipInput).appendTo(skip);
+        $("<button>").addClass("button table-skip-button").addClass(o.clsTableSkipButton).html(o.tableSkipTitle).appendTo(skip);
+
+        if (o.showSkip !== true) {
+            skip.hide();
+        }
+
         return bottom_block;
     },
 
     _createStructure: function(){
         var that = this, element = this.element, o = this.options;
         var columns;
-        var w_search = $(o.searchWrapper), w_info = $(o.infoWrapper), w_rows = $(o.rowsWrapper), w_paging = $(o.paginationWrapper);
+        var w_search = $(o.searchWrapper),
+            w_info = $(o.infoWrapper),
+            w_rows = $(o.rowsWrapper),
+            w_paging = $(o.paginationWrapper),
+            w_skip = $(o.skipWrapper);
 
         if (w_search.length > 0) {this.wrapperSearch = w_search;}
         if (w_info.length > 0) {this.wrapperInfo = w_info;}
         if (w_rows.length > 0) {this.wrapperRows = w_rows;}
         if (w_paging.length > 0) {this.wrapperPagination = w_paging;}
+        if (w_skip.length > 0) {this.wrapperSkip = w_skip;}
 
         element.html("").addClass(o.clsTable);
 
@@ -26124,8 +26970,27 @@ var Table = {
         var component = element.closest(".table-component");
         var table_container = component.find(".table-container");
         var search = component.find(".table-search-block input");
+        var skip_button = component.find(".table-skip button");
+        var skip_input = component.find(".table-skip input");
         var customSearch;
         var id = element.attr("id");
+
+        skip_button.on(Metro.events.click, function(){
+            var skipTo = parseInt(skip_input.val().trim());
+
+            if (isNaN(skipTo) || skipTo <=0 || skipTo > that.pagesCount) {
+                skip_input.val('');
+                return false;
+            }
+
+            skip_input.val('');
+            Utils.exec(o.onSkip, [skipTo, that.currentPage], element[0]);
+            element.fire("skip", {
+                skipTo: skipTo,
+                skipFrom: that.currentPage
+            });
+            that.page(skipTo);
+        });
 
         $(window).on(Metro.events.resize, function(){
             if (o.horizontalScroll === true) {
@@ -27585,12 +28450,16 @@ var MaterialTabs = {
         }
 
         element.animate({
-            scrollLeft: scrollLeft
+            draw: {
+                scrollLeft: scrollLeft
+            }
         });
 
         this.marker.animate({
-            left: tab_left,
-            width: tab_width
+            draw: {
+                left: tab_left,
+                width: tab_width
+            }
         });
 
         target = tab.find("a").attr("href");
@@ -29192,9 +30061,14 @@ var TimePicker = {
         }
 
         var animateList = function(list, item){
-            list.scrollTop(0).animate({
-                scrollTop: item.position().top - (o.distance * 40) + list.scrollTop()
-            }, 100);
+            list
+                .scrollTop(0)
+                .animate({
+                    draw: {
+                        scrollTop: item.position().top - (o.distance * 40) + list.scrollTop()
+                    },
+                    dur: 100
+                });
         };
 
         if (o.hours === true) {
@@ -31506,7 +32380,7 @@ if (typeof window["metroVideoSetup"] !== undefined) {
     Metro.videoSetup(window["metroVideoSetup"]);
 }
 
-var Video = {
+var VideoPlayer = {
     name: "Video",
 
     init: function( options, elem ) {
@@ -31708,7 +32582,7 @@ var Video = {
 
         if (o.muted) {
             that.volumeBackup = video.volume;
-            Metro.getPlugin(that.volume[0], 'slider').val(0);
+            Metro.getPlugin(that.volume, 'slider').val(0);
             video.volume = 0;
         }
 
@@ -31740,7 +32614,7 @@ var Video = {
         element.on("timeupdate", function(){
             var position = Math.round(video.currentTime * 100 / that.duration);
             that._setInfo(video.currentTime, that.duration);
-            Metro.getPlugin(that.stream[0], 'slider').val(position);
+            Metro.getPlugin(that.stream, 'slider').val(position);
             Utils.exec(o.onTime, [video.currentTime, that.duration, video, player], element[0]);
         });
 
@@ -31765,13 +32639,13 @@ var Video = {
         });
 
         element.on("stop", function(){
-            Metro.getPlugin(that.stream[0], 'slider').val(0);
+            Metro.getPlugin(that.stream, 'slider').val(0);
             Utils.exec(o.onStop, [video, player], element[0]);
             that._offMouse();
         });
 
         element.on("ended", function(){
-            Metro.getPlugin(that.stream[0], 'slider').val(0);
+            Metro.getPlugin(that.stream, 'slider').val(0);
             Utils.exec(o.onEnd, [video, player], element[0]);
             that._offMouse();
         });
@@ -31982,7 +32856,7 @@ var Video = {
         this.isPlaying = false;
         this.video.pause();
         this.video.currentTime = 0;
-        Metro.getPlugin(this.stream[0], 'slider').val(0);
+        Metro.getPlugin(this.stream, 'slider').val(0);
         this._offMouse();
     },
 
@@ -32033,8 +32907,8 @@ var Video = {
     destroy: function(){
         var element = this.element, player = this.player;
 
-        Metro.getPlugin(this.stream[0], "slider").destroy();
-        Metro.getPlugin(this.volume[0], "slider").destroy();
+        Metro.getPlugin(this.stream, "slider").destroy();
+        Metro.getPlugin(this.volume, "slider").destroy();
 
         element.off("loadstart");
         element.off("loadedmetadata");
@@ -32062,7 +32936,7 @@ var Video = {
     }
 };
 
-Metro.plugin('video', Video);
+Metro.plugin('video', VideoPlayer);
 
 var WindowDefaultConfig = {
     windowDeferred: 0,
@@ -33095,7 +33969,9 @@ var Wizard = {
         var border_size = element.children("section.complete").length === 0 ? 0 : parseInt(Utils.getStyleOne(element.children("section.complete")[0], "border-left-width"));
 
         actions.animate({
-            left: element.children("section.complete").length * border_size + 41
+            draw: {
+                left: element.children("section.complete").length * border_size + 41
+            }
         });
 
         if (

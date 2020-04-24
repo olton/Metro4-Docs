@@ -204,7 +204,10 @@
     menu.show(function(){
         link.parent().addClass("active");
         sb_menu.animate({
-            scrollTop: link.offset().top - sb_menu.offset().top
+            draw: {
+                scrollTop: link.offset().top - sb_menu.offset().top
+            },
+            dur: 500
         });
     });
 
