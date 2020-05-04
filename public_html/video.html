@@ -93,14 +93,14 @@
                     It is often necessary to show video files to the user. Use the Metro 4 video player to show video the same in all systems.
                 </p>
                 <p>
-                    To create <code>video player</code> add attribute <code>data-role="video"</code> to <code>video</code> element.
+                    To create <code>video player</code> add attribute <code>data-role="video-player"</code> to <code>video</code> element.
                     To define video source add attribute <code>data-src="..."</code>.
                 </p>
                 <div class="example">
-                    <video data-role="video" data-src="https://metroui.org.ua/res/oceans.mp4" data-full-screen-mode="window"></video>
+                    <video data-role="video-player" data-src="https://metroui.org.ua/res/oceans.mp4" data-full-screen-mode="window"></video>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video" data-src="https://metroui.org.ua/res/oceans.mp4"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-src="https://metroui.org.ua/res/oceans.mp4"&gt;&lt;/video&gt;
                 </code></pre>
 
                 <h3 id="_video_poster">Poster &amp; logo</h3>
@@ -113,13 +113,13 @@
                     To add <code>poster</code> use attribute <code>data-poster="..."</code>.
                 </p>
                 <div class="example">
-                    <video data-role="video"
+                    <video data-role="video-player"
                            data-src="https://metroui.org.ua/res/oceans.mp4"
                            data-poster="https://metroui.org.ua/res/poster-oceans.jpg"
                     ></video>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video"
+                    &lt;video data-role="video-player"
                            data-src="https://metroui.org.ua/res/oceans.mp4"
                            data-poster="https://metroui.org.ua/res/poster-oceans.jpg"&gt;
                     &lt;/video&gt;
@@ -136,7 +136,7 @@
                     With <code>data-logo-height</code> and <code>data-logo-width</code> you can change default logo <code>size</code>.
                 </p>
                 <div class="example">
-                    <video data-role="video"
+                    <video data-role="video-player"
                            data-src="https://metroui.org.ua/res/oceans.mp4"
                            data-logo="https://metroui.org.ua/images/logo4.png"
                            data-logo-height="64"
@@ -144,7 +144,7 @@
                     ></video>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video"
+                    &lt;video data-role="video-player"
                         data-src="https://metroui.org.ua/res/oceans.mp4"
                         data-logo="https://metroui.org.ua/images/logo4.png"
                         data-logo-height="64"
@@ -169,7 +169,7 @@
                     All this attributes has ben one of two values: <code>true</code> or <code>false</code>.
                 </p>
                 <div class="example">
-                    <video data-role="video"
+                    <video data-role="video-player"
                            data-src="https://metroui.org.ua/res/oceans.mp4"
                            data-controls-hide="0"
                            data-show-loop="false"
@@ -178,7 +178,7 @@
                            ></video>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video"
+                    &lt;video data-role="video-player"
                            data-src="https://metroui.org.ua/res/oceans.mp4"
                            data-show-loop="false"
                            data-show-full="false"
@@ -202,7 +202,7 @@
                     Values for these attributes must be valid html tag for icon from font or image.
                 </p>
                 <div class="example">
-                    <video data-role="video"
+                    <video data-role="video-player"
                            data-controls-hide="0"
                            data-loop-icon="<span class='mif-loop2 fg-orange'></span>"
                            data-mute-icon="<span class='mif-volume-mute2 fg-red'></span>"
@@ -215,7 +215,7 @@
                     </video>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video"
+                    &lt;video data-role="video-player"
                         data-loop-icon="&lt;span class="mif-loop2"&gt;&lt;/span&gt;"
                         data-play-icon="&lt;img src="images/play-icon.png"&gt;"
                         data-src="https://metroui.org.ua/res/oceans.mp4"&gt;
@@ -231,7 +231,7 @@
                     <div class="row">
                         <div class="cell-md-6">
                             <h6>Hide after 1000 ms</h6>
-                            <video data-role="video"
+                            <video data-role="video-player"
                                    data-src="https://metroui.org.ua/res/oceans.mp4"
                                    data-show-stop="false"
                                    data-show-volume="false"
@@ -239,7 +239,7 @@
                         </div>
                         <div class="cell-md-6">
                             <h6>Never hide</h6>
-                            <video data-role="video"
+                            <video data-role="video-player"
                                    data-src="https://metroui.org.ua/res/oceans.mp4"
                                    data-controls-hide="0"
                                    data-show-stop="false"
@@ -249,7 +249,7 @@
                     </div>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video"
+                    &lt;video data-role="video-player"
                         data-src="https://metroui.org.ua/res/oceans.mp4"
                         data-controls-hide="1000"&gt;
                     &lt;/video&gt;
@@ -267,7 +267,7 @@
                     You can set <code>looping video</code> with attribute <code>data-loop="true"</code>.
                 </p>
                 <pre><code class="html">
-                    &lt;video data-role="video" data-loop="true"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-loop="true"&gt;&lt;/video&gt;
                 </code></pre>
 
                 <h4 id="_video_autoplay">Auto play video</h4>
@@ -275,7 +275,7 @@
                     To <code>auto-play</code> video, you can use attribute <code>data-autoplay="true"</code>.
                 </p>
                 <pre><code class="html">
-                    &lt;video data-role="video" data-autoplay="true"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-autoplay="true"&gt;&lt;/video&gt;
                 </code></pre>
 
                 <h4 id="_video_volume">Volume</h4>
@@ -283,7 +283,7 @@
                     You can setup <code>volume</code> with attribute <code>data-volume</code>. This value must be between <code>0</code> and <code>1</code>.
                 </p>
                 <pre><code class="html">
-                    &lt;video data-role="video" data-volume=".5"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-volume=".5"&gt;&lt;/video&gt;
                 </code></pre>
 
                 <h3 id="_video_aspect_ratio">Aspect ratio</h3>
@@ -294,7 +294,7 @@
                     <div class="row">
                         <div class="cell-md-4">
                             <h6>HD (16:9)</h6>
-                            <video data-role="video"
+                            <video data-role="video-player"
                                    data-src="https://metroui.org.ua/res/video-16x9.mp4"
                                    data-aspect-ratio="hd"
                                    data-show-stop="false"
@@ -306,7 +306,7 @@
                         </div>
                         <div class="cell-md-4">
                             <h6>SD (4:3)</h6>
-                            <video data-role="video"
+                            <video data-role="video-player"
                                    data-src="https://metroui.org.ua/res/video-4x3.mp4"
                                    data-aspect-ratio="sd"
                                    data-show-stop="false"
@@ -318,7 +318,7 @@
                         </div>
                         <div class="cell-md-4">
                             <h6>CINEMA (21:9)</h6>
-                            <video data-role="video"
+                            <video data-role="video-player"
                                    data-poster="https://metroui.org.ua/res/poster-oceans.jpg"
                                    data-src="https://metroui.org.ua/res/oceans.mp4"
                                    data-aspect-ratio="cinema"
@@ -332,9 +332,9 @@
                     </div>
                 </div>
                 <pre><code class="html">
-                    &lt;video data-role="video" data-aspect-ratio="hd"&gt;&lt;/video&gt;
-                    &lt;video data-role="video" data-aspect-ratio="sd"&gt;&lt;/video&gt;
-                    &lt;video data-role="video" data-aspect-ratio="cinema"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-aspect-ratio="hd"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-aspect-ratio="sd"&gt;&lt;/video&gt;
+                    &lt;video data-role="video-player" data-aspect-ratio="cinema"&gt;&lt;/video&gt;
                 </code></pre>
 
                 <h3 id="_video_events">Events</h3>
