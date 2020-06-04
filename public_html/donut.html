@@ -79,13 +79,13 @@
                             <div class="mx-auto" id="donut1" data-role="donut" data-value="35" data-show-value="true" data-cap=""></div>
                         </div>
                         <div class="cell-md-3">
-                            <div class="mx-auto" id="donut2" data-role="donut" data-value="35" data-hole="0" data-stroke="transparent" data-fill="#4CAF50" data-animate="10"></div>
+                            <div class="mx-auto" id="donut2" data-role="donut" data-value="35" data-hole="0" data-stroke="transparent" data-fill="#4CAF50" data-animate="500"></div>
                         </div>
                         <div class="cell-md-3">
-                            <div class="mx-auto" id="donut3" data-role="donut" data-value="35" data-hole=".6" data-stroke="#f5f5f5" data-fill="#9C27B0" data-animate="10"></div>
+                            <div class="mx-auto" id="donut3" data-role="donut" data-value="35" data-hole=".6" data-stroke="#f5f5f5" data-fill="#9C27B0" data-animate="500"></div>
                         </div>
                         <div class="cell-md-3">
-                            <div class="mx-auto" id="donut4" data-role="donut" data-value="35" data-stroke="#F44336" data-fill="#FFC107" data-color="#FFFFFf" data-cap="" data-animate="10" data-background="#4fc3f7" data-font-size="32"></div>
+                            <div class="mx-auto" id="donut4" data-role="donut" data-value="35" data-stroke="#F44336" data-fill="#FFC107" data-color="#FFFFFf" data-cap="" data-animate="500" data-background="#4fc3f7" data-font-size="32"></div>
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                     &lt;script&gt;
                         function setDonutNewValue(){
                             var donut = $('#donut_val').data('donut');
-                            donut.val(Metro.utils.random(0, 100));
+                            donut.val($.random(0, 100));
                         }
 
                         function getDonutValue(){
@@ -289,15 +289,15 @@
             donut_interval = setInterval(function(){
                 var i, d;
                 for (i = 0; i < 4; i++) {
-                    d = Metro.utils.random(0,100);
-                    $('#donut'+(i+1)).data('donut').val(d);
+                    d = $.random(0,100);
+                    Metro.getPlugin('#donut'+(i+1), 'donut').val(d);
                 }
             }, 2000);
         })();
 
         function setDonutNewValue(){
             var donut = $('#donut_val').data('donut');
-            donut.val(Metro.utils.random(0, 100));
+            donut.val($.random(0, 100));
         }
 
         function getDonutValue(){

@@ -331,7 +331,7 @@
                     <input data-role="rating" id="rating-methods" data-message="Please rate">
                     <div class="mt-2">
                         <button class="button" onclick="
-                            var v = Metro.utils.random(1, 5);
+                            var v = $.random(1, 5);
                             var r = $('#rating-methods').data('rating');
                             r.val(v).msg('Your rate is: ' + v);
                         ">Click me for rate</button>
@@ -341,7 +341,7 @@
                     &lt;input data-role="rating" id="rating-methods" data-message="Please rate"&gt;
                     &lt;div&gt;
                         &lt;button class="button" onclick="
-                            var v = Metro.utils.random(1, 5);
+                            var v = $.random(1, 5);
                             var r = $('#rating-methods').data('rating');
                             r.val(v).msg('Your rate is: ' + v);
                         "&gt;Click me for rate&lt;/button&gt;

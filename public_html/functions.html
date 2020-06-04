@@ -68,10 +68,43 @@
 
                 <h3>About</h3>
                 <p>
-                    All special utilities functions stored in <code>Metro.utils</code> object.
+                    All special utilities functions stored in <code>Metro.utils</code> or <code>Metro.Utils</code> object.
                 </p>
 
-                <table class="table cell-border table-border options-table mt-4">
+                <script>
+                    var tableData = [
+                        ['isUrl(v)', 'Checks if value is url'],
+                        ['isTag(v)', 'Checks if value is tag'],
+                        ['isColor(v)', 'Checks if value is color (#fff, #ffffff)'],
+                        ['isEmbedObject(v)', 'Checks if value is embed object, value to check - html string'],
+                        ['isVideoUrl(v)', 'Checks if value is youtube or vimeo video link'],
+                        ['isDate(v, f)', 'Checks if value is valid date string. You can set format in second argument'],
+                        ['isInt(v)', 'Checks if value is integer'],
+                        ['isFloat(v)', 'Checks if value is float'],
+                        ['isTouchDevice()', 'Checks if device is touchable'],
+                        ['isFunc(v)', 'Checks if value is a function or callable/executable'],
+                        ['isObject(v)', 'Checks if value is a object'],
+                        ['isArray(v)', 'Checks if value is a array'],
+                        ['isType(v, t)', 'Checks if value is a specified type'],
+                        ['isMetroObject(el)', 'Checks if value is a Metro component'],
+                        ['isJQuery(el)', 'Checks if value is a jQuery object'],
+                        ['isM4Q(el)', 'Checks if value is a M4Q object'],
+                        ['isQ(el)', 'Checks if value is a M4Q or JQuery object'],
+
+                        ['embedObject(el)', 'Insert element into embed container. Return html string'],
+                        ['embedUrl(el)', 'Insert youtube link into embed container. Return html string'],
+                        ['secondsToTime(seconds)', 'Return object {hours, minutes, seconds}'],
+                        ['hex2rgba(hex, alpha)', 'Return string \'rgba(x, x, x, a)\''],
+                        ['elementId(prefix)', 'Return string. Based on datetime and with specified prefix'],
+                    ];
+
+                    var drawCell = function(td, val, index){
+                        if (index === 0) {
+                            td.html("<code>"+val+"</code>");
+                        }
+                    }
+                </script>
+                <table class="table cell-border table-border options-table mt-4" data-role="table" data-static="true" data-body="tableData" data-on-draw-cell="drawCell">
                     <thead>
                     <tr>
                         <th>Function</th>
@@ -80,108 +113,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><code>isUrl(v)</code></td>
-                        <td>Checks if value is url</td>
-                    </tr>
-                    <tr>
-                        <td><code>isTag(v)</code></td>
-                        <td>Checks if value is tag.</td>
-                    </tr>
-                    <tr>
-                        <td><code>isColor(v)</code></td>
-                        <td>Checks if value is hex color. #fff, #ffffff - true</td>
-                    </tr>
-                    <tr>
-                        <td><code>isEmbedObject(v)</code></td>
-                        <td>Checks if value is embed object, value to check - html string</td>
-                    </tr>
-                    <tr>
-                        <td><code>isVideoUrl(v)</code></td>
-                        <td>Checks if value is youtube or vimeo video link</td>
-                    </tr>
-                    <tr>
-                        <td><code>isDate(v)</code></td>
-                        <td>Checks if value is valid date string</td>
-                    </tr>
-                    <tr>
-                        <td><code>isInt(v)</code></td>
-                        <td>Checks if value is integer</td>
-                    </tr>
-                    <tr>
-                        <td><code>isFloat(v)</code></td>
-                        <td>Checks if value is float</td>
-                    </tr>
-                    <tr>
-                        <td><code>isTouchDevice()</code></td>
-                        <td>Checks if device is touchable</td>
-                    </tr>
-                    <tr>
-                        <td><code>isFunc(v)</code></td>
-                        <td>Checks if value is function</td>
-                    </tr>
-                    <tr>
-                        <td><code>isObject(v)</code></td>
-                        <td>Checks if value is object</td>
-                    </tr>
-                    <tr>
-                        <td><code>isArray(v)</code></td>
-                        <td>Checks if value is array</td>
-                    </tr>
-                    <tr>
-                        <td><code>isType(v, t)</code></td>
-                        <td>Checks if value is a type: isType(v, 'function')</td>
-                    </tr>
-                    <tr>
-                        <td><code>isMetroObject(el, type)</code></td>
-                        <td>Checks if element is a Metro component</td>
-                    </tr>
-                    <tr>
-                        <td><code>isJQuery(el)</code></td>
-                        <td>Checks if element is a jQuery object</td>
-                    </tr>
-                    <tr>
-                        <td><code>isM4Q(el)</code></td>
-                        <td>Checks if element is a m4q object</td>
-                    </tr>
-                    <tr>
-                        <td><code>isQ(el)</code></td>
-                        <td>Checks if element is a m4q or jQuery object</td>
-                    </tr>
-                    <tr>
-                        <td><code>embedObject(el)</code></td>
-                        <td>Insert element into embed container. Return html string</td>
-                    </tr>
-                    <tr>
-                        <td><code>embedUrl(el)</code></td>
-                        <td>Insert youtube link into embed container. Return html string</td>
-                    </tr>
-                    <tr>
-                        <td><code>secondsToTime(seconds)</code></td>
-                        <td>Return object {hours, minutes, seconds}</td>
-                    </tr>
-                    <tr>
-                        <td><code>hex2rgba(hex, alpha)</code></td>
-                        <td>Return string 'rgba(x, x, x, a)'</td>
-                    </tr>
-                    <tr>
-                        <td><code>random(from, to)</code></td>
-                        <td>Return random value</td>
-                    </tr>
-                    <tr>
-                        <td><code>uniqueId()</code></td>
-                        <td>Return string in format <span class="no-wrap">xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</span></td>
-                    </tr>
-                    <tr>
-                        <td><code>elementId(prefix)</code></td>
-                        <td>Return string. Based in datetime</td>
-                    </tr>
-                    <tr>
                         <td><code>secondsToFormattedString(seconds)</code></td>
                         <td>Return string "hh:mm:ss"</td>
-                    </tr>
-                    <tr>
-                        <td><code>callback(f, args, context)</code></td>
-                        <td>Synonym to exec function</td>
                     </tr>
                     <tr>
                         <td><code>exec(f, args, context)</code></td>
@@ -202,10 +135,6 @@
                     <tr>
                         <td><code>percent(a, b, r)</code></td>
                         <td>Return percent value for b from a. If r is true, returned value is integer else - real</td>
-                    </tr>
-                    <tr>
-                        <td><code>camelCase(str)</code></td>
-                        <td>Return 'data-on-value' as 'dataOnValue'</td>
                     </tr>
                     <tr>
                         <td><code>objectShift(obj)</code></td>
@@ -348,10 +277,6 @@
                         <td>Register metro locale in runtime</td>
                     </tr>
                     <tr>
-                        <td><code>strToArray(str, delimiter)</code></td>
-                        <td>Convert string to array</td>
-                    </tr>
-                    <tr>
                         <td><code>aspectRatioH(width, ratio)</code></td>
                         <td>Return height for specific ratio</td>
                     </tr>
@@ -442,10 +367,6 @@
                     <tr>
                         <td><code>getCursorPositionY(element, event)</code></td>
                         <td>Return mouse or pointer position y</td>
-                    </tr>
-                    <tr>
-                        <td><code>formData(form)</code></td>
-                        <td>Return named inputs as obj as pairs <code>name: value</code></td>
                     </tr>
                     </tbody>
                 </table>

@@ -393,11 +393,11 @@
                 name: opponent.name,
                 time: (new Date()),
                 avatar: opponent.avatar,
-                text: messages[Metro.utils.random(0, messages.length - 1)],
+                text: messages[$.random(0, messages.length - 1)],
                 position: "left"
             };
             chat.add(_m);
-        }, Metro.utils.random(1000, 3000));
+        }, $.random(1000, 3000));
     }
 </script>
 

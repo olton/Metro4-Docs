@@ -69,10 +69,10 @@
             $.each(sides, function(){
                 for(var i = 1; i <= 10; i++) {
                     var array = Array(window["a_"+this]);
-                    var id, timeout = Metro.utils.random(100, 500), cell;
+                    var id, timeout = $.random(100, 500), cell;
 
                     do {
-                        id = Metro.utils.random(1, 100);
+                        id = $.random(1, 100);
                     } while (array.indexOf(id) > -1);
 
                     cell = $(element).find("."+this+"-side .cell-id-"+id);
