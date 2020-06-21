@@ -6354,8 +6354,9 @@ $.noConflict = function() {
         },
 
         github: function(repo, callback){
+            var that = this;
             $.json('https://api.github.com/repos/' + repo).then(function(data){
-                this.exec(callback, [data]);
+                that.exec(callback, [data]);
             });
         },
 
@@ -13989,7 +13990,7 @@ $.noConflict = function() {
 
             Utils.exec(o.onStart, null, element[0]);
             element.fire("start");
-
+            console.log(o.value);
             element.animate({
                 draw: {
                     innerHTML: [0, +o.value]
@@ -14019,9 +14020,10 @@ $.noConflict = function() {
             this.options.value = this.element.attr("data-value");
         },
 
-        changeAttribute: function(attributeName){
+        changeAttribute: function(attributeName, newVal){
             if (attributeName === "data-value") {
-                this.setValueAttribute();
+                this.options.value = newVal;
+                console.log(newVal)
             }
         },
 

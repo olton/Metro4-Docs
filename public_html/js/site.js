@@ -31,7 +31,7 @@ $(function() {
 
     $(window).on("adblock-alert", function(){
         setTimeout(function(){
-            Metro.createToast("At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker!", null, null, "alert", {
+            Metro.createToast("At the moment, advertising is almost the only source of financing for the project. By the way, this block is shown by the built-in Metro 4! Please disable ad blocker and support Metro 4!", null, null, "info", {
                 showTop: true,
                 distance: 60,
                 timeout: 5000
