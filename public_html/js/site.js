@@ -1,4 +1,4 @@
-(function() {
+$(function() {
     "use strict";
 
     var form = $(".need-validation");
@@ -28,5 +28,15 @@
             sidebar.close();
         }
     });
-}());
+
+    $(window).on("adblock-alert", function(){
+        setTimeout(function(){
+            Metro.createToast("At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker!", null, null, "alert", {
+                showTop: true,
+                distance: 60,
+                timeout: 5000
+            });
+        }, 2000);
+    })
+});
 

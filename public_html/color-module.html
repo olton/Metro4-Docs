@@ -332,36 +332,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><code>toHexString(val)</code></td>
-                        <td>Return hexdecimal string for color: <code>#RRGGBB</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>toRgbString(val)</code></td>
-                        <td>Return rgb string for color: <code>rgb(r, g, b)</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>toRgbaString(val)</code></td>
-                        <td>Return rgba string for color: <code>rgba(r, g, b, a)</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>toHsvString(val)</code></td>
-                        <td>Return hsv string for color: <code>hsv(h, s, v)</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>toHslString(val)</code></td>
-                        <td>Return hsl string for color: <code>hsl(h, s, l)</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>toHslaString(val)</code></td>
-                        <td>Return hsl string for color: <code>hsl(h, s, l)</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>toCmykString(val)</code></td>
-                        <td>Return cmyk string for color: <code>cmyk(c, m, y, k)</code></td>
-                    </tr>
-                    <tr>
                         <td><code>toString(val)</code></td>
-                        <td>Return string for color value</td>
+                        <td>Return stringify value for color: <code>#RRGGBB</code>, <code>rgb(r, g, b)</code>, <code>rgba(r, g, b, a)</code>, <code>hsv(h, s, v)</code>, ...</td>
                     </tr>
                     </tbody>
                 </table>
@@ -369,12 +341,9 @@
                     var cm = Metro.colors;
                     var c = "#cc0000";
 
-                    cm.toHexString(c); // #cc0000
-                    cm.toRgbString(c); // rgb(204,0,0)
-                    cm.toRgbaString(c); // rgba(204,0,0,1)
-                    cm.toHsvString(c); // hsv(0,1,0.8)
-                    cm.toHslString(c); // hsl(0,1,0.4)
-                    cm.toCmykString(c); // cmyk(0,100,100,20)
+                    cm.toHEX().toString(c); // #cc0000
+                    cm.toRGB().toString(c); // rgb(204,0,0)
+                    cm.toRGBA().toString(c); // rgba(204,0,0,1)
                 </code></pre>
 
                 <h3 id="_cm-tone-functions">Tone functions</h3>
@@ -425,7 +394,7 @@
 
                 <h3 id="_cm_schemes">Schemes</h3>
                 <p>
-                    Metro 4 color module contains function <code>getScheme()</code>. This function generate any color schemes from base color:
+                    Metro 4 color module contains function <code>getScheme()</code> or <code>createScheme()</code>. This function generate any color schemes from base color:
                     <code>monochromatic</code>,
                     <code>complementary</code>,
                     <code>split-complementary</code>,
@@ -745,12 +714,13 @@
     <script src="js/clipboard.min.js"></script>
     <script src="js/site.js"></script>
     <script>
+        "use strict";
         var cm = Metro.colors,
             color = "#ffff00";
         var colors, schemes = ['mono', 'complement', 'split', 'double', 'analog', 'triadic', 'tetradic', 'square'];
         $.each(schemes, function(){
-            var scheme_name = String(this);
-            colors = cm.getScheme(color, scheme_name, "hex");
+            var scheme_name = this;
+            colors = cm.createScheme(color, scheme_name, "hex");
 
             $.each(colors, function(){
                 var bg_color = this;
@@ -759,7 +729,7 @@
             })
         });
 
-        console.log(cm.toHslaString("#9d4232"));
+        console.log(cm.toHSLA("#9d4232").toString());
     </script>
     <!-- ads-script -->
     <!-- ga-script -->

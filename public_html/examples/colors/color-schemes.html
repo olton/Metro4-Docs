@@ -56,65 +56,70 @@
     <!-- ads-script -->
 
     <script>
-        var cm = Metro.colors;
-        var schemes = ['analogous', 'split-complementary', 'complementary', 'triadic', 'square', 'tetradic', 'double-complementary', 'monochromatic'];
-        var colors = [];
-        var container = $("#scheme-container").html("");
-        var input = $("#current-color");
+        $(function(){
+            'use strict';
+            var cm = Metro.colors;
+            var schemes = ['analog', 'split', 'comp', 'triad', 'square', 'tetra', 'double', 'mono'];
+            var colors = [];
+            var container = $("#scheme-container").html("");
+            var input = $("#current-color");
 
-        input.on(Metro.events.inputchange, function(){
-            var target;
-            var color = this.value[0] === "#" ? "" : "#"+this.value;
+            input.on(Metro.events.inputchange, function(){
+                var target;
+                var color = this.value[0] === "#" ? "" : "#"+this.value;
 
-            if (cm.colorList[this.value] === undefined && (this.value.length < 6 || cm.isHEX(color) === false)) {
-                return ;
-            }
+                if (this.value.length < 6) {
+                    return ;
+                }
 
-            if (cm.isHEX(color) === false) {
-                color = cm.colorList[this.value];
-            }
+                if (cm.isHEX(color) === false) {
+                    return ;
+                }
 
-            container.html("");
+                container.html("");
 
-            $("#base-color").html("Base color is: " + color);
+                $("#base-color").html("Base color is: " + color);
 
-            $.each(schemes, function(){
-                var scheme_name = String(this);
+                $.each(schemes, function(){
+                    var scheme_name = this;
+
+                    target = $("<div>").addClass("row flex-align-center m-0").appendTo(container);
+
+                    colors = cm.createScheme(color, scheme_name, 'hex', {
+                        algorithm: 3
+                    });
+
+                    $("<h5>").addClass("w-100 text-light pl-4 flex-no-shrink").html(scheme_name).appendTo(target);
+                    $.each(colors, function(key, bg_color){
+                        $("<div>").addClass("p-4 cell text-center mb-2").html(bg_color).attr("style", "background-color:"+ bg_color).appendTo(target);
+                    })
+                });
 
                 target = $("<div>").addClass("row flex-align-center m-0").appendTo(container);
 
-                colors = cm.getScheme(color, scheme_name, 'hex', {
-                    algorithm: 3
-                });
+                var lightenColor = cm.lighten(color);
+                $("<h5>").addClass("w-100 text-light pl-4 flex-no-shrink").html("lighten &amp; darken on 10%").appendTo(target);
+                $("<div>").addClass("p-4 cell text-center mb-2").html(lightenColor).attr("style", "background-color:"+ lightenColor).appendTo(target);
+                $("<div>").addClass("p-4 cell text-center mb-2").html(color).attr("style", "background-color:"+ color).appendTo(target);
+                $("<div>").addClass("p-4 cell text-center mb-2").html(cm.darken(color)).attr("style", "background-color:"+ cm.darken(color)).appendTo(target);
 
-                $("<h5>").addClass("w-100 text-light pl-4 flex-no-shrink").html(scheme_name).appendTo(target);
-                $.each(colors, function(key, bg_color){
-                    $("<div>").addClass("p-4 cell text-center mb-2").html(bg_color).attr("style", "background-color:"+ bg_color).appendTo(target);
-                })
+                target = $("<div>").addClass("row flex-align-center m-0").appendTo(container);
+                $("<h5>").addClass("w-100 text-light pl-4 flex-no-shrink").html("Grayscale").appendTo(target);
+                $("<div>").addClass("p-4 cell text-center mb-2").html(color).attr("style", "background-color:"+ color).appendTo(target);
+                $("<div>").addClass("p-4 cell text-center mb-2").html(cm.grayscale(color)).attr("style", "background-color:"+ cm.grayscale(color)).appendTo(target);
+
             });
 
-            target = $("<div>").addClass("row flex-align-center m-0").appendTo(container);
-            $("<h5>").addClass("w-100 text-light pl-4 flex-no-shrink").html("lighten &amp; darken on 10%").appendTo(target);
-            $("<div>").addClass("p-4 cell text-center mb-2").html(cm.lighten(color)).attr("style", "background-color:"+ cm.lighten(color)).appendTo(target);
-            $("<div>").addClass("p-4 cell text-center mb-2").html(color).attr("style", "background-color:"+ color).appendTo(target);
-            $("<div>").addClass("p-4 cell text-center mb-2").html(cm.darken(color)).attr("style", "background-color:"+ cm.darken(color)).appendTo(target);
+            input.val("cc0000").trigger("change");
 
-            target = $("<div>").addClass("row flex-align-center m-0").appendTo(container);
-            $("<h5>").addClass("w-100 text-light pl-4 flex-no-shrink").html("Grayscale").appendTo(target);
-            $("<div>").addClass("p-4 cell text-center mb-2").html(color).attr("style", "background-color:"+ color).appendTo(target);
-            $("<div>").addClass("p-4 cell text-center mb-2").html(cm.grayscale(color)).attr("style", "background-color:"+ cm.grayscale(color)).appendTo(target);
-
-        });
-
-        input.val("cc0000").trigger("change");
-
-        var col = "#cc0000";
-        var hsv = cm.hex2hsv(col);
-        var hsl = cm.hsv2hsl(hsv);
-        console.log(col);
-        console.log(hsv);
-        console.log(hsl);
-        console.log(cm.hsl2hsv(cm.hsv2hsl(hsv)));
+            // var col = "#cc0000";
+            // var hsv = cm.hex2hsv(col);
+            // var hsl = cm.hsv2hsl(hsv);
+            // console.log(col);
+            // console.log(hsv);
+            // console.log(hsl);
+            // console.log(cm.hsl2hsv(cm.hsv2hsl(hsv)));
+        })
     </script>
 
 </body>
