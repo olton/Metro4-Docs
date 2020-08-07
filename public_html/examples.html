@@ -8,12 +8,14 @@
     <meta name="twitter:creator" content="@pimenov_sergey">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Metro 4 Components Library">
-    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta name="twitter:description"
+          content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
     <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
 
-    <meta property="og:url" content="https://metroui.org.ua/v4/index.html">
+    <meta property="og:url" content="https://metroui.org.ua/index.html">
     <meta property="og:title" content="Metro 4 Components Library">
-    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta property="og:description"
+          content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
     <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
@@ -22,102 +24,157 @@
     <meta property="og:image:height" content="504">
 
     <meta name="author" content="Sergey Pimenov">
-    <meta name="description" content="Are you tired of Bootstrap? Get started with Metro 4, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page. The most popular HTML, CSS, and JS library in Metro style.">
-    <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+    <meta name="description"
+          content="Are you tired of Bootstrap? Get started with Metro 4, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page. The most popular HTML, CSS, and JS library in Metro style.">
+    <meta name="keywords"
+          content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
-    <link href="css/site.css" rel="stylesheet">
+    <link href="highlight/styles/github.css" rel="stylesheet">
+    <link href="css/site2.css" rel="stylesheet">
 
-    <title>Examples :: Metro 4 - Popular HTML, CSS and JS library</title>
-
-    <style>
-        h4 {
-            white-space: nowrap;
-        }
-
-        @media all and (min-width: 768px) {
-            .hero {
-                padding: 160px 80px 120px;
-            }
-
-            .neb-white {
-                height: auto;
-            }
-
-        }
-
-        [class*=cell-md-3] {
-            display: flex;
-            flex-flow: column;
-            justify-content: flex-start;
-        }
-
-        [class*=cell-md-3] div:last-child {
-            display: flex;
-            justify-content: space-between;
-            margin-top: auto!important;
-        }
-    </style>
+    <title>Metro 4 - Popular HTML, CSS and JS library</title>
 
 </head>
-<body class="m4-cloak">
-
-<div class="container-fluid pos-fixed fixed-top z-top bg-hero" id="header">
-    <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
-        <a href="index.html" class="brand fg-white no-hover text-bold">METRO_4</a>
+<body class="m4-cloak" style="padding-top: 52px">
+<div class="container-fluid pos-fixed fixed-top z-top bg-white fg-dark" id="header">
+    <header class="app-bar container bg-white pos-relative" data-role="appbar" data-expand-point="md">
+        <a href="index.html" class="brand no-hover text-bold">METRO_4</a>
         <ul class="app-bar-menu ml-auto text-upper">
-            <li><a href="index.html" class="app-bar-item">Home</a></li>
             <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
             <li><a href="m4q-about.html" class="app-bar-item">Components</a></li>
             <li><a href="examples.html" class="app-bar-item">Examples</a></li>
-            <li><a href="support.html" class="app-bar-item">Support</a></li>
+            <li><a href="support.html" class="app-bar-item text-bold fg-darkRed">You can help</a></li>
             <li><a href="https://github.com/olton/Metro-UI-CSS" class="app-bar-item">GitHub</a></li>
         </ul>
     </header>
 </div>
 
-<div class="container-fluid">
-    <div class="container">
-        <h1>Pandora - Admin template</h1>
-        <h5>super big example for all features</h5>
+<div class="container-fluid hero-wrapper">
+    <div class="container new-hero-container">
+        <div class="row">
+            <div class="cell-lg-6 order-2 order-lg-1">
+                <div class="new-hero text-center text-left-lg">
+                    <div class="display2 fg-dark text-bold mt-0" style="line-height: 1">
+                        <span class="reduce-1">Various examples of using the Metro 4</span>
+                    </div>
 
-        <div>
-            <a href="https://metroui.org.ua/themes/pandora/"><img src="https://user-images.githubusercontent.com/365108/56853343-eef5a980-692e-11e9-8613-b7e42a913383.jpg" style="max-width: 100%"></a>
-        </div>
+                    <div class="text-leader2 mt-4 mb-4">
+                        I have created various examples for you to make it easier and faster for you to start using Metro 4 productively.
+                    </div>
 
-        <div class="mt-10">
-            <b>Pandora</b> - is a Responsive and Clean Admin Dashboard template. This template created with Metro 4 with uses native classes, elements, and components. The template contains different types of reusable and professional responsive components with different variations.
-            <br>
-            <br>
-            This template was created using the classes and components of Metro 4 to demonstrate the capabilities of Metro 4. You can easily do all this on Metro 4.
-            <br>
-            <br>
-            <b>Pandora</b> comes with a mega collection of features which can make admin dashboard of any projects like Small to Medium and Large sizes of projects including Personal projects, eCommerce, CRM, ERP, SaaS, PaaS, CMS, Back office and Accounting Software backend etc. The Multipurpose feature of the dashboard template will allow integrating for different types of business projects.
-            <br>
-            <br>
-            <b>Pandora</b> offers a creative and easy way to develop admin backend for your next exciting projects.
-        </div>
+                    <div class="mt-8">
+                        <a href="intro.html" class="button get-started-button large"><span class="ml-4 mr-4">Get Started</span></a>
+                        <a href="https://github.com/olton/Metro4-Docs/tree/master/public_html/examples" class="mt-2 mt-0-sm button download-source-button large"><span class="ml-4 mr-4">Download Source</span></a>
+                    </div>
 
-        <div class="mt-4">
-            <a href="https://metroui.org.ua/themes/pandora/" class="button warning">Goto pandora demo</a>
-            <a href="https://metroui.org.ua/themes/pandora/" class="button info">Get source</a>
-            <a href="https://www.patreon.com/metroui" rel="nofollow">
-                <img src="https://camo.githubusercontent.com/c11c9bdf1f6c2a1d80afb11859984a61f0fadfa6/68747470733a2f2f63352e70617472656f6e2e636f6d2f65787465726e616c2f6c6f676f2f6265636f6d655f615f706174726f6e5f627574746f6e4032782e706e67" width="160" data-canonical-src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" style="max-width:100%;">
-            </a>
+                </div>
+            </div>
+
+            <div class="cell-lg-6 order-1 order-lg-2">
+                <img src="images/examples.svg" alt="examples" class="w-100">
+            </div>
         </div>
     </div>
 </div>
 
 <div class="container-fluid">
-    <div class="container mt-4 mb-4">
-
+    <div class="container">
         <!-- ads-html -->
-        <div class="example no-border p-0"></div>
+    </div>
+</div>
+
+<div class="container-fluid top-themes">
+    <div class="container  pt-20 pb-20">
+        <div class="row">
+            <div class="cell-lg-4">
+                <div class="presenta-box bg-white d-flex flex-column flex-align-center  border border-radius-10 bd-transparent p-4 h-100">
+                    <img src="images/themes/pandora.jpg" style="height: 200px;">
+                    <br>
+                    <h3>Pandora</h3>
+                    <div class="text-center">
+                        Pandora - is a Responsive and Clean Admin Dashboard template.
+                    </div>
+                    <br>
+                    <div class="mt-auto mb-4">
+                        <a href="https://themes.org.ua/pandora" class="button">View theme</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-lg-4">
+                <div class="presenta-box bg-white d-flex flex-column flex-align-center  border border-radius-10 bd-transparent p-4 h-100">
+                    <img src="images/themes/aistant.jpg" style="height: 200px;">
+                    <br>
+                    <h3>Aistant</h3>
+                    <div class="text-center">
+                        Theme for general purpose site. Created for smart QnA service <a href="https://aistant.com">Aistant</a>.
+                    </div>
+                    <br>
+                    <div class="mt-auto mb-4">
+                        <a href="https://themes.org.ua/aistant" class="button">View theme</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-lg-4">
+                <div class="presenta-box bg-white d-flex flex-column flex-align-center border border-radius-10 bd-transparent p-4 h-100">
+                    <img src="images/themes/mirohost.jpg" style="height: 200px;">
+                    <br>
+                    <h3>Mirohost</h3>
+                    <div class="text-center">
+                        Theme for hosting site. Created for biggest hosting provider in Ukraine <a href="https://mirohost.net">Mirohost.net</a>.
+                    </div>
+                    <br>
+                    <div class="mt-auto mb-4">
+                        <a href="https://themes.org.ua/mirohost" class="button">View theme</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid pandora features text-left" style="padding-bottom: 100px">
+    <div class="container pt-20 pb-20">
+        <div class="row">
+            <div class="cell-lg-6 order-2 order-lg-1">
+                <div class="display3 fg-dark">Pandora - free big example!</div>
+                <div class="text-leader2">
+                    <p class="fg-dark">
+                        <b>Pandora</b> - is a Responsive and Clean Admin Dashboard template. This template created with
+                        Metro 4 with uses native classes, elements, and components. The template contains different
+                        types of reusable and professional responsive components with different variations.
+                    <p>
+                </div>
+            </div>
+            <div class="cell-lg-6 order-1 order-lg-2">
+                <img src="https://user-images.githubusercontent.com/365108/56853343-eef5a980-692e-11e9-8613-b7e42a913383.jpg"
+                     alt="checklist">
+            </div>
+        </div>
+
+        <div class="mt-10 text-center">
+            <a href="https://themes.org.ua/pandora/" class="button warning">Open Pandora Demo</a>
+            <a href="https://github.com/olton/Pandora" class="button info">Download Source</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="container">
+        <!-- ads-html -->
+    </div>
+</div>
+
+<div class="container-fluid in-action-wrapper2">
+    <div class="container">
 
         <h2 class="mt-20">Metro 4 Features</h2>
+
         <div class="row mt-10">
             <div class="cell-md-3">
                 <h4 class="text-light">Start page</h4>
@@ -392,24 +449,50 @@
     </div>
 </div>
 
+<div class="container-fluid bg-white fg-dark bg-white">
+    <div class="container pt-10 pb-10">
+        <div class="h2 text-center"><span>Thank for technical support</span></div>
+
+        <div class="row special-thanks">
+            <div class="cell-md-2">
+                <a href="https://olshansky.ua/"><img src="images/olshansky.svg" alt="Olshansky and Co"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://www.imena.ua/"><img src="images/imena_logo.png" alt="Imena.ua"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://mirohost.net/"><img src="images/mirohost_logo.svg" alt="Mirohost.net"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://www.keycdn.com/"><img src="images/keycdn-logo.svg" alt="keycdn.com"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://www.jetbrains.com/"><img src="images/jetbrains.svg" alt="jetbrains.com"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="footer-bg">
     <div class="container pt-20 pb-20">
         <div class="text-center">
             <ul class="inline-list reduce-1" id="social-menu">
-                <li><a href="https://www.facebook.com/groups/metro4.libary/"><span class="mif-facebook"></span></a></li>
-                <li><a href="https://twitter.com/MetroUI"><span class="mif-twitter"></span></a></li>
-                <li><a href="#"><span class="mif-youtube"></span></a></li>
-                <li><a href="https://github.com/olton/Metro-UI-CSS"><span class="mif-github"></span></a></li>
+                <li><a class="" href="https://www.facebook.com/groups/metro4.libary/"><span class="mif-facebook"></span></a>
+                </li>
+                <li><a class="" href="https://twitter.com/MetroUI"><span class="mif-twitter"></span></a></li>
+                <li><a class="" href="#"><span class="mif-youtube"></span></a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS"><span class="mif-github"></span></a></li>
             </ul>
         </div>
 
         <div class="text-center mt-10">
             <ul class="inline-list reduce-1" id="footer-menu">
-                <li><a href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">License</a></li>
-                <li><a href="https://pimenov.com.ua">Author</a></li>
-                <li><a href="https://forum.metroui.org.ua">Forum</a></li>
-                <li><a href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
-                <li><a href="https://github.com/olton/Metro-UI-CSS/releases">Releases</a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">License</a></li>
+                <li><a class="" href="https://pimenov.com.ua">Author</a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/releases">Releases</a></li>
+                <li><a class="" href="https://www.npmjs.com/package/metro4">Npm</a></li>
+                <li><a class="" href="https://www.nuget.org/packages/Metro4/">Nuget</a></li>
             </ul>
         </div>
 
@@ -418,48 +501,44 @@
         </div>
 
         <div class="text-center mt-10 reduce-1">
-            Metro 4 (Metro UI CSS) &copy; 2012-2019 by <a href="https://pimenov.com.ua" class="no-wrap">Sergey Pimenov</a>.
-            <br />
-            <span class="no-wrap">Domain by <a href="https://imena.ua/">Imena.ua</a>.</span>
-            <span class="no-wrap">Hosting by <a href="https://mirohost.net/">Mirohost</a>.</span>
+            Metro 4 (Metro UI CSS) &copy; 2012-2020 by <a href="https://pimenov.com.ua" class="no-wrap">Serhii
+            Pimenov</a>.
             <br/>
-            <span class="no-wrap">Metro CDN by <a href="https://www.keycdn.com/">KeyCDN</a>.</span>
+            <span class="no-wrap">Domain by <a class href="https://imena.ua/">Imena.ua</a>.</span>
+            <span class="no-wrap">Hosting by <a class href="https://mirohost.net/">Mirohost</a>.</span>
             <br/>
-            <span class="no-wrap">IDE PhpStorm by <a href="https://www.jetbrains.com/">JetBrains</a>.</span>
-            <br />
-            Currently <span class="version-number-full"></span>. Code licensed <a href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+            <span class="no-wrap">Metro CDN by <a class href="https://www.keycdn.com/">KeyCDN</a>.</span>
+            <br/>
+            <span class="no-wrap">IDE PhpStorm by <a class href="https://www.jetbrains.com/">JetBrains</a>.</span>
+            <br/>
+            Docs version <span class="docs-version">2020.1</span>. Code licensed <a class
+                                                                                    href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>,
+            docs <a class href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
         </div>
     </div>
 </footer>
 
+
 <script src="metro/js/metro.js?ver=@@b-version"></script>
 <script>
-    $(".version-number").html(Metro.ver());
+    $(window).on("adblock-alert", function(){
+        setTimeout(function(){
+            Metro.createToast(
+                "<span class='text-leader'>At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker and support Metro 4!</span>" +
+                "<br>"+
+                "<br>"+
+                "By the way, this block is shown by the built-in Metro 4 function! ",
+                null, null, "alert",
+                {
+                    showTop: true,
+                    distance: 60,
+                    timeout: 10000
+                }
+            );
+        }, 2000);
+    })
 </script>
-<!-- ads-script -->
 <!-- ga-script -->
 <!-- hit-ua -->
-<script>
-    setTimeout(function(){
-        var b = $(".adsbygoogle");
-        var div = $(".example");
-
-        if (Metro.utils.isLocalhost()) {
-            return ;
-        }
-
-        if (b.length === 0) {
-            // div.html("<div class='bg-red fg-white p-4 text-center h3 text-light'>With your help, I can make Metro 4 even better! Please, disable AdBlock or AdGuard.<br>Thank you for your support!</div>");
-        } else {
-            $.each(b, function(){
-                var bl = $(this);
-                if (bl.height() < 50 || Metro.utils.getStyleOne(bl, 'display') === 'none') {
-                    // div.html("<div class='bg-red fg-white p-4 text-center h3 text-light'>With your help, I can make Metro 4 even better! Please, disable AdBlock or AdGuard.<br>Thank you for your support!</div>");
-                }
-            });
-        }
-    }, 1000)
-</script>
-
 </body>
 </html>

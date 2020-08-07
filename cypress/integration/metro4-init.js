@@ -26,6 +26,8 @@ describe("Test metro 4 docs", function(){
 
         'icons', 'color-schemes',
 
+        'drag-items', 'adblock', 'cookie', 'cookie-disclaimer',
+
         'm4q',
         'm4q-about',
         'm4q-ajax',

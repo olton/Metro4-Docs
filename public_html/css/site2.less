@@ -1,0 +1,158 @@
+.accent-color {
+    color: #8b0000;
+}
+
+.new-hero {
+    padding: 20px;
+}
+
+body {
+    background: transparent url("../images/d.svg") top left no-repeat;
+    background-size: cover;
+}
+
+.new-hero {
+    .button {
+        border-radius: 50px;
+
+        &.get-started-button {
+            color: white;
+            background: #8b0000;
+        }
+
+        &.download-source-button {
+            color: black;
+            background: #ffd200;
+            //margin-top: 8px;
+        }
+    }
+}
+
+.presenta {
+    margin-top: 60px;
+    padding: 60px 0;
+    background: transparent url("../images/a.svg") top right no-repeat;
+    background-size: contain;
+}
+
+.presenta, .top-themes {
+    .button {
+        border-radius: 20px;
+        color: white;
+        background: #8b0000;
+    }
+}
+
+.presenta-box {
+    box-shadow: 2px 2px 10px #ffd2d2;
+}
+
+.features {
+    padding: 60px 0;
+    color: white;
+    text-align: center;
+    background: transparent url("../images/b.svg") top left no-repeat;
+    background-size: cover;
+}
+
+.in-action-wrapper {
+    background: transparent url("../images/e.svg") top right no-repeat;
+    background-size: contain;
+}
+
+.sponsor-wrapper, .in-action-wrapper2 {
+    background: transparent url("../images/d.svg") bottom left no-repeat;
+    background-size: contain;
+}
+
+.shadowed {
+    box-shadow: 2px 2px 20px #ffd2d2;
+}
+
+.pandora {
+    .button {
+        border-radius: 50px;
+        margin: 10px;
+    }
+}
+
+footer {
+    background: #24285b url("../images/c.svg") top right no-repeat;
+    background-size: cover;
+    color: #fff;
+}
+
+footer a {
+    color: #909090;
+    text-decoration: none!important;
+}
+
+footer a:hover {
+    color: #c9c9c9;
+}
+
+.special-thanks {
+    justify-content: space-between;
+    align-items: center;
+    //margin-top: 20px;
+
+    [class*=cell-] {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    img {
+        width: 124px;
+        max-height: 64px;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .new-hero {
+        .download-source-button {
+            margin-top: 0!important;
+        }
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .new-hero-container {
+        padding-top: 80px;
+    }
+
+    .new-hero {
+        padding: 60px 40px 0 80px;
+    }
+}
+
+.work-box {
+    max-height: 260px;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 2px 2px 10px #a9a4a4;
+    transition: transform .1s linear;
+    z-index: 0;
+
+    &:hover {
+        transform: scale(1.2);
+        z-index: 1;
+    }
+
+}
+
+.buy-me-coffee > div {
+    box-shadow: inset 2px 2px 20px #ffd2d2;
+    background: #faf5f5;
+
+    img {
+        height: 48px;
+    }
+}
+
+.adsbygoogle {
+    margin-top: 60px;
+}
+
+.google-auto-placed {
+    display: none!important;
+}

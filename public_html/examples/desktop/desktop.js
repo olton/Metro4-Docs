@@ -83,7 +83,7 @@ var w_titles = [
 ];
 
 function createWindow(){
-    var index = Metro.utils.random(0, 3);
+    var index = $.random(0, 3);
     var w = Desktop.createWindow({
         resizeable: true,
         draggable: true,
@@ -99,7 +99,7 @@ function createWindow(){
 }
 
 function createWindowWithCustomButtons(){
-    var index = Metro.utils.random(0, 3);
+    var index = $.random(0, 3);
     var customButtons = [
         {
             html: "<span class='mif-rocket'></span>",
@@ -141,14 +141,14 @@ function createWindowModal(){
         modal: true,
         place: "center",
         onShow: function(win){
-            var win = $(win);
+            win = $(win);
             win.addClass("ani-swoopInTop");
             setTimeout(function(){
                 $(win).removeClass("ani-swoopInTop");
             }, 1000);
         },
         onClose: function(win){
-            var win = $(win);
+            win = $(win);
             win.addClass("ani-swoopOutTop");
         }
     });

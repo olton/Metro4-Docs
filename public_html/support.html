@@ -8,12 +8,14 @@
     <meta name="twitter:creator" content="@pimenov_sergey">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Metro 4 Components Library">
-    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta name="twitter:description"
+          content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
     <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
 
-    <meta property="og:url" content="https://metroui.org.ua/v4/index.html">
+    <meta property="og:url" content="https://metroui.org.ua/index.html">
     <meta property="og:title" content="Metro 4 Components Library">
-    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta property="og:description"
+          content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
     <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
@@ -22,114 +24,81 @@
     <meta property="og:image:height" content="504">
 
     <meta name="author" content="Sergey Pimenov">
-    <meta name="description" content="Are you tired of Bootstrap? Get started with Metro 4, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page. The most popular HTML, CSS, and JS library in Metro style.">
-    <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+    <meta name="description"
+          content="Are you tired of Bootstrap? Get started with Metro 4, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page. The most popular HTML, CSS, and JS library in Metro style.">
+    <meta name="keywords"
+          content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
     <link href="highlight/styles/github.css" rel="stylesheet">
-    <link href="docsearch/docsearch.min.css" rel="stylesheet">
-    <link href="css/site.css" rel="stylesheet">
+    <link href="css/site2.css" rel="stylesheet">
 
-    <title>Metro 4 Support - Popular HTML, CSS and JS library</title>
+    <title>Metro 4 - Popular HTML, CSS and JS library</title>
 
-    <style>
-        @media all and (min-width: 768px) {
-            .hero {
-                padding: 160px 80px 120px;
-            }
-
-            .neb-white {
-                height: auto;
-                z-index: 4;
-            }
-        }
-    </style>
 </head>
 <body class="m4-cloak" style="padding-top: 52px">
+<div class="container-fluid pos-fixed fixed-top z-top bg-white fg-dark" id="header">
+    <header class="app-bar container bg-white pos-relative" data-role="appbar" data-expand-point="md">
+        <a href="index.html" class="brand no-hover text-bold">METRO_4</a>
+        <ul class="app-bar-menu ml-auto text-upper">
+            <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
+            <li><a href="m4q-about.html" class="app-bar-item">Components</a></li>
+            <li><a href="examples.html" class="app-bar-item">Examples</a></li>
+            <li><a href="support.html" class="app-bar-item text-bold fg-darkRed">You can help</a></li>
+            <li><a href="https://github.com/olton/Metro-UI-CSS" class="app-bar-item">GitHub</a></li>
+        </ul>
+    </header>
+</div>
 
-    <div class="container-fluid pos-fixed fixed-top z-top bg-hero" id="header">
-        <header class="app-bar container bg-transparent fg-white pos-relative" data-role="appbar" data-expand-point="md">
-            <a href="index.html" class="brand fg-white no-hover text-bold">METRO_4</a>
-            <ul class="app-bar-menu ml-auto text-upper">
-                <li><a href="index.html" class="app-bar-item">Home</a></li>
-                <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
-                <li><a href="m4q-about.html" class="app-bar-item">Components</a></li>
-                <li><a href="examples.html" class="app-bar-item">Examples</a></li>
-                <li><a href="support.html" class="app-bar-item">Support</a></li>
-                <li><a href="https://github.com/olton/Metro-UI-CSS" class="app-bar-item">GitHub</a></li>
-            </ul>
-        </header>
-    </div>
-
-    <div class="hero hero-bg text-center">
-
-        <div class="display4 fg-white"><span class="reduce-3 enlarge-3-md">Metro_4</span></div>
-
-        <div class="text-center m-8">
-            <a href="intro.html" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Get started</a>
-            <a href="https://github.com/olton/Metro-UI-CSS" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Source Files</a>
-            <a href="https://builder.metroui.org.ua" class="button bg-transparent bg-darkRed-hover fg-white m-1 text-upper outline bd-lightRed">Build own set</a>
-        </div>
-
-        <h2 class="fg-white mt-10"><span class="reduce-1 enlarge-md">Support Development</span></h2>
-        <div class="container mt-10 text-leader fg-white pl-5-fs pr-5-fs pl-20-md pr-20-md">
-            <p class=" reduce-1 enlarge-1-md">
-            Metro 4 is an MIT licensed open source project and completely free to use.
-            <br>However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing.
-            </p>
-        </div>
-
-    </div>
-
-    <div class="container-fluid bg-white fg-dark pt-10 pb-20 neb neb-white">
-        <div class="container">
-            <div class="h1 text-light">Support methods:</div>
-
-            <div class="row mt-10">
-                <div class="cell-md-6 mt-4">
-                    <div class="border bd-default p-4 h-100 text-center">
-                        <h3 class="mt-5 mb-5">Patreon</h3>
-                        <hr>
-                        <p>
-                            Recurring pledges come with exclusive perks, e.g. having your name listed in the Metro 4 GitHub repository, or have your company logo placed on this website.
-                        </p>
-
-                        <div class="mt-4">
-                            <a href="https://www.patreon.com/bePatron?u=8975658" class="button alert large text-upper d-inline-flex flex-align-center flex-justify-center"><img src="images/patreon.png" class="mr-2"> Become a Patron</a>
-                        </div>
-
-                        <p class="text-bold">
-                            With your help, I can make Metro 4 even better!
-                        </p>
+<div class="container-fluid hero-wrapper">
+    <div class="container new-hero-container">
+        <div class="row">
+            <div class="cell-lg-6 order-2 order-lg-1">
+                <div class="new-hero text-center text-left-lg">
+                    <div class="display2 fg-dark text-bold mt-0" style="line-height: 1">
+                        <span class="reduce-1">You can help the project Metro 4</span>
                     </div>
-                </div>
-                <div class="cell-md-6 mt-4">
-                    <div class="border bd-default p-4 h-100 text-center">
-                        <h3 class="mt-5 mb-5">Open collective</h3>
-                        <hr>
-                        <p>
-                            Recurring pledges come with exclusive perks, e.g. having your name listed in the Metro 4 GitHub repository, or have your company logo placed on this website.
-                        </p>
 
-                        <div class="mt-4">
-                            <a href="https://opencollective.com/metro4" class="button info large text-upper d-inline-flex flex-align-center flex-justify-center"><img src="images/open-collective.png" class="mr-2"> Become a Patron</a>
-                        </div>
+                    <div class="text-leader2 mt-4 mb-4">
+                        Metro 4 is a open-source project, and completely free to use.
+                        However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing.
+                    </div>
 
-                        <p class="text-bold">
-                            With your help, I can make Metro 4 even better!
-                        </p>
+                    <div>
+                        <a href="https://www.patreon.com/metroui" rel="nofollow" class="d-inline-block">
+                            <img style="height: 36px; border-radius: 20px;" alt="patreon" src="images/become-patron.png">
+                        </a>
+                        <a class="button bg-darkRed fg-white" target="_blank" href="https://www.buymeacoffee.com/pimenov">
+                            <img style="height: 18px" src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy coffee for the author"><span class="text-bold reduce-2 text-upper ml-2">Buy coffee for the author</span>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="row mt-10">
-                <div class="cell-md-6 mt-4">
-                    <div class="border bd-default p-4 h-100">
-                        <h3 class="mt-5 mb-5">Swift USD</h3>
-                        <hr>
-                        <table class="table text-left striped">
+
+            <div class="cell-lg-6 order-1 order-lg-2">
+                <img src="images/businessman.svg" alt="web development" class="w-100 mt-5">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="container">
+        <!-- ads-html -->
+    </div>
+</div>
+
+<div class="container-fluid presenta">
+    <div class="container">
+        <div class="row">
+            <div class="cell-lg-6">
+                <div class="presenta-box bg-white d-flex flex-column flex-align-center  border border-radius-10 bd-transparent p-4 h-100">
+                    <h3>Swift USD</h3>
+                    <div class="w-100">
+                        <table class="table text-left striped reduce-1" data-role="table" data-static="true" data-horizontal-scroll="true">
                             <thead>
                             <tr>
                                 <th>BENEFICIARY:</th>
@@ -161,11 +130,13 @@
                         </table>
                     </div>
                 </div>
-                <div class="cell-md-6 mt-4">
-                    <div class="border bd-default p-4 h-100">
-                        <h3 class="mt-5 mb-5">Swift EURO</h3>
-                        <hr>
-                        <table class="table text-left striped">
+            </div>
+
+            <div class="cell-lg-6">
+                <div class="presenta-box bg-white d-flex flex-column flex-align-center  border border-radius-10 bd-transparent p-4 h-100">
+                    <h3>Swift EURO</h3>
+                    <div class="w-100">
+                        <table class="table text-left striped reduce-1" data-role="table" data-static="true" data-horizontal-scroll="true">
                             <thead>
                             <tr>
                                 <th>BENEFICIARY:</th>
@@ -198,12 +169,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-10">
-                <div class="cell-md-6 mt-4">
-                    <div class="border bd-default p-4 h-100">
-                        <h3 class="mt-5 mb-5">SEPA EURO</h3>
-                        <hr>
-                        <table class="table text-left striped">
+
+            <div class="cell-lg-6">
+                <div class="presenta-box bg-white d-flex flex-column flex-align-center border border-radius-10 bd-transparent p-4 h-100">
+                    <h3>SEPA EURO</h3>
+                    <div class="w-100">
+                        <table class="table text-left striped reduce-1" data-role="table" data-static="true" data-horizontal-scroll="true">
                             <thead>
                             <tr>
                                 <th>ACCOUNT HOLDER:</th>
@@ -227,12 +198,27 @@
                         </table>
                     </div>
                 </div>
-                <div class="cell-md-6 mt-4">
-                    <div class="border bd-default p-4 h-100">
-                        <h3 class="mt-5 mb-5">PayPal</h3>
-                        <hr>
-                        <div class="remark alert">
-                            Currently not available in Ukraine :(
+            </div>
+
+            <div class="cell-lg-6">
+                <div class="presenta-box bg-white border border-radius-10 bd-transparent p-4 h-100 text-center">
+                    <div class="d-flex flex-column h-100">
+                        <div class="h-50 pt-4 pb-4">
+                            <h3>PayPal</h3>
+                            <div class="text-center">
+                                You can send PayPal donation to address
+                                <br>
+                                <strong>serhii@pimenov.com.ua</strong>
+                            </div>
+                        </div>
+
+                        <div class="h-50 pt-4 pb-4 border-top bd-lightRed">
+                            <h3>Payoneer</h3>
+                            <div class="text-center">
+                                You can send Payoneer donation to address
+                                <br>
+                                <strong>sergey@pimenov.com.ua</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,152 +226,330 @@
         </div>
     </div>
 
-    <div class="container-fluid bg-light pt-10 pb-20 neb neb-light">
-        <div class="container text-center">
-            <h3 class="mt-10">Sponsors</h3>
-            <ul class="mt-5 unstyled-list d-block flex-justify-center">
-                <li class="m-4"><a href="https://www.patreon.com/user/creators?u=27819336" style="font-size: 42px" class="text-bold fg-dark no-decor">Steve</a></li>
-            </ul>
-
-            <h6 class="mt-10">Backers</h6>
-            <ul class="mt-5 unstyled-list h5">
-                <li><a href="https://www.patreon.com/user/creators?u=13947239">Arnaud Dagnelies</a></li>
-                <li><a href="https://www.patreon.com/user/creators?u=33581561">ProJee</a></li>
-                <li><a href="https://www.patreon.com/user/creators?u=35477827">Abdelaziz Maaded</a></li>
-                <li><a href="https://www.patreon.com/user/creators?u=28475416">Enrique Flores</a></li>
-            </ul>
-
-            <hr>
-            <h6 class="mt-10">Over the years, the project was supported:</h6>
-            <ul class="mt-5 unstyled-list text-small">
-                <li>Open Builds</li>
-                <li>Infinity Technology</li>
-                <li>Triple Beta</li>
-                <li>Riku</li>
-                <li>Jonathan</li>
-                <li>Hebert Alves</li>
-                <li>Mike</li>
-                <li>Arnaud Dagnelies</li>
-                <li>Walter Sassano</li>
-                <li>Chaoswriter96</li>
-                <li>chongzia</li>
-                <li>TorakikiSan</li>
-                <li>Walter Sassano</li>
-                <li>Interactivity</li>
-                <li>Matthew Bezuidenhout</li>
-                <li>Petr Jahoda</li>
-                <li>Marcel Wehrstedt</li>
-                <li>Steve</li>
-                <li>ProJee</li>
-                <li>Abdelaziz Maaded</li>
-                <li>Enrique Flores</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="container-fluid feature-bg pt-10 pb-20 neb neb-feature">
-        <div class="container text-center">
-
-            <div class="h1 m-10"><span class="reduce-1 enlarge-1-md">Why sponsor?</span></div>
-            <div class="text-leader">
-                <p class="reduce-1 enlarge-1-md pl-5-fs pr-5-fs pl-20-md pr-20-md">
-                    If you run a business and is using Metro 4 (Metro UI CSS) in a revenue-generating product, it would make business sense to sponsor Metro 4 development: it ensures the project that your product relies on stays healthy and actively maintained.
-                </p>
+    <div class="container pt-20 pb-20 text-center text-left-lg">
+        <div class="row">
+            <div class="cell-lg-6">
+                <img src="images/revenue.svg" alt="checklist">
             </div>
-            <hr class="mt-10 mb-10 w-50" style="background-color: #E1E1E1">
-            <!-- ads-html -->
-            <hr class="mt-10 mb-10 w-50" style="background-color: #E1E1E1">
-            <div class="text-leader2">
-                <p class="reduce-1 enlarge-1-md pl-5-fs pr-5-fs pl-20-md pr-20-md">
-                    Of course, individual users are also welcome to make a recurring pledge if Metro 4 (Metro UI CSS) has helped you in your work or personal projects.
-                </p>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="container-fluid bg-white fg-dark">
-        <div class="container pt-10 pb-20">
-            <div class="h1 mt-10 text-center"><span class="reduce-1 enlarge-1-md">Special thanks to</span></div>
-
-            <div class="row special-thanks">
-                <div class="cell-md-2">
-                    <a href="https://olshansky.ua/"><img src="images/olshansky.svg"></a>
-                </div>
-                <div class="cell-md-2">
-                    <a href="https://www.imena.ua/"><img src="images/imena_logo.png"></a>
-                </div>
-                <div class="cell-md-2">
-                    <a href="https://mirohost.net/"><img src="images/mirohost_logo.svg"></a>
-                </div>
-                <div class="cell-md-2">
-                    <a href="https://www.keycdn.com/"><img src="images/keycdn-logo.svg"></a>
-                </div>
-                <div class="cell-md-2">
-                    <a href="https://www.jetbrains.com/"><img src="images/jetbrains.svg"></a>
+            <div class="cell-lg-6">
+                <div class="display3 mt-12 fg-dark">Why sponsor?</div>
+                <div class="text-leader21">
+                    <p class="text-leader2">
+                        Metro 4 is a open-source project, and completely free to use.
+                    </p>
+                    <p>
+                        If you run a business and is using Metro 4 (Metro UI CSS) in a revenue-generating product, it would make business sense to sponsor Metro 4 development:
+                        it ensures the project that your product relies on stays healthy and actively maintained.
+                    </p>
+                    <p>
+                        Of course, individual users are also welcome to make a recurring pledge if Metro 4 (Metro UI CSS) has helped you in your work or personal projects.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="footer-bg">
-        <div class="container pt-20 pb-20">
-            <div class="text-center">
-                <ul class="inline-list reduce-1" id="social-menu">
-                    <li><a href="https://www.facebook.com/groups/metro4.libary/"><span class="mif-facebook"></span></a></li>
-                    <li><a href="https://twitter.com/MetroUI"><span class="mif-twitter"></span></a></li>
-                    <li><a href="#"><span class="mif-youtube"></span></a></li>
-                    <li><a href="https://github.com/olton/Metro-UI-CSS"><span class="mif-github"></span></a></li>
-                </ul>
+    <div class="container buy-me-coffee">
+        <div class="text-center p-10 border border-radius-10 bd-transparent shadowed">
+            <div class="h3 text-light text-center">
+                <span class="reduce-1 enlarge-1-md">
+                    Like Metro 4?
+                    <br>Buy coffee for the author or become a patron!
+                </span>
             </div>
 
-            <div class="text-center mt-10">
-                <ul class="inline-list reduce-1" id="footer-menu">
-                    <li><a href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">License</a></li>
-                    <li><a href="https://pimenov.com.ua">Author</a></li>
-                    <li><a href="https://forum.metroui.org.ua">Forum</a></li>
-                    <li><a href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
-                    <li><a href="https://github.com/olton/Metro-UI-CSS/releases">Releases</a></li>
-                </ul>
+            <br>
+
+            <a href="https://www.patreon.com/metroui" rel="nofollow" class="d-inline-block">
+                <img style="height: 38px; border-radius: 20px;" alt="patreon" src="images/become-patron.png">
+            </a>
+            <a class="button" target="_blank" href="https://www.buymeacoffee.com/pimenov">
+                <img style="height: 18px" src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy coffee for the author"><span class="text-bold reduce-2 text-upper ml-2">Buy coffee for the author</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid features">
+    <div class="container">
+        <div class=" bg-white border border-radius-10 bd-transparent shadowed">
+            <div class="row">
+                <div class="cell-md-4">
+                    <div class="bg-white p-8 fg-dark h-100">
+                        <img src="images/css.svg" alt="css" style="height: 200px;">
+                        <h4 class="fg-dark mt-4">Base styles</h4>
+                        <p>
+                            Metro 4 includes various styles for changing the appearance of html elements.
+                        </p>
+                    </div>
+                </div>
+                <div class="cell-md-4">
+                    <div class="bg-white p-8 fg-dark h-100">
+                        <img src="images/ui_design.svg" alt="css" style="height: 200px;">
+                        <h4 class="fg-dark mt-4">100+ Components</h4>
+                        <p>
+                            More than 100 HTML components are available to you to solve almost all tasks.
+                        </p>
+                    </div>
+                </div>
+                <div class="cell-md-4">
+                    <div class="bg-white p-8 fg-dark h-100">
+                        <img src="images/javascript.svg" alt="css" style="height: 200px;">
+                        <h4 class="fg-dark mt-4">Tools and Routines</h4>
+                        <p>
+                            Various built-in tool functions and classes will increase your productivity.
+                        </p>
+                    </div>
+                </div>
             </div>
 
-            <div class="text-center m-10">
-                <span class="h2"><span class="fg-cyan">Made in </span><span class="fg-yellow">Ukraine</span></span>
-            </div>
-
-            <div class="text-center mt-10 reduce-1">
-                Metro 4 (Metro UI CSS) &copy; 2012-2019 by <a href="https://pimenov.com.ua" class="no-wrap">Sergey Pimenov</a>.
-                <br />
-                <span class="no-wrap">Domain by <a href="https://imena.ua/">Imena.ua</a>.</span>
-                <span class="no-wrap">Hosting by <a href="https://mirohost.net/">Mirohost</a>.</span>
-                <br/>
-                <span class="no-wrap">Metro CDN by <a href="https://www.keycdn.com/">KeyCDN</a>.</span>
-                <br/>
-                <span class="no-wrap">IDE PhpStorm by <a href="https://www.jetbrains.com/">JetBrains</a>.</span>
-                <br />
-                Currently <span class="version-number-full"></span>. Code licensed <a href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+            <div class="row">
+                <div class="cell-md-4">
+                    <div class="bg-white p-8 fg-dark h-100">
+                        <img src="images/bug_fixed.svg" alt="css" style="height: 200px;">
+                        <h4 class="fg-dark mt-4">Issues</h4>
+                        <p>
+                            Rapid response to detected bugs and their elimination.
+                        </p>
+                    </div>
+                </div>
+                <div class="cell-md-4">
+                    <div class="bg-white p-8 fg-dark h-100">
+                        <img src="images/knowledge.svg" alt="css" style="height: 200px;">
+                        <h4 class="fg-dark mt-4">Documentation</h4>
+                        <p>
+                            Detailed description of all elements of the Metro 4 library.
+                        </p>
+                    </div>
+                </div>
+                <div class="cell-md-4">
+                    <div class="bg-white p-8 fg-dark h-100">
+                        <img src="images/rocket_launch.svg" alt="css" style="height: 200px;">
+                        <h4 class="fg-dark mt-4">Dependencies free</h4>
+                        <p>
+                            The Metro 4 library has no dependencies and is very fast.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="container">
+        <!-- ads-html -->
+    </div>
+</div>
+
+<div class="container-fluid pandora">
+    <div class="container pt-20 pb-20">
+        <div class="row">
+            <div class="cell-lg-6 order-2 order-lg-1">
+                <div class="display3 fg-dark">Pandora - free big example!</div>
+                <div class="text-leader2">
+                    <p>
+                        <b>Pandora</b> - is a Responsive and Clean Admin Dashboard template. This template created with
+                        Metro 4 with uses native classes, elements, and components. The template contains different
+                        types of reusable and professional responsive components with different variations.
+                    <p>
+                </div>
+            </div>
+            <div class="cell-lg-6 order-1 order-lg-2">
+                <img src="https://user-images.githubusercontent.com/365108/56853343-eef5a980-692e-11e9-8613-b7e42a913383.jpg"
+                     alt="checklist">
+            </div>
+        </div>
+
+        <div class="mt-10 text-center">
+            <a href="https://themes.org.ua/pandora/" class="button warning">Open Pandora Demo</a>
+            <a href="https://github.com/olton/Pandora" class="button info">Download Source</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid pt-20 pb-20 in-action-wrapper">
+    <div class="container">
+        <div class="h2 text-center mb-10"><span>Metro 4 in action!</span></div>
+
+        <div class="row">
+            <div class="cell-md-4">
+                <div class="work-box">
+                    <a href="https://themes.org.ua/pandora"><img src="images/our-work/pandora.jpg" alt="work pandora"></a>
+                </div>
+            </div>
+            <div class="cell-md-4">
+                <div class="work-box">
+                    <a href="https://themes.org.ua/mirohost"><img src="images/our-work/mirohost.jpg" alt="work mirohost"></a>
+                </div>
+            </div>
+            <div class="cell-md-4">
+                <div class="work-box">
+                    <a href="https://metroui.org.ua/examples/tiles/start.html"><img src="images/our-work/start.jpg" alt="work start screen"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="cell-md-4">
+                <div class="work-box">
+                    <a href="https://themes.org.ua/aistant"><img src="images/our-work/aistant.jpg" alt="work aistant"></a>
+                </div>
+            </div>
+            <div class="cell-md-4">
+                <div class="work-box">
+                    <a href="https://cryptoscamalert.com"><img src="images/our-work/cryptoscamalert.jpg" alt="work cryptoscamalert"></a>
+                </div>
+            </div>
+            <div class="cell-md-4">
+                <div class="work-box">
+                    <a href="https://metroui.org.ua/examples/github/github.html"><img src="images/our-work/github.jpg" alt="work github"></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container-fluid sponsor-wrapper">
+    <div class="container text-center pt-10 pb-10">
+        <div class="h2 text-center mb-10"><span>At the moment the project is supported</span></div>
+
+        <div class="h2 mt-10">Sponsors</div>
+        <ul class="mt-5 unstyled-list d-block flex-justify-center">
+            <li class="m-4"><a href="https://www.patreon.com/user/creators?u=27819336" style="font-size: 64px" class="text-bold accent-color no-decor">Steve</a></li>
+        </ul>
+
+        <h6 class="mt-10">Backers</h6>
+        <ul class="mt-5 unstyled-list h5">
+            <li><a href="https://www.patreon.com/user/creators?u=13947239">Arnaud Dagnelies</a></li>
+            <li><a href="https://www.patreon.com/user/creators?u=33581561">ProJee</a></li>
+            <li><a href="https://www.patreon.com/user/creators?u=35477827">Abdelaziz Maaded</a></li>
+            <li><a href="https://www.patreon.com/user/creators?u=28475416">Enrique Flores</a></li>
+            <li><a href="https://www.patreon.com/user/creators?u=39975997">Alejandro Marin</a></li>
+        </ul>
+
+        <hr>
+        <h6 class="mt-10">Over the years, the project was supported:</h6>
+        <ul class="mt-5 unstyled-list text-small">
+            <li>Open Builds</li>
+            <li>Infinity Technology</li>
+            <li>Triple Beta</li>
+            <li>Riku</li>
+            <li>Jonathan</li>
+            <li>Hebert Alves</li>
+            <li>Mike</li>
+            <li>Arnaud Dagnelies</li>
+            <li>Walter Sassano</li>
+            <li>Chaoswriter96</li>
+            <li>chongzia</li>
+            <li>TorakikiSan</li>
+            <li>Walter Sassano</li>
+            <li>Interactivity</li>
+            <li>Matthew Bezuidenhout</li>
+            <li>Petr Jahoda</li>
+            <li>Marcel Wehrstedt</li>
+            <li>Steve</li>
+            <li>ProJee</li>
+            <li>Abdelaziz Maaded</li>
+            <li>Enrique Flores</li>
+            <li>Alejandro Marin</li>
+        </ul>
+
+    </div>
+</div>
+
+<div class="container-fluid bg-white fg-dark bg-white">
+    <div class="container pt-10 pb-10">
+        <div class="h2 text-center"><span>Thank for technical support</span></div>
+
+        <div class="row special-thanks">
+            <div class="cell-md-2">
+                <a href="https://olshansky.ua/"><img src="images/olshansky.svg" alt="Olshansky and Co"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://www.imena.ua/"><img src="images/imena_logo.png" alt="Imena.ua"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://mirohost.net/"><img src="images/mirohost_logo.svg" alt="Mirohost.net"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://www.keycdn.com/"><img src="images/keycdn-logo.svg" alt="keycdn.com"></a>
+            </div>
+            <div class="cell-md-2">
+                <a href="https://www.jetbrains.com/"><img src="images/jetbrains.svg" alt="jetbrains.com"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer-bg">
+    <div class="container pt-20 pb-20">
+        <div class="text-center">
+            <ul class="inline-list reduce-1" id="social-menu">
+                <li><a class="" href="https://www.facebook.com/groups/metro4.libary/"><span class="mif-facebook"></span></a>
+                </li>
+                <li><a class="" href="https://twitter.com/MetroUI"><span class="mif-twitter"></span></a></li>
+                <li><a class="" href="#"><span class="mif-youtube"></span></a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS"><span class="mif-github"></span></a></li>
+            </ul>
+        </div>
+
+        <div class="text-center mt-10">
+            <ul class="inline-list reduce-1" id="footer-menu">
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">License</a></li>
+                <li><a class="" href="https://pimenov.com.ua">Author</a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
+                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/releases">Releases</a></li>
+                <li><a class="" href="https://www.npmjs.com/package/metro4">Npm</a></li>
+                <li><a class="" href="https://www.nuget.org/packages/Metro4/">Nuget</a></li>
+            </ul>
+        </div>
+
+        <div class="text-center m-10">
+            <span class="h2"><span class="fg-cyan">Made in </span><span class="fg-yellow">Ukraine</span></span>
+        </div>
+
+        <div class="text-center mt-10 reduce-1">
+            Metro 4 (Metro UI CSS) &copy; 2012-2020 by <a href="https://pimenov.com.ua" class="no-wrap">Serhii
+            Pimenov</a>.
+            <br/>
+            <span class="no-wrap">Domain by <a class href="https://imena.ua/">Imena.ua</a>.</span>
+            <span class="no-wrap">Hosting by <a class href="https://mirohost.net/">Mirohost</a>.</span>
+            <br/>
+            <span class="no-wrap">Metro CDN by <a class href="https://www.keycdn.com/">KeyCDN</a>.</span>
+            <br/>
+            <span class="no-wrap">IDE PhpStorm by <a class href="https://www.jetbrains.com/">JetBrains</a>.</span>
+            <br/>
+            Docs version <span class="docs-version">2020.1</span>. Code licensed <a class
+                                                                                    href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>,
+            docs <a class href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+        </div>
+    </div>
+</footer>
 
 
-    <script src="metro/js/metro.js?ver=@@b-version"></script>
-    <script>
-        $(".version-number").html(Metro.ver());
-        // $(function(){
-        //     window.onscroll = function(){
-        //         var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        //         if (winScroll > 50) {
-        //             $("#header").addClass("scrolled-header");
-        //         } else {
-        //             $("#header").removeClass("scrolled-header");
-        //         }
-        //     };
-        // });
-    </script>
-    <!-- ads-script -->
-    <!-- ga-script -->
-    <!-- hit-ua -->
-
+<script src="metro/js/metro.js?ver=@@b-version"></script>
+<script>
+    $(window).on("adblock-alert", function(){
+        setTimeout(function(){
+            Metro.createToast(
+                "<span class='text-leader'>At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker and support Metro 4!</span>" +
+                "<br>"+
+                "<br>"+
+                "By the way, this block is shown by the built-in Metro 4 function! ",
+                null, null, "alert",
+                {
+                    showTop: true,
+                    distance: 60,
+                    timeout: 10000
+                }
+            );
+        }, 2000);
+    })
+</script>
+<!-- ads-script -->
+<!-- ga-script -->
+<!-- hit-ua -->
 </body>
 </html>
