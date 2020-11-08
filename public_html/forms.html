@@ -117,12 +117,12 @@
                     <form  class="mb-2">
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" placeholder="Enter email"/>
+                            <input type="email" placeholder="Enter email" class="metro-input"/>
                             <small class="text-muted">We'll never share your email with anyone else.</small>
                         </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" placeholder="Enter email"/>
+                            <input type="password" placeholder="Enter email" class="metro-input"/>
                         </div>
                         <div class="form-group">
                             <input type="checkbox" data-role="checkbox" data-caption="Remember me" title="">
@@ -172,12 +172,24 @@
                 <h6>Default input</h6>
                 <div class="example pb-0">
                     <form class="mb-2">
-                        <input type="text" class="mt-1" title="">
+                        <input type="text">
                     </form>
                 </div>
                 <pre><code class="html">
                     &lt;form&gt;
-                        &lt;input type="text" class="mt-1"&gt;
+                        &lt;input type="text"&gt;
+                    &lt;/form&gt;
+                </code></pre>
+
+                <h6>Input with class .metro-input</h6>
+                <div class="example pb-0">
+                    <form class="mb-2">
+                        <input type="text" class="metro-input">
+                    </form>
+                </div>
+                <pre><code class="html">
+                    &lt;form&gt;
+                        &lt;input type="text" class="metro-input"&gt;
                     &lt;/form&gt;
                 </code></pre>
 
@@ -663,11 +675,11 @@
                 <h4 id="_textarea">Textarea</h4>
                 <p>
                     Metro 4 uses a special wrapper to display the textarea. When you use Metro 4 textarea wrapper, you can enabling <code>autosize</code> feature.
-                    Use attribute <code>data-role="textarea"</code> to activate wrapper.
+                    Use attribute <code>data-role="textarea"</code> to activate wrapper. Also you can add class <code>.metro-input</code> to textarea to add metro style.
                 </p>
                 <div class="example mb-2">
                     <form>
-                        <textarea placeholder="Default" class="mb-1"></textarea>
+                        <textarea placeholder="Default textarea with class .metro-input" class="mb-1 metro-input"></textarea>
                         <textarea data-role="textarea" placeholder="Autosize" data-auto-size="true" class="mb-1"></textarea>
                         <textarea data-role="textarea" placeholder="Autosize" data-auto-size="true" class="mb-1" data-prepend="<span class='mif-bubbles'></span>"></textarea>
                         <textarea data-role="textarea" placeholder="Disabled" disabled></textarea>
@@ -869,11 +881,11 @@
                     <form>
                         <div class="form-group">
                             <label>Example label</label>
-                            <input type="text" title="">
+                            <input type="text" class="metro-input">
                         </div>
                         <div class="form-group">
                             <label>Example label</label>
-                            <input type="text" title="">
+                            <input type="text" class="metro-input">
                         </div>
                     </form>
                 </div>
@@ -881,11 +893,11 @@
                     &lt;form&gt;
                         &lt;div class="form-group"&gt;
                             &lt;label&gt;Example label&lt;/label&gt;
-                            &lt;input type="text"&gt;
+                            &lt;input type="text" class="metro-input"&gt;
                         &lt;/div&gt;
                         &lt;div class="form-group"&gt;
                             &lt;label&gt;Example label&lt;/label&gt;
-                            &lt;input type="text"&gt;
+                            &lt;input type="text" class="metro-input"&gt;
                         &lt;/div&gt;
                     &lt;/form&gt;
                 </code></pre>
@@ -899,10 +911,10 @@
                     <form>
                         <div class="row">
                             <div class="cell-md-6">
-                                <input type="text" placeholder="First name">
+                                <input type="text" placeholder="First name" class="metro-input">
                             </div>
                             <div class="cell-md-6">
-                                <input type="text" placeholder="Last name">
+                                <input type="text" placeholder="Last name" class="metro-input">
                             </div>
                         </div>
                     </form>
@@ -911,10 +923,10 @@
                     &lt;form&gt;
                         &lt;div class="row"&gt;
                             &lt;div class="cell-md-6"&gt;
-                                &lt;input type="text" placeholder="First name"&gt;
+                                &lt;input type="text" placeholder="First name" class="metro-input"&gt;
                             &lt;/div&gt;
                             &lt;div class="cell-md-6"&gt;
-                                &lt;input type="text" placeholder="Last name"&gt;
+                                &lt;input type="text" placeholder="Last name" class="metro-input"&gt;
                             &lt;/div&gt;
                         &lt;/div&gt;
                     &lt;/form&gt;
@@ -929,13 +941,13 @@
                         <div class="row mb-2">
                             <label class="cell-sm-2">Email</label>
                             <div class="cell-sm-10">
-                                <input type="email" title="">
+                                <input type="email" title="" class="metro-input">
                             </div>
                         </div>
                         <div class="row mb-2">
                             <label class="cell-sm-2">Password</label>
                             <div class="cell-sm-10">
-                                <input type="password" title="">
+                                <input type="password" title="" class="metro-input">
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -964,13 +976,13 @@
                         &lt;div class="row mb-2"&gt;
                             &lt;label class="cell-sm-2"&gt;Email&lt;/label&gt;
                             &lt;div class="cell-sm-10"&gt;
-                                &lt;input type="email"&gt;
+                                &lt;input type="email" class="metro-input"&gt;
                             &lt;/div&gt;
                         &lt;/div&gt;
                         &lt;div class="row mb-2"&gt;
                             &lt;label class="cell-sm-2"&gt;Password&lt;/label&gt;
                             &lt;div class="cell-sm-10"&gt;
-                                &lt;input type="password"&gt;
+                                &lt;input type="password" class="metro-input"&gt;
                             &lt;/div&gt;
                         &lt;/div&gt;
                         &lt;div class="row mb-2"&gt;
@@ -1006,16 +1018,16 @@
                 </p>
                 <div class="example">
                     <form class="inline-form">
-                        <input type="text" placeholder="Your Name" title="">
-                        <input type="text" placeholder="Username" title="">
+                        <input type="text" placeholder="Your Name" title="" class="metro-input">
+                        <input type="text" placeholder="Username" title="" class="metro-input">
                         <input type="checkbox" data-role="checkbox" data-caption="Remember me" title="">
                         <button class="button success">Submit</button>
                     </form>
                 </div>
                 <pre class=""><code>
                     &lt;form class="inline-form"&gt;
-                        &lt;input type="text" placeholder="Your Name"&gt;
-                        &lt;input type="text" placeholder="Username"&gt;
+                        &lt;input type="text" placeholder="Your Name" class="metro-input"&gt;
+                        &lt;input type="text" placeholder="Username" class="metro-input"&gt;
                         &lt;input type="checkbox" data-role="checkbox" data-caption="Remember me"&gt;
                         &lt;button class="button success"&gt;Submit&lt;/button&gt;
                     &lt;/form&gt;
@@ -1036,7 +1048,7 @@
                 </p>
                 <div class="example">
                     <form>
-                        <input type="text" class="alert mb-1" title="">
+                        <input type="text" class="alert mb-1 metro-input" title="">
                         <input type="password" class="success mb-1" data-role="input" title="">
                         <textarea data-role="textarea" class="primary mb-1" title=""></textarea>
                         <select class="warning" data-role="select" title="">
@@ -1047,7 +1059,7 @@
                     </form>
                 </div>
                 <pre class=""><code>
-                    &lt;input type="text" class="alert"&gt;
+                    &lt;input type="text" class="alert metro-input"&gt;
                     &lt;input type="password" class="success" data-role="input"&gt;
                     &lt;textarea data-role="textarea" class="primary"&gt;&lt;/textarea&gt;
                     &lt;select class="warning" data-role="select"&gt;
@@ -1098,7 +1110,7 @@
                     <script>
                         function toggleInputState(el){
                             var i = $('#disable_input_runtime');
-                            $(el).is(':checked') ? i.attr('disabled', false) : i.attr('disabled', true);
+                            i.prop('disabled', !$(el).is(':checked'));
                         }
                     </script>
                 </div>
@@ -1108,7 +1120,7 @@
                     &lt;script&gt;
                         function toggleInputState(el){
                             var i = $('#disable_enable_input_runtime');
-                            $(el).is(':checked') ? i.attr('disabled', false) : i.attr('disabled', true);
+                            i.prop('disabled', !$(el).is(':checked'));
                         }
                     &lt;/script&gt;
                 </code></pre>
@@ -1141,27 +1153,27 @@
                         <div class="row mb-3">
                             <div class="cell-md-6">
                                 <label>First name</label>
-                                <input type="text" required value="Billy" title="">
+                                <input type="text" required value="Billy" title="" class="metro-input">
                             </div>
                             <div class="cell-md-6">
                                 <label>Last name</label>
-                                <input type="text" required value="Gates" title="">
+                                <input type="text" required value="Gates" title="" class="metro-input">
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="cell-md-6">
                                 <label>City</label>
-                                <input type="text" required placeholder="City" title="">
+                                <input type="text" required placeholder="City" title="" class="metro-input">
                                 <div class="invalid_feedback">Please provide a valid city.</div>
                             </div>
                             <div class="cell-md-3">
                                 <label>State</label>
-                                <input type="text" required placeholder="State" title="">
+                                <input type="text" required placeholder="State" title="" class="metro-input">
                                 <div class="invalid_feedback">Please provide a valid state.</div>
                             </div>
                             <div class="cell-md-3">
                                 <label>Zip</label>
-                                <input type="text" required placeholder="Zip" title="">
+                                <input type="text" required placeholder="Zip" title="" class="metro-input">
                                 <div class="invalid_feedback">Please provide a valid zip.</div>
                             </div>
                         </div>
@@ -1184,25 +1196,25 @@
                         <div class="row mb-3">
                             <div class="cell-md-6">
                                 <label>First name</label>
-                                <input type="text" required value="Billy" title="">
+                                <input type="text" required value="Billy" title="" class="metro-input">
                             </div>
                             <div class="cell-md-6">
                                 <label>Last name</label>
-                                <input type="text" required value="Gates" title="">
+                                <input type="text" required value="Gates" title="" class="metro-input">
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="cell-md-6">
                                 <label>City</label>
-                                <input type="text" required placeholder="City">
+                                <input type="text" required placeholder="City" class="metro-input">
                             </div>
                             <div class="cell-md-3">
                                 <label>State</label>
-                                <input type="text" required placeholder="State">
+                                <input type="text" required placeholder="State" class="metro-input">
                             </div>
                             <div class="cell-md-3">
                                 <label>Zip</label>
-                                <input type="text" required placeholder="Zip">
+                                <input type="text" required placeholder="Zip" class="metro-input">
                             </div>
                         </div>
                         <button class="button primary">Submit form</button>
@@ -1217,7 +1229,7 @@
                 <div class="example">
                     <form data-role="validator" action="javascript:">
                         <label>Label for input</label>
-                        <input type="text" data-role="input" data-validate="required" title="">
+                        <input type="text" data-role="input" data-validate="required" title="" class="metro-input">
                         <button class="button primary mt-2">Submit</button>
                     </form>
                 </div>
@@ -1231,7 +1243,7 @@
                 <h4>Inputs</h4>
                 <div class="example">
                     <form class="mb-2">
-                        <input type="text" dir="rtl" class="mb-1" title="">
+                        <input type="text" dir="rtl" class="mb-1 metro-input" title="">
                         <input type="text" dir="rtl" data-role="input" data-clear-button="true" class="mb-1" title="">
                         <input type="text" dir="rtl" data-role="input" data-clear-button="true" data-prepend="<span class='mif-user'></span>" title="">
                     </form>
@@ -1254,13 +1266,13 @@
                 <h4>Textarea</h4>
                 <div class="example">
                     <form class="mb-2">
-                        <textarea dir="rtl" class="mb-1" title=""></textarea>
+                        <textarea dir="rtl" class="mb-1 metro-input" title=""></textarea>
                         <textarea data-role="textarea" dir="rtl" class="mb-1" title=""></textarea>
                         <textarea data-role="textarea" dir="rtl" data-prepend="<span class='mif-bookmark'></span>" title=""></textarea>
                     </form>
                 </div>
                 <pre class=""><code>
-                    &lt;textarea dir="rtl"&gt;&lt;/textarea&gt;
+                    &lt;textarea dir="rtl" class=metro-input&gt;&lt;/textarea&gt;
                     &lt;textarea data-role="textarea" dir="rtl"&gt;&lt;/textarea&gt;
                 </code></pre>
 
@@ -1292,6 +1304,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

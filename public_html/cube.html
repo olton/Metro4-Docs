@@ -400,19 +400,19 @@
                         &lt;button class="button" onclick="setRules(myDemoRules3)"&gt;Rule set #3&lt;/button&gt;
                     &lt;/div&gt;
 
-                    &lt;div data-role="cube" id="demo-cube-methods"&gt;&lt;/div&gt;
+                    &lt;div data-role="cube" id="demo-cube"&gt;&lt;/div&gt;
 
                     &lt;div class="text-center"&gt;
                         &lt;button class="button"
-                            onclick="$('#demo-cube-methods').data('cube').axis(true)"&gt;Show axis&lt;/button&gt;
+                            onclick="Metro.getPlugin('#demo-cube','cube').axis(true)"&gt;Show axis&lt;/button&gt;
 
                         &lt;button class="button"
-                            onclick="$('#demo-cube-methods').data('cube').axis(false)"&gt;Hide axis&lt;/button&gt;
+                            onclick="Metro.getPlugin('#demo-cube','cube').axis(false)"&gt;Hide axis&lt;/button&gt;
                     &lt;/div&gt;
 
                     &lt;script&gt;
                         function setRules(rules){
-                            $('#demo-cube-methods').data('cube').rule(rules)
+                            Metro.getPlugin('#demo-cube','cube').rule(rules)
                         }
                     &lt;/script&gt;
                 </code></pre>
@@ -450,6 +450,6 @@
 
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

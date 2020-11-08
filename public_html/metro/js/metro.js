@@ -1,7 +1,7 @@
 /*
- * Metro 4 Components Library v4.4.0  (https://metroui.org.ua)
+ * Metro 4 Components Library v4.4.2  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 07/08/2020 15:29:34
+ * Built at 08/11/2020 22:09:20
  * Licensed under MIT
  */
 (function (global, undefined) {
@@ -14,7 +14,7 @@
 // Source: src/func.js
 
 /* global dataSet */
-/* exported isSimple, isHidden, isPlainObject, isEmptyObject, isArrayLike, str2arr, parseUnit, getUnit, setStyleProp, acceptData, dataAttr, normName, strip, dashedName */
+/* exported isTouch, isSimple, isHidden, isPlainObject, isEmptyObject, isArrayLike, str2arr, parseUnit, getUnit, setStyleProp, acceptData, dataAttr, normName, strip, dashedName, isLocalhost */
 
 var numProps = ['opacity', 'zIndex'];
 
@@ -139,6 +139,23 @@ function strip(name, what) {
 
 function hasProp(obj, prop){
     return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+function isLocalhost(host){
+    var hostname = host || window.location.hostname;
+    return (
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "[::1]" ||
+        hostname === "" ||
+        hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/) !== null
+    );
+}
+
+function isTouch() {
+    return (('ontouchstart' in window)
+        || (navigator.maxTouchPoints > 0)
+        || (navigator.msMaxTouchPoints > 0));
 }
 
 // Source: src/setimmediate.js
@@ -603,7 +620,7 @@ function hasProp(obj, prop){
 
 /* global hasProp */
 
-var m4qVersion = "v1.0.8. Built at 06/08/2020 18:05:15";
+var m4qVersion = "v1.0.9. Built at 19/10/2020 18:36:03";
 
 /* eslint-disable-next-line */
 var matches = Element.prototype.matches
@@ -1538,9 +1555,15 @@ $.fn.extend({
 
 // Source: src/utils.js
 
-/* global $, not, camelCase, dashedName, isPlainObject, isEmptyObject, isArrayLike, acceptData, parseUnit, getUnit, isVisible, isHidden, matches, strip, normName, hasProp */
+/* global $, not, camelCase, dashedName, isPlainObject, isEmptyObject, isArrayLike, acceptData, parseUnit, getUnit, isVisible, isHidden, matches, strip, normName, hasProp, isLocalhost, isTouch */
 
 $.extend({
+
+    device: (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())),
+    localhost: isLocalhost(),
+    isLocalhost: isLocalhost,
+    touchable: isTouch(),
+
     uniqueId: function (prefix) {
         var d = new Date().getTime();
         if (not(prefix)) {
@@ -1596,14 +1619,11 @@ $.extend({
     },
 
     isSelector: function(selector){
-        if (typeof(selector) !== 'string') {
-            return false;
-        }
-        if (selector.indexOf("<") !== -1) {
+        if (typeof selector !== 'string') {
             return false;
         }
         try {
-            $(selector);
+            document.querySelector(selector);
         } catch(error) {
             return false;
         }
@@ -1614,18 +1634,18 @@ $.extend({
         return $(s).remove();
     },
 
-    camelCase: function(string){return camelCase(string);},
-    dashedName: function(str){return dashedName(str);},
-    isPlainObject: function(obj){return isPlainObject(obj);},
-    isEmptyObject: function(obj){return isEmptyObject(obj);},
-    isArrayLike: function(obj){return isArrayLike(obj);},
-    acceptData: function(owner){return acceptData(owner);},
-    not: function(val){return not(val);},
-    parseUnit: function(str, out){return parseUnit(str, out);},
-    getUnit: function(str, und){return getUnit(str, und);},
-    unit: function(str, out){return parseUnit(str, out);},
-    isVisible: function(elem) {return isVisible(elem);},
-    isHidden: function(elem) {return isHidden(elem);},
+    camelCase: camelCase,
+    dashedName: dashedName,
+    isPlainObject: isPlainObject,
+    isEmptyObject: isEmptyObject,
+    isArrayLike: isArrayLike,
+    acceptData: acceptData,
+    not: not,
+    parseUnit: parseUnit,
+    getUnit: getUnit,
+    unit: parseUnit,
+    isVisible: isVisible,
+    isHidden: isHidden,
     matches: function(el, s) {return matches.call(el, s);},
     random: function(from, to) {
         if (arguments.length === 1 && isArrayLike(from)) {
@@ -1633,9 +1653,9 @@ $.extend({
         }
         return Math.floor(Math.random()*(to-from+1)+from);
     },
-    strip: function(val, what){return strip(val, what);},
-    normName: function(val){return normName(val);},
-    hasProp: function(obj, prop){return hasProp(obj, prop);},
+    strip: strip,
+    normName: normName,
+    hasProp: hasProp,
 
     serializeToArray: function(form){
         var _form = $(form)[0];
@@ -2290,6 +2310,7 @@ $.fn.extend({
 
     scrollTop: function(val){
         if (not(val)) {
+            
             return this.length === 0 ? undefined : this[0] === window ? pageYOffset : this[0].scrollTop;
         }
         return this.each(function(){
@@ -2387,9 +2408,9 @@ $.fn.extend({
 
 // Source: src/parser.js
 
-/* global $, isPlainObject, hasProp */
+/* global $ */
 
-$.parseHTML = function(data, context){
+$.parseHTML = function(data){
     var base, singleTag, result = [], ctx, _context;
     var regexpSingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i; // eslint-disable-line
 
@@ -2414,16 +2435,6 @@ $.parseHTML = function(data, context){
         for(var i = 0; i < _context.childNodes.length; i++) {
             result.push(_context.childNodes[i]);
         }
-    }
-
-    if (context && !(context instanceof $) && isPlainObject(context)) {
-        $.each(result,function(){
-            var el = this;
-            for(var name in context) {
-                if (hasProp(context, name))
-                    el.setAttribute(name, context[name]);
-            }
-        });
     }
 
     return result;
@@ -2824,6 +2835,19 @@ var normalizeElements = function(s){
 };
 
 $.fn.extend({
+
+    appendText: function(text){
+        return this.each(function(elIndex, el){
+            el.innerHTML += text;
+        });
+    },
+
+    prependText: function(text){
+        return this.each(function(elIndex, el){
+            el.innerHTML = text + el.innerHTML;
+        });
+    },
+
     append: function(elements){
         var _elements = normalizeElements(elements);
 
@@ -3481,7 +3505,7 @@ Object.keys(eases).forEach(function(name) {
     };
 });
 
-var defaultProps = {
+var defaultAnimationProps = {
     id: null,
     el: null,
     draw: {},
@@ -3498,7 +3522,7 @@ var defaultProps = {
 function animate(args){
     return new Promise(function(resolve){
         var that = this, start;
-        var props = $.assign({}, defaultProps, args);
+        var props = $.assign({}, defaultAnimationProps, {dur: $.animation.duration, ease: $.animation.ease}, args);
         var id = props.id, el = props.el, draw = props.draw, dur = props.dur, ease = props.ease, loop = props.loop, onFrame = props.onFrame, onDone = props.onDone, pause = props.pause, dir = props.dir, defer = props.defer;
         var map = {};
         var easeName = "linear", easeArgs = [], easeFn = Easing.linear, matchArgs;
@@ -4253,11 +4277,15 @@ $.fn.extend({
 
 // Source: src/init.js
 
-/* global $, isArrayLike */
+/* global $, isArrayLike, isPlainObject, hasProp, str2arr */
 
 $.init = function(sel, ctx){
-    var parsed, r;
+    var parsed;
     var that = this;
+
+    if (typeof sel === "string") {
+        sel = sel.trim();
+    }
 
     this.uid = $.uniqueId();
 
@@ -4269,80 +4297,68 @@ $.init = function(sel, ctx){
         return $.ready(sel);
     }
 
-    if (typeof sel === 'string' && sel === "document") {
-        sel = document;
-    }
-
-    if (typeof sel === 'string' && sel === "body") {
-        sel = document.body;
-    }
-
-    if (typeof sel === 'string' && sel === "html") {
-        sel = document.documentElement;
-    }
-
-    if (typeof sel === 'string' && sel === "doctype") {
-        sel = document.doctype;
-    }
-
-    if (sel && (sel.nodeType || sel.self === window)) {
-        this[0] = sel;
-        this.length = 1;
+    if (sel instanceof Element) {
+        this.push(sel);
         return this;
     }
 
     if (sel instanceof $) {
-        r = $();
         $.each(sel, function(){
-            r.push(this);
+            that.push(this);
         });
-        return r;
+        return this;
+    }
+
+    if (sel === "window") sel = window;
+    if (sel === "document") sel = document;
+    if (sel === "body") sel = document.body;
+    if (sel === "html") sel = document.documentElement;
+    if (sel === "doctype") sel = document.doctype;
+    if (sel && (sel.nodeType || sel.self === window)) {
+        this.push(sel);
+        return this;
     }
 
     if (isArrayLike(sel)) {
-        r = $();
         $.each(sel, function(){
             $(this).each(function(){
-                r.push(this);
+                that.push(this);
             });
         });
-        return r;
+        return this;
     }
 
-    if (typeof sel === "object") {
-        return sel;
+    if (typeof sel !== "string" && (sel.self && sel.self !== window)) {
+        return this;
     }
 
-    if (typeof sel === "string") {
+    if (sel === "#" || sel === ".") {
+        console.error("Selector can't be # or .") ;
+        return this;
+    }
 
-        if (sel[0] === "@") {
+    if (sel[0] === "@") {
 
-            $("[data-role]").each(function(){
-                var roles = $(this).attr("data-role").split(",").map(function(v){
-                    return (""+v).trim();
-                });
-                if (roles.indexOf(sel.slice(1)) > -1) {
-                    that.push(this);
-                }
-            });
-
-        } else {
-            sel = sel.trim();
-
-            if (sel === "#" || sel === ".") {
-                console.warn("Selector can't be # or .") ;
-                return this;
+        $("[data-role]").each(function(){
+            var roles = str2arr($(this).attr("data-role"), ",");
+            if (roles.indexOf(sel.slice(1)) > -1) {
+                that.push(this);
             }
+        });
 
-            parsed = $.parseHTML(sel, ctx);
+    } else {
 
-            if (parsed.length === 1 && parsed[0].nodeType === 3) { // Must be a text node -> css sel
+        parsed = $.parseHTML(sel);
+
+        if (parsed.length === 1 && parsed[0].nodeType === 3) { // Must be a text node -> css sel
+            try {
                 [].push.apply(this, document.querySelectorAll(sel));
-            } else {
-                $.merge(this, parsed);
+            } catch (e) {
+                console.error(sel + " is not a valid selector");
             }
+        } else {
+            $.merge(this, parsed);
         }
-
     }
 
     if (ctx !== undefined) {
@@ -4352,6 +4368,15 @@ $.init = function(sel, ctx){
             });
         } else if (ctx instanceof HTMLElement) {
             $(ctx).append(that);
+        } else {
+            if (isPlainObject(ctx)) {
+                $.each(this,function(){
+                    for(var name in ctx) {
+                        if (hasProp(ctx, name))
+                            this.setAttribute(name, ctx[name]);
+                    }
+                });
+            }
         }
     }
 
@@ -4406,6 +4431,11 @@ $.noConflict = function() {
     var meta_cloak = $.meta('metro4:cloak').attr("content");
     var meta_cloak_duration = $.meta('metro4:cloak_duration').attr("content");
     var meta_global_common = $.meta('metro4:global_common').attr("content");
+    var meta_blur_image = $.meta('metro4:blur_image').attr("content");
+
+    if (window.METRO_BLUR_IMAGE === undefined) {
+        window.METRO_BLUR_IMAGE = meta_blur_image !== undefined ? JSON.parse(meta_global_common) : false;
+    }
 
     if (window.METRO_GLOBAL_COMMON === undefined) {
         window.METRO_GLOBAL_COMMON = meta_global_common !== undefined ? JSON.parse(meta_global_common) : false;
@@ -4506,9 +4536,9 @@ $.noConflict = function() {
 
     var Metro = {
 
-        version: "4.4.0",
-        compileTime: "07/08/2020 15:29:34",
-        buildNumber: "750",
+        version: "4.4.2",
+        compileTime: "08/11/2020 22:09:20",
+        buildNumber: "753",
         isTouchable: isTouch,
         fullScreenEnabled: document.fullscreenEnabled,
         sheet: null,
@@ -4788,6 +4818,10 @@ $.noConflict = function() {
             var html = $("html");
             var that = this;
 
+            if (window.METRO_BLUR_IMAGE) {
+                html.addClass("use-blur-image");
+            }
+
             if (window.METRO_SHOW_ABOUT) Metro.info(true);
 
             if (isTouch === true) {
@@ -4797,6 +4831,8 @@ $.noConflict = function() {
             }
 
             Metro.sheet = this.utils.newCssSheet();
+
+            this.utils.addCssRule(Metro.sheet, "*, *::before, *::after", "box-sizing: border-box;");
 
             window.METRO_MEDIA = [];
             $.each(Metro.media_queries, function(key, query){
@@ -4855,8 +4891,13 @@ $.noConflict = function() {
             var that = this;
 
             $.each(widgets, function () {
-                var $this = $(this);
-                var roles = $this.data('role').split(/\s*,\s*/);
+                var $this = $(this), roles;
+
+                if (!this.hasAttribute("data-role")) {
+                    return ;
+                }
+
+                roles = $this.attr('data-role').split(/\s*,\s*/);
 
                 roles.map(function (func) {
 
@@ -5045,9 +5086,17 @@ $.noConflict = function() {
 
                 _runtime: function(){
                     var element = this.element, mc;
+                    var roles = (element.attr("data-role") || "").toArray(",").map(function(v){
+                        return normalizeComponentName(v);
+                    });
+
                     if (!element.attr('data-role-'+this.name)) {
                         element.attr("data-role-"+this.name, true);
-                        element.attr("data-role", this.name);
+                        if (roles.indexOf(this.name) === -1) {
+                            roles.push(this.name);
+                            element.attr("data-role", roles.join(","));
+                        }
+
                         mc = element.data('metroComponent');
                         if (mc === undefined) {
                             mc = [this.name];
@@ -5509,7 +5558,10 @@ $.noConflict = function() {
                     "days": "ДНИ",
                     "hours": "ЧАСЫ",
                     "minutes": "МИН",
-                    "seconds": "СЕК"
+                    "seconds": "СЕК",
+                    "month": "МЕС",
+                    "day": "ДЕНЬ",
+                    "year": "ГОД"
                 }
             },
             "buttons": {
@@ -5525,6 +5577,47 @@ $.noConflict = function() {
                 "random": "Случайно",
                 "save": "Сохранить",
                 "reset": "Сброс"
+            }
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    $.extend(Metro.locales, {
+        'tr-TR': {
+            "calendar": {
+                "months": [
+                    "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık",
+                    "Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"
+                ],
+                "days": [
+                    "Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi",
+                    "Pa", "Pz", "Sa", "Ça", "Pe", "Cu", "Ct",
+                    "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"
+                ],
+                "time": {
+                    "days": "GÜN",
+                    "hours": "SAAT",
+                    "minutes": "DAK",
+                    "seconds": "SAN",
+                    "month": "AY",
+                    "day": "GÜN",
+                    "year": "YIL"
+                }
+            },
+            "buttons": {
+                "ok": "Tamam",
+                "cancel": "Vazgeç",
+                "done": "Bitti",
+                "today": "Bugün",
+                "now": "Şimdi",
+                "clear": "Temizle",
+                "help": "Yardım",
+                "yes": "Evet",
+                "no": "Hayır",
+                "random": "Rasgele",
+                "save": "Kurtarmak",
+                "reset": "Sıfırla"
             }
         }
     });
@@ -5588,7 +5681,10 @@ $.noConflict = function() {
                     "days": "ДНІ",
                     "hours": "ГОД",
                     "minutes": "ХВИЛ",
-                    "seconds": "СЕК"
+                    "seconds": "СЕК",
+                    "month": "МІС",
+                    "day": "ДЕНЬ",
+                    "year": "РІК"
                 }
             },
             "buttons": {
@@ -6041,11 +6137,6 @@ $.noConflict = function() {
             return /^<\/?[\w\s="/.':;#-\/\?]+>/gi.test(val);
         },
 
-        isColor: function (val) {
-            /* eslint-disable-next-line */
-            return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(val);
-        },
-
         isEmbedObject: function(val){
             var embed = ["iframe", "object", "embed", "video"];
             var result = false;
@@ -6060,7 +6151,7 @@ $.noConflict = function() {
         },
 
         isVideoUrl: function(val){
-            return /youtu\.be|youtube|vimeo/gi.test(val);
+            return /youtu\.be|youtube|twitch|vimeo/gi.test(val);
         },
 
         isDate: function(val, format){
@@ -6091,22 +6182,12 @@ $.noConflict = function() {
             return (!isNaN(n) && +n % 1 !== 0) || /^\d*\.\d+$/.test(n);
         },
 
-        isTouchDevice: function() {
-            return (('ontouchstart' in window)
-                || (navigator.MaxTouchPoints > 0)
-                || (navigator.msMaxTouchPoints > 0));
-        },
-
         isFunc: function(f){
             return this.isType(f, 'function');
         },
 
         isObject: function(o){
             return this.isType(o, 'object');
-        },
-
-        isArray: function(a){
-            return Array.isArray(a);
         },
 
         isType: function(o, t){
@@ -6126,7 +6207,7 @@ $.noConflict = function() {
                 return o;
             }
 
-            if ((""+t).toLowerCase() === 'array' && this.isArray(o)) {
+            if ((""+t).toLowerCase() === 'array' && Array.isArray(o)) {
                 return o;
             }
 
@@ -6196,15 +6277,15 @@ $.noConflict = function() {
             return !!window.MSInputMethodContext && !!document["documentMode"];
         },
 
-        embedObject: function(val){
-            return "<div class='embed-container'>" + $(val)[0].outerHTML + "</div>";
-        },
-
         embedUrl: function(val){
             if (val.indexOf("youtu.be") !== -1) {
                 val = "https://www.youtube.com/embed/" + val.split("/").pop();
             }
             return "<div class='embed-container'><iframe src='"+val+"'></iframe></div>";
+        },
+
+        elementId: function(prefix){
+            return prefix+"-"+(new Date()).getTime()+$.random(1, 1000);
         },
 
         secondsToTime: function(secs) {
@@ -6221,24 +6302,6 @@ $.noConflict = function() {
                 "m": minutes,
                 "s": seconds
             };
-        },
-
-        hex2rgba: function(hex, alpha){
-            var c;
-            alpha = isNaN(alpha) ? 1 : alpha;
-            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-                c= hex.substring(1).split('');
-                if(c.length=== 3){
-                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-                }
-                c= '0x'+c.join('');
-                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
-            }
-            throw new Error('Hex2rgba error. Bad Hex value');
-        },
-
-        elementId: function(prefix){
-            return prefix+"-"+(new Date()).getTime()+$.random(1, 1000);
         },
 
         secondsToFormattedString: function(time){
@@ -6272,7 +6335,7 @@ $.noConflict = function() {
                 result = func.apply(context, args);
             } catch (err) {
                 result = null;
-                if (METRO_THROWS === true) {
+                if (window.METRO_THROWS === true) {
                     throw err;
                 }
             }
@@ -6281,7 +6344,7 @@ $.noConflict = function() {
 
         isOutsider: function(element) {
             var el = $(element);
-            var rect;
+            var inViewport;
             var clone = el.clone();
 
             clone.removeAttr("data-role").css({
@@ -6291,15 +6354,11 @@ $.noConflict = function() {
             });
             el.parent().append(clone);
 
-            rect = clone[0].getBoundingClientRect();
+            inViewport = this.inViewport(clone[0]);
+
             clone.remove();
 
-            return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
+            return !inViewport;
         },
 
         inViewport: function(el){
@@ -6567,73 +6626,6 @@ $.noConflict = function() {
             return this.getStyle(el).getPropertyValue(property);
         },
 
-        getTransformMatrix: function(el, returnArray){
-            var computedMatrix = this.getStyleOne(el, "transform");
-            var a = computedMatrix
-                .replace("matrix(", '')
-                .slice(0, -1)
-                .split(',');
-            return returnArray !== true ? {
-                a: a[0],
-                b: a[1],
-                c: a[2],
-                d: a[3],
-                tx: a[4],
-                ty: a[5]
-            } : a;
-        },
-
-        computedRgbToHex: function(rgb){
-            var a = rgb.replace(/[^\d,]/g, '').split(',');
-            var result = "#", i;
-
-            for(i = 0; i < 3; i++) {
-                var h = parseInt(a[i]).toString(16);
-                result += h.length === 1 ? "0" + h : h;
-            }
-
-            return result;
-        },
-
-        computedRgbToRgba: function(rgb, alpha){
-            var a = rgb.replace(/[^\d,]/g, '').split(',');
-            if (alpha === undefined) {
-                alpha = 1;
-            }
-            a.push(alpha);
-            return "rgba("+a.join(",")+")";
-        },
-
-        computedRgbToArray: function(rgb){
-            return rgb.replace(/[^\d,]/g, '').split(',');
-        },
-
-        hexColorToArray: function(hex){
-            var c;
-            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-                c= hex.substring(1).split('');
-                if(c.length === 3){
-                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-                }
-                c= '0x'+c.join('');
-                return [(c>>16)&255, (c>>8)&255, c&255];
-            }
-            return [0,0,0];
-        },
-
-        hexColorToRgbA: function(hex, alpha){
-            var c;
-            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-                c= hex.substring(1).split('');
-                if(c.length === 3){
-                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-                }
-                c= '0x'+c.join('');
-                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255, alpha ? alpha : 1].join(',')+')';
-            }
-            return 'rgba(0,0,0,1)';
-        },
-
         getInlineStyles: function(element){
             var i, l, styles = {}, el = $(element)[0];
             for (i = 0, l = el.style.length; i < l; i++) {
@@ -6726,15 +6718,15 @@ $.noConflict = function() {
         },
 
         mediaModes: function(){
-            return METRO_MEDIA;
+            return window.METRO_MEDIA;
         },
 
         mediaExist: function(media){
-            return METRO_MEDIA.indexOf(media) > -1;
+            return window.METRO_MEDIA.indexOf(media) > -1;
         },
 
         inMedia: function(media){
-            return METRO_MEDIA.indexOf(media) > -1 && METRO_MEDIA.indexOf(media) === METRO_MEDIA.length - 1;
+            return window.METRO_MEDIA.indexOf(media) > -1 && window.METRO_MEDIA.indexOf(media) === window.METRO_MEDIA.length - 1;
         },
 
         isValue: function(val){
@@ -6831,36 +6823,439 @@ $.noConflict = function() {
             }
         },
 
-        isLocalhost: function(pattern){
-            pattern = pattern || ".local";
-            return (
-                location.hostname === "localhost" ||
-                location.hostname === "127.0.0.1" ||
-                location.hostname === "[::1]" ||
-                location.hostname === "" ||
-                window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/ ) ||
-                location.hostname.indexOf(pattern) !== -1
-            );
-        },
-
         decCount: function(v){
             return v % 1 === 0 ? 0 : v.toString().split(".")[1].length;
-        },
-
-        randomColor: function(){
-            var r, g, b;
-
-            r = $.random(0, 255);
-            g = $.random(0, 255);
-            b = $.random(0, 255);
-
-            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
     };
 
     if (window.METRO_GLOBAL_COMMON === true) {
         window.Utils = Metro.utils;
     }
+}(Metro, m4q));
+
+(function(Metro, $){
+    'use strict';
+    var Utils = Metro.utils;
+    var AccordionDefaultConfig = {
+        accordionDeferred: 0,
+        showMarker: true,
+        material: false,
+        duration: METRO_ANIMATION_DURATION,
+        oneFrame: true,
+        showActive: true,
+        activeFrameClass: "",
+        activeHeadingClass: "",
+        activeContentClass: "",
+        onFrameOpen: Metro.noop,
+        onFrameBeforeOpen: Metro.noop_true,
+        onFrameClose: Metro.noop,
+        onFrameBeforeClose: Metro.noop_true,
+        onAccordionCreate: Metro.noop
+    };
+
+    Metro.accordionSetup = function(options){
+        AccordionDefaultConfig = $.extend({}, AccordionDefaultConfig, options);
+    };
+
+    if (typeof window["metroAccordionSetup"] !== undefined) {
+        Metro.accordionSetup(window["metroAccordionSetup"]);
+    }
+
+    Metro.Component('accordion', {
+        init: function( options, elem ) {
+            this._super(elem, options, AccordionDefaultConfig);
+            return this;
+        },
+
+        _create: function(){
+            var element = this.element;
+
+            this._createStructure();
+            this._createEvents();
+
+            this._fireEvent('accordionCreate', {
+                element: element
+            });
+        },
+
+        _createStructure: function(){
+            var that = this, element = this.element, o = this.options;
+            var frames = element.children(".frame");
+            var active = element.children(".frame.active");
+            var frame_to_open;
+
+            element.addClass("accordion");
+
+            if (o.showMarker === true) {
+                element.addClass("marker-on");
+            }
+
+            if (o.material === true) {
+                element.addClass("material");
+            }
+
+            if (active.length === 0) {
+                frame_to_open = frames[0];
+            } else {
+                frame_to_open = active[0];
+            }
+
+            this._hideAll();
+
+            if (o.showActive === true) {
+                if (o.oneFrame === true) {
+                    this._openFrame(frame_to_open);
+                } else {
+                    $.each(active, function(){
+                        that._openFrame(this);
+                    });
+                }
+            }
+        },
+
+        _createEvents: function(){
+            var that = this, element = this.element, o = this.options;
+            var active = element.children(".frame.active");
+
+            element.on(Metro.events.click, ".heading", function(){
+                var heading = $(this);
+                var frame = heading.parent();
+
+                if (heading.closest(".accordion")[0] !== element[0]) {
+                    return false;
+                }
+
+                if (frame.hasClass("active")) {
+                    if (active.length === 1 && o.oneFrame) {
+                        /* eslint-disable-next-line */
+
+                    } else {
+                        that._closeFrame(frame);
+                    }
+                } else {
+                    that._openFrame(frame);
+                }
+            });
+        },
+
+        _openFrame: function(f){
+            var element = this.element, o = this.options;
+            var frame = $(f);
+
+            if (Utils.exec(o.onFrameBeforeOpen, [frame[0]], element[0]) === false) {
+                return false;
+            }
+
+            if (o.oneFrame === true) {
+                this._closeAll(frame[0]);
+            }
+
+            frame.addClass("active " + o.activeFrameClass);
+            frame.children(".heading").addClass(o.activeHeadingClass);
+            frame.children(".content").addClass(o.activeContentClass).slideDown(o.duration);
+
+            this._fireEvent("frameOpen", {
+                frame: frame[0]
+            });
+        },
+
+        _closeFrame: function(f){
+            var element = this.element, o = this.options;
+            var frame = $(f);
+
+            if (!frame.hasClass("active")) {
+                return ;
+            }
+
+            if (Utils.exec(o.onFrameBeforeClose, [frame[0]], element[0]) === false) {
+                return ;
+            }
+
+            frame.removeClass("active " + o.activeFrameClass);
+            frame.children(".heading").removeClass(o.activeHeadingClass);
+            frame.children(".content").removeClass(o.activeContentClass).slideUp(o.duration);
+
+            this._fireEvent("frameClose", {
+                frame: frame[0]
+            });
+        },
+
+        _closeAll: function(skip){
+            var that = this, element = this.element;
+            var frames = element.children(".frame");
+
+            $.each(frames, function(){
+                if (skip === this) return;
+                that._closeFrame(this);
+            });
+        },
+
+        _hideAll: function(){
+            var element = this.element;
+            var frames = element.children(".frame");
+
+            $.each(frames, function(){
+                $(this).children(".content").hide();
+            });
+        },
+
+        _openAll: function(){
+            var that = this, element = this.element;
+            var frames = element.children(".frame");
+
+            $.each(frames, function(){
+                that._openFrame(this);
+            });
+        },
+
+        /* eslint-disable-next-line */
+        changeAttribute: function(attributeName){
+        },
+
+        destroy: function(){
+            var element = this.element;
+            element.off(Metro.events.click, ".heading");
+            return element;
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
+    var ActivityDefaultConfig = {
+        activityDeferred: 0,
+        type: "ring",
+        style: "light",
+        size: 64,
+        radius: 20,
+        onActivityCreate: Metro.noop
+    };
+
+    Metro.activitySetup = function(options){
+        ActivityDefaultConfig = $.extend({}, ActivityDefaultConfig, options);
+    };
+
+    if (typeof window["metroActivitySetup"] !== undefined) {
+        Metro.activitySetup(window["metroActivitySetup"]);
+    }
+
+    Metro.Component('activity', {
+        init: function( options, elem ) {
+            this._super(elem, options, ActivityDefaultConfig);
+            return this;
+        },
+
+        _create: function(){
+            var element = this.element, o = this.options;
+            var i, wrap;
+
+            element
+                .html('')
+                .addClass(o.style + "-style")
+                .addClass("activity-" + o.type);
+
+            function _metro(){
+                for(i = 0; i < 5 ; i++) {
+                    $("<div/>").addClass('circle').appendTo(element);
+                }
+            }
+
+            function _square(){
+                for(i = 0; i < 4 ; i++) {
+                    $("<div/>").addClass('square').appendTo(element);
+                }
+            }
+
+            function _cycle(){
+                $("<div/>").addClass('cycle').appendTo(element);
+            }
+
+            function _ring(){
+                for(i = 0; i < 5 ; i++) {
+                    wrap = $("<div/>").addClass('wrap').appendTo(element);
+                    $("<div/>").addClass('circle').appendTo(wrap);
+                }
+            }
+
+            function _simple(){
+                $('<svg class="circular"><circle class="path" cx="'+o.size/2+'" cy="'+o.size/2+'" r="'+o.radius+'" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg>').appendTo(element);
+            }
+
+            function _atom(){
+                for(i = 0; i < 3 ; i++) {
+                    $("<span/>").addClass('electron').appendTo(element);
+                }
+            }
+
+            function _bars(){
+                for(i = 0; i < 6 ; i++) {
+                    $("<span/>").addClass('bar').appendTo(element);
+                }
+            }
+
+            switch (o.type) {
+                case 'metro': _metro(); break;
+                case 'square': _square(); break;
+                case 'cycle': _cycle(); break;
+                case 'simple': _simple(); break;
+                case 'atom': _atom(); break;
+                case 'bars': _bars(); break;
+                default: _ring();
+            }
+
+            this._fireEvent("activity-create", {
+                element: element
+            })
+        },
+
+        /*eslint-disable-next-line*/
+        changeAttribute: function(attributeName){
+        },
+
+        destroy: function(){
+            return this.element;
+        }
+    });
+
+    Metro.activity = {
+        open: function(options){
+            var o = options || {};
+            var activity = '<div data-role="activity" data-type="'+( o.type ? o.type : 'cycle' )+'" data-style="'+( o.style ? o.style : 'color' )+'"></div>';
+            var text = o.text ? '<div class="text-center">'+o.text+'</div>' : '';
+
+            return Metro.dialog.create({
+                content: activity + text,
+                defaultAction: false,
+                clsContent: "d-flex flex-column flex-justify-center flex-align-center bg-transparent no-shadow w-auto",
+                clsDialog: "no-border no-shadow bg-transparent global-dialog",
+                autoHide: o.autoHide ? o.autoHide : 0,
+                overlayClickClose: o.overlayClickClose === true,
+                overlayColor: o.overlayColor ? o.overlayColor : '#000000',
+                overlayAlpha: o.overlayAlpha ? o.overlayAlpha : 0.5,
+                clsOverlay: "global-overlay"
+            });
+        },
+
+        close: function(a){
+            Metro.dialog.close(a);
+        }
+    };
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
+    var Utils = Metro.utils;
+    var AdblockDefaultConfig = {
+        adblockDeferred: 0,
+        checkInterval: 1000,
+        fireOnce: true,
+        checkStop: 10,
+        localhost: false,
+        onAlert: Metro.noop,
+        onFishingStart: Metro.noop,
+        onFishingDone: Metro.noop
+    };
+
+    Metro.adblockSetup = function(options){
+        AdblockDefaultConfig = $.extend({}, AdblockDefaultConfig, options);
+    };
+
+    if (typeof window["metroAdblockSetup"] !== undefined) {
+        Metro.adblockSetup(window["metroAdblockSetup"]);
+    }
+
+    var Adblock = {
+        bite: function(){
+            var classes = "adblock-bite adsense google-adsense dblclick advert topad top_ads topAds textads sponsoredtextlink_container show_ads right-banner rekl mpu module-ad mid_ad mediaget horizontal_ad headerAd contentAd brand-link bottombanner bottom_ad_block block_ad bannertop banner-right banner-body b-banner b-article-aside__banner b-advert adwrapper adverts advertisment advertisement:not(body) advertise advert_list adtable adsense adpic adlist adleft adinfo adi adholder adframe addiv ad_text ad_space ad_right ad_links ad_body ad_block ad_Right adTitle adText";
+            $("<div>")
+                .addClass(classes.split(" ").shuffle().join(" "))
+                .css({
+                    position: "fixed",
+                    height: 1,
+                    width: 1,
+                    overflow: "hidden",
+                    visibility: "visible",
+                    top: 0,
+                    left: 0
+                })
+                .append($("<a href='https://dblclick.net'>").html('dblclick.net'))
+                .appendTo('body');
+
+            if (Adblock.options.adblockDeferred) {
+                setTimeout(function () {
+                    Adblock.fishing();
+                }, Adblock.options.adblockDeferred);
+            } else this.fishing();
+        },
+
+        fishing: function(){
+            var o = Adblock.options;
+            var checks = typeof o.fireOnce === "number" ? o.fireOnce : 0;
+            var checkStop = o.checkStop;
+            var interval = false;
+            var run = function(){
+                var a = $(".adsense.google-adsense.dblclick.advert.adblock-bite");
+                var b = a.find("a");
+                var done = function(){
+                    clearInterval(interval);
+
+                    Utils.exec(o.onFishingDone);
+                    $(window).fire("fishing-done");
+
+                    a.remove();
+                };
+
+                if (!o.localhost && $.localhost) {
+                    done();
+                    return ;
+                }
+
+                if (   !a.length
+                    || !b.length
+                    || a.css("display").indexOf('none') > -1
+                    || b.css("display").indexOf('none') > -1
+                ) {
+
+                    Utils.exec(Adblock.options.onAlert);
+                    $(window).fire("adblock-alert");
+
+                    if (Adblock.options.fireOnce === true) {
+                        done();
+                    } else {
+                        checks--;
+                        if (checks === 0) {
+                            done();
+                        }
+                    }
+                } else {
+                    if (checkStop !== false) {
+                        checkStop--;
+                        if (checkStop === 0) {
+                            done();
+                        }
+                    }
+                }
+            };
+
+            Utils.exec(o.onFishingStart);
+            $(window).fire("fishing-start");
+
+            interval = setInterval(function(){
+                run();
+            }, Adblock.options.checkInterval);
+
+            run();
+        }
+    };
+
+    Metro.Adblock = Adblock;
+
+    $(function(){
+        Adblock.options = $.extend({}, AdblockDefaultConfig);
+        $(window).on("metro-initiated", function(){
+            Adblock.bite();
+        });
+    });
 }(Metro, m4q));
 
 (function(Metro, $) {
@@ -7215,2081 +7610,7 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
-    var Types = {
-        HEX: "hex",
-        HEXA: "hexa",
-        RGB: "rgb",
-        RGBA: "rgba",
-        HSV: "hsv",
-        HSL: "hsl",
-        HSLA: "hsla",
-        CMYK: "cmyk",
-        UNKNOWN: "unknown"
-    };
 
-    Metro.colorsSetup = function (options) {
-        ColorsDefaultConfig = $.extend({}, ColorsDefaultConfig, options);
-    };
-
-    if (typeof window["metroColorsSetup"] !== undefined) {
-        Metro.colorsSetup(window["metroColorsSetup"]);
-    }
-
-    var ColorsDefaultConfig = {
-        angle: 30,
-        algorithm: 1,
-        step: 0.1,
-        distance: 5,
-        tint1: 0.8,
-        tint2: 0.4,
-        shade1: 0.6,
-        shade2: 0.3,
-        alpha: 1
-    };
-
-    function RGB(r, g, b){
-        this.r = r || 0;
-        this.g = g || 0;
-        this.b = b || 0;
-    }
-
-    RGB.prototype.toString = function(){
-        return "rgb(" + [this.r, this.g, this.b].join(",") + ")";
-    }
-
-    function RGBA(r, g, b, a){
-        this.r = r || 0;
-        this.g = g || 0;
-        this.b = b || 0;
-        this.a = a || 1;
-    }
-
-    RGBA.prototype.toString = function(){
-        return "rgba(" + [this.r, this.g, this.b, this.a].join(",") + ")";
-    }
-
-    function HSV(h, s, v){
-        this.h = h || 0;
-        this.s = s || 0;
-        this.v = v || 0;
-    }
-
-    HSV.prototype.toString = function(){
-        return "hsv(" + [this.h, this.s, this.v].join(",") + ")";
-    }
-
-    function HSL(h, s, l){
-        this.h = h || 0;
-        this.s = s || 0;
-        this.l = l || 0;
-    }
-
-    HSL.prototype.toString = function(){
-        return "hsl(" + [this.h, this.s, this.l].join(",") + ")";
-    }
-
-    function HSLA(h, s, l, a){
-        this.h = h || 0;
-        this.s = s || 0;
-        this.l = l || 0;
-        this.a = a || 1;
-    }
-
-    HSLA.prototype.toString = function(){
-        return "hsla(" + [this.h, this.s, this.l, this.a].join(",") + ")";
-    }
-
-    function CMYK(c, m, y, k){
-        this.c = c || 0;
-        this.m = m || 0;
-        this.y = y || 0;
-        this.k = k || 0;
-    }
-
-    CMYK.prototype.toString = function(){
-        return "cmyk(" + [this.c, this.m, this.y, this.k].join(",") + ")";
-    }
-
-    var Colors = {
-
-        PALETTES: {
-            ALL: "all",
-            METRO: "metro",
-            STANDARD: "standard"
-        },
-
-        metro: {
-            lime: '#a4c400',
-            green: '#60a917',
-            emerald: '#008a00',
-            blue: '#00AFF0',
-            teal: '#00aba9',
-            cyan: '#1ba1e2',
-            cobalt: '#0050ef',
-            indigo: '#6a00ff',
-            violet: '#aa00ff',
-            pink: '#dc4fad',
-            magenta: '#d80073',
-            crimson: '#a20025',
-            red: '#CE352C',
-            orange: '#fa6800',
-            amber: '#f0a30a',
-            yellow: '#fff000',
-            brown: '#825a2c',
-            olive: '#6d8764',
-            steel: '#647687',
-            mauve: '#76608a',
-            taupe: '#87794e'
-        },
-
-        standard: {
-            aliceBlue: "#f0f8ff",
-            antiqueWhite: "#faebd7",
-            aqua: "#00ffff",
-            aquamarine: "#7fffd4",
-            azure: "#f0ffff",
-            beige: "#f5f5dc",
-            bisque: "#ffe4c4",
-            black: "#000000",
-            blanchedAlmond: "#ffebcd",
-            blue: "#0000ff",
-            blueViolet: "#8a2be2",
-            brown: "#a52a2a",
-            burlyWood: "#deb887",
-            cadetBlue: "#5f9ea0",
-            chartreuse: "#7fff00",
-            chocolate: "#d2691e",
-            coral: "#ff7f50",
-            cornflowerBlue: "#6495ed",
-            cornsilk: "#fff8dc",
-            crimson: "#dc143c",
-            cyan: "#00ffff",
-            darkBlue: "#00008b",
-            darkCyan: "#008b8b",
-            darkGoldenRod: "#b8860b",
-            darkGray: "#a9a9a9",
-            darkGreen: "#006400",
-            darkKhaki: "#bdb76b",
-            darkMagenta: "#8b008b",
-            darkOliveGreen: "#556b2f",
-            darkOrange: "#ff8c00",
-            darkOrchid: "#9932cc",
-            darkRed: "#8b0000",
-            darkSalmon: "#e9967a",
-            darkSeaGreen: "#8fbc8f",
-            darkSlateBlue: "#483d8b",
-            darkSlateGray: "#2f4f4f",
-            darkTurquoise: "#00ced1",
-            darkViolet: "#9400d3",
-            deepPink: "#ff1493",
-            deepSkyBlue: "#00bfff",
-            dimGray: "#696969",
-            dodgerBlue: "#1e90ff",
-            fireBrick: "#b22222",
-            floralWhite: "#fffaf0",
-            forestGreen: "#228b22",
-            fuchsia: "#ff00ff",
-            gainsboro: "#DCDCDC",
-            ghostWhite: "#F8F8FF",
-            gold: "#ffd700",
-            goldenRod: "#daa520",
-            gray: "#808080",
-            green: "#008000",
-            greenYellow: "#adff2f",
-            honeyDew: "#f0fff0",
-            hotPink: "#ff69b4",
-            indianRed: "#cd5c5c",
-            indigo: "#4b0082",
-            ivory: "#fffff0",
-            khaki: "#f0e68c",
-            lavender: "#e6e6fa",
-            lavenderBlush: "#fff0f5",
-            lawnGreen: "#7cfc00",
-            lemonChiffon: "#fffacd",
-            lightBlue: "#add8e6",
-            lightCoral: "#f08080",
-            lightCyan: "#e0ffff",
-            lightGoldenRodYellow: "#fafad2",
-            lightGray: "#d3d3d3",
-            lightGreen: "#90ee90",
-            lightPink: "#ffb6c1",
-            lightSalmon: "#ffa07a",
-            lightSeaGreen: "#20b2aa",
-            lightSkyBlue: "#87cefa",
-            lightSlateGray: "#778899",
-            lightSteelBlue: "#b0c4de",
-            lightYellow: "#ffffe0",
-            lime: "#00ff00",
-            limeGreen: "#32dc32",
-            linen: "#faf0e6",
-            magenta: "#ff00ff",
-            maroon: "#800000",
-            mediumAquaMarine: "#66cdaa",
-            mediumBlue: "#0000cd",
-            mediumOrchid: "#ba55d3",
-            mediumPurple: "#9370db",
-            mediumSeaGreen: "#3cb371",
-            mediumSlateBlue: "#7b68ee",
-            mediumSpringGreen: "#00fa9a",
-            mediumTurquoise: "#48d1cc",
-            mediumVioletRed: "#c71585",
-            midnightBlue: "#191970",
-            mintCream: "#f5fffa",
-            mistyRose: "#ffe4e1",
-            moccasin: "#ffe4b5",
-            navajoWhite: "#ffdead",
-            navy: "#000080",
-            oldLace: "#fdd5e6",
-            olive: "#808000",
-            oliveDrab: "#6b8e23",
-            orange: "#ffa500",
-            orangeRed: "#ff4500",
-            orchid: "#da70d6",
-            paleGoldenRod: "#eee8aa",
-            paleGreen: "#98fb98",
-            paleTurquoise: "#afeeee",
-            paleVioletRed: "#db7093",
-            papayaWhip: "#ffefd5",
-            peachPuff: "#ffdab9",
-            peru: "#cd853f",
-            pink: "#ffc0cb",
-            plum: "#dda0dd",
-            powderBlue: "#b0e0e6",
-            purple: "#800080",
-            rebeccaPurple: "#663399",
-            red: "#ff0000",
-            rosyBrown: "#bc8f8f",
-            royalBlue: "#4169e1",
-            saddleBrown: "#8b4513",
-            salmon: "#fa8072",
-            sandyBrown: "#f4a460",
-            seaGreen: "#2e8b57",
-            seaShell: "#fff5ee",
-            sienna: "#a0522d",
-            silver: "#c0c0c0",
-            slyBlue: "#87ceeb",
-            slateBlue: "#6a5acd",
-            slateGray: "#708090",
-            snow: "#fffafa",
-            springGreen: "#00ff7f",
-            steelBlue: "#4682b4",
-            tan: "#d2b48c",
-            teal: "#008080",
-            thistle: "#d8bfd8",
-            tomato: "#ff6347",
-            turquoise: "#40e0d0",
-            violet: "#ee82ee",
-            wheat: "#f5deb3",
-            white: "#ffffff",
-            whiteSmoke: "#f5f5f5",
-            yellow: "#ffff00",
-            yellowGreen: "#9acd32"
-        },
-
-        all: {},
-
-        init: function(){
-            this.all = $.extend( {}, this.standard, this.metro );
-            return this;
-        },
-
-        color: function(name, palette){
-            palette = palette || this.PALETTES.ALL;
-            return this[palette][name] !== undefined ? this[palette][name] : false;
-        },
-
-        palette: function(palette){
-            palette = palette || this.PALETTES.ALL;
-            return Object.keys(this[palette]);
-        },
-
-        expandHexColor: function(hex){
-            if (typeof hex !== "string") {
-                throw new Error("Value is not a string!");
-            }
-            if (hex[0] === "#" && hex.length === 4) {
-                var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-                return (
-                    "#" +
-                    hex.replace(shorthandRegex, function(m, r, g, b) {
-                        return r + r + g + g + b + b;
-                    })
-                );
-            }
-            return hex[0] === "#" ? hex : "#" + hex;
-        },
-
-        colors: function(palette){
-            palette = palette || this.PALETTES.ALL;
-            return Object.values(this[palette]);
-        },
-
-        random: function(colorType, alpha){
-            colorType = colorType || Types.HEX;
-            alpha = typeof alpha !== "undefined" ? alpha : 1;
-
-            var hex, r, g, b;
-
-            r = $.random(0, 255);
-            g = $.random(0, 255);
-            b = $.random(0, 255);
-
-            hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-
-            return colorType === "hex" ? hex : this.toColor(hex, colorType, alpha);
-        },
-
-        parse: function(color){
-            var _color = color.toLowerCase();
-
-            var a = _color
-                .replace(/[^\d.,]/g, "")
-                .split(",")
-                .map(function(v) {
-                    return _color.includes("hs") ? parseFloat(v) : parseInt(v);
-                });
-
-            if (_color[0] === "#") {
-                return this.expandHexColor(_color);
-            }
-
-            if (_color.includes("rgba")) {
-                return new RGBA(a[0], a[1], a[2], a[3]);
-            }
-            if (_color.includes("rgb")) {
-                return new RGB(a[0], a[1], a[2]);
-            }
-            if (_color.includes("cmyk")) {
-                return new CMYK(a[0], a[1], a[2], a[3]);
-            }
-            if (_color.includes("hsv")) {
-                return new HSV(a[0], a[1], a[2]);
-            }
-            if (_color.includes("hsla")) {
-                return new HSLA(a[0], a[1], a[2], a[3]);
-            }
-            if (_color.includes("hsl")) {
-                return new HSL(a[0], a[1], a[2]);
-            }
-            return _color;
-        },
-
-        createColor: function(colorType, from){
-            colorType = colorType || "hex";
-            from = from || "#000000";
-
-            var baseColor;
-
-            if (typeof from === "string") {
-                baseColor = this.parse(from);
-            }
-
-            if (!this.isColor(baseColor)) {
-                baseColor = "#000000";
-            }
-
-            return this.toColor(baseColor, colorType.toLowerCase());
-        },
-
-        isDark: function(color){
-            if (!this.isColor(color)) return;
-            var rgb = this.toRGB(color);
-            var YIQ = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-            return YIQ < 128;
-        },
-
-        isLight: function(color){
-            return !this.isDark(color);
-        },
-
-        isHSV: function(color){
-            return color instanceof HSV;
-        },
-
-        isHSL: function(color){
-            return color instanceof HSL;
-        },
-
-        isHSLA: function(color){
-            return color instanceof HSLA;
-        },
-
-        isRGB: function(color){
-            return color instanceof RGB;
-        },
-
-        isRGBA: function(color){
-            return color instanceof RGBA;
-        },
-
-        isCMYK: function(color){
-            return color instanceof CMYK;
-        },
-
-        isHEX: function(color){
-            return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
-        },
-
-        isColor: function(color){
-            return !color
-                ? false
-                : this.isHEX(color) ||
-                  this.isRGB(color) ||
-                  this.isRGBA(color) ||
-                  this.isHSV(color) ||
-                  this.isHSL(color) ||
-                  this.isHSLA(color) ||
-                  this.isCMYK(color);
-        },
-
-        check: function(color, type){
-            if (!this["is"+type.toUpperCase()](color)) {
-                throw new Error("Value is not a " + type + " color type!");
-            }
-        },
-
-        colorType: function(color){
-            if (this.isHEX(color)) return Types.HEX;
-            if (this.isRGB(color)) return Types.RGB;
-            if (this.isRGBA(color)) return Types.RGBA;
-            if (this.isHSV(color)) return Types.HSV;
-            if (this.isHSL(color)) return Types.HSL;
-            if (this.isHSLA(color)) return Types.HSLA;
-            if (this.isCMYK(color)) return Types.CMYK;
-
-            return Types.UNKNOWN;
-        },
-
-        equal: function(color1, color2){
-            if (!this.isColor(color1) || !this.isColor(color2)) {
-                return false;
-            }
-
-            return this.toHEX(color1) === this.toHEX(color2);
-        },
-
-        colorToString: function(color){
-            return color.toString();
-        },
-
-        hex2rgb: function(color){
-            if (typeof color !== "string") {
-                throw new Error("Value is not a string!")
-            }
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
-                this.expandHexColor(color)
-            );
-            var rgb = [
-                parseInt(result[1], 16),
-                parseInt(result[2], 16),
-                parseInt(result[3], 16)
-            ];
-            return result ? new RGB(rgb[0], rgb[1], rgb[2]) : null;
-        },
-
-        rgb2hex: function(color){
-            this.check(color, "rgb");
-            return (
-                "#" +
-                ((1 << 24) + (color.r << 16) + (color.g << 8) + color.b).toString(16).slice(1)
-            );
-        },
-
-        rgb2hsv: function(color){
-            this.check(color, "rgb");
-            var hsv = new HSV();
-            var h, s, v;
-            var r = color.r / 255,
-                g = color.g / 255,
-                b = color.b / 255;
-
-            var max = Math.max(r, g, b);
-            var min = Math.min(r, g, b);
-            var delta = max - min;
-
-            v = max;
-
-            if (max === 0) {
-                s = 0;
-            } else {
-                s = 1 - min / max;
-            }
-
-            if (max === min) {
-                h = 0;
-            } else if (max === r && g >= b) {
-                h = 60 * ((g - b) / delta);
-            } else if (max === r && g < b) {
-                h = 60 * ((g - b) / delta) + 360;
-            } else if (max === g) {
-                h = 60 * ((b - r) / delta) + 120;
-            } else if (max === b) {
-                h = 60 * ((r - g) / delta) + 240;
-            } else {
-                h = 0;
-            }
-
-            hsv.h = h;
-            hsv.s = s;
-            hsv.v = v;
-
-            return hsv;
-        },
-
-        hsv2rgb: function(color){
-            this.check(color, "hsv");
-            var r, g, b;
-            var h = color.h,
-                s = color.s * 100,
-                v = color.v * 100;
-            var Hi = Math.floor(h / 60);
-            var Vmin = ((100 - s) * v) / 100;
-            var alpha = (v - Vmin) * ((h % 60) / 60);
-            var Vinc = Vmin + alpha;
-            var Vdec = v - alpha;
-
-            switch (Hi) {
-                case 0:
-                    r = v;
-                    g = Vinc;
-                    b = Vmin;
-                    break;
-                case 1:
-                    r = Vdec;
-                    g = v;
-                    b = Vmin;
-                    break;
-                case 2:
-                    r = Vmin;
-                    g = v;
-                    b = Vinc;
-                    break;
-                case 3:
-                    r = Vmin;
-                    g = Vdec;
-                    b = v;
-                    break;
-                case 4:
-                    r = Vinc;
-                    g = Vmin;
-                    b = v;
-                    break;
-                case 5:
-                    r = v;
-                    g = Vmin;
-                    b = Vdec;
-                    break;
-            }
-
-            return new RGB(
-                Math.round((r * 255) / 100),
-                Math.round((g * 255) / 100),
-                Math.round((b * 255) / 100)
-            );
-        },
-
-        hsv2hex: function(color){
-            this.check(color, "hsv");
-            return this.rgb2hex(this.hsv2rgb(color));
-        },
-
-        hex2hsv: function(color){
-            this.check(color, "hex");
-            return this.rgb2hsv(this.hex2rgb(color));
-        },
-
-        rgb2cmyk: function(color){
-            this.check(color, "rgb");
-            var cmyk = new CMYK();
-
-            var r = color.r / 255;
-            var g = color.g / 255;
-            var b = color.b / 255;
-
-            cmyk.k = Math.min(1 - r, 1 - g, 1 - b);
-
-            cmyk.c = 1 - cmyk.k === 0 ? 0 : (1 - r - cmyk.k) / (1 - cmyk.k);
-            cmyk.m = 1 - cmyk.k === 0 ? 0 : (1 - g - cmyk.k) / (1 - cmyk.k);
-            cmyk.y = 1 - cmyk.k === 0 ? 0 : (1 - b - cmyk.k) / (1 - cmyk.k);
-
-            cmyk.c = Math.round(cmyk.c * 100);
-            cmyk.m = Math.round(cmyk.m * 100);
-            cmyk.y = Math.round(cmyk.y * 100);
-            cmyk.k = Math.round(cmyk.k * 100);
-
-            return cmyk;
-        },
-
-        cmyk2rgb: function(color){
-            this.check(color, "cmyk");
-            var r = Math.floor(255 * (1 - color.c / 100) * (1 - color.k / 100));
-            var g = Math.ceil(255 * (1 - color.m / 100) * (1 - color.k / 100));
-            var b = Math.ceil(255 * (1 - color.y / 100) * (1 - color.k / 100));
-
-            return new RGB(r, g, b);
-        },
-
-        hsv2hsl: function(color){
-            this.check(color, "hsv");
-            var h, s, l, d;
-            h = color.h;
-            l = (2 - color.s) * color.v;
-            s = color.s * color.v;
-            if (l === 0) {
-                s = 0;
-            } else {
-                d = l <= 1 ? l : 2 - l;
-                if (d === 0) {
-                    s = 0;
-                } else {
-                    s /= d;
-                }
-            }
-            l /= 2;
-            return new HSL(h, s, l);
-        },
-
-        hsl2hsv: function(color){
-            this.check(color, "hsl");
-            var h, s, v, l;
-            h = color.h;
-            l = color.l * 2;
-            s = color.s * (l <= 1 ? l : 2 - l);
-
-            v = (l + s) / 2;
-
-            if (l + s === 0) {
-                s = 0;
-            } else {
-                s = (2 * s) / (l + s);
-            }
-
-            return new HSV(h, s, v);
-        },
-
-        rgb2websafe: function(color){
-            this.check(color, "rgb");
-            return new RGB(
-                Math.round(color.r / 51) * 51,
-                Math.round(color.g / 51) * 51,
-                Math.round(color.b / 51) * 51
-            );
-        },
-
-        rgba2websafe: function(color){
-            this.check(color, "rgba");
-            var rgbWebSafe = this.rgb2websafe(color);
-            return new RGBA(rgbWebSafe.r, rgbWebSafe.g, rgbWebSafe.b, color.a);
-        },
-
-        hex2websafe: function(color){
-            this.check(color, "hex");
-            return this.rgb2hex(this.rgb2websafe(this.hex2rgb(color)));
-        },
-
-        hsv2websafe: function(color){
-            this.check(color, "hsv");
-            return this.rgb2hsv(this.rgb2websafe(this.toRGB(color)));
-        },
-
-        hsl2websafe: function(color){
-           this.check(color, "hsl");
-            return this.hsv2hsl(this.rgb2hsv(this.rgb2websafe(this.toRGB(color))));
-        },
-
-        cmyk2websafe: function(color){
-            this.check(color, "cmyk");
-            return this.rgb2cmyk(this.rgb2websafe(this.cmyk2rgb(color)));
-        },
-
-        websafe: function(color){
-            if (this.isHEX(color)) return this.hex2websafe(color);
-            if (this.isRGB(color)) return this.rgb2websafe(color);
-            if (this.isRGBA(color)) return this.rgba2websafe(color);
-            if (this.isHSV(color)) return this.hsv2websafe(color);
-            if (this.isHSL(color)) return this.hsl2websafe(color);
-            if (this.isCMYK(color)) return this.cmyk2websafe(color);
-
-            return color;
-        },
-
-        toColor: function(color, type, alpha){
-            var result;
-            switch (type.toLowerCase()) {
-                case "hex":
-                    result = this.toHEX(color);
-                    break;
-                case "rgb":
-                    result = this.toRGB(color);
-                    break;
-                case "rgba":
-                    result = this.toRGBA(color, alpha);
-                    break;
-                case "hsl":
-                    result = this.toHSL(color);
-                    break;
-                case "hsla":
-                    result = this.toHSLA(color, alpha);
-                    break;
-                case "hsv":
-                    result = this.toHSV(color);
-                    break;
-                case "cmyk":
-                    result = this.toCMYK(color);
-                    break;
-                default:
-                    result = color;
-            }
-            return result;
-        },
-
-        toHEX: function(color){
-            return typeof color === "string"
-                ? this.expandHexColor(color)
-                : this.rgb2hex(this.toRGB(color));
-        },
-
-        toRGB: function(color){
-            if (this.isRGB(color)) return color;
-            if (this.isRGBA(color)) return new RGB(color.r, color.g, color.b);
-            if (this.isHSV(color)) return this.hsv2rgb(color);
-            if (this.isHSL(color)) return this.hsv2rgb(this.hsl2hsv(color));
-            if (this.isHSLA(color)) return this.hsv2rgb(this.hsl2hsv(color));
-            if (this.isHEX(color)) return this.hex2rgb(color);
-            if (this.isCMYK(color)) return this.cmyk2rgb(color);
-
-            throw new Error("Unknown color format!");
-        },
-
-        toRGBA: function(color, alpha){
-            if (this.isRGBA(color)) {
-                if (alpha) {
-                    color.a = alpha;
-                }
-                return color;
-            }
-            var rgb = this.toRGB(color);
-            return new RGBA(rgb.r, rgb.g, rgb.b, alpha);
-        },
-
-        toHSV: function(color){
-            return this.rgb2hsv(this.toRGB(color));
-        },
-
-        toHSL: function(color){
-            return this.hsv2hsl(this.rgb2hsv(this.toRGB(color)));
-        },
-
-        toHSLA: function(color, alpha){
-            if (this.isHSLA(color)) {
-                if (alpha) {
-                    color.a = alpha;
-                }
-                return color;
-            }
-            var hsla = this.hsv2hsl(this.rgb2hsv(this.toRGB(color)));
-            hsla.a = alpha;
-            return new HSLA(hsla.h, hsla.s, hsla.l, hsla.a);
-        },
-
-        toCMYK: function(color){
-            return this.rgb2cmyk(this.toRGB(color));
-        },
-
-        grayscale: function(color){
-            var rgb = this.toRGB(color);
-            var type = this.colorType(color).toLowerCase();
-            var gray = Math.round(rgb.r * 0.2125 + rgb.g * 0.7154 + rgb.b * 0.0721);
-            var mono = new RGB(gray, gray, gray);
-
-            return this.toColor(mono, type);
-        },
-
-        darken: function(color, amount){
-            amount = typeof amount !== "undefined" ? amount : 10;
-            return this.lighten(color, -1 * Math.abs(amount));
-        },
-
-        lighten: function(color, amount){
-            var type, res, alpha, ring;
-
-            var calc = function (_color, _amount) {
-                var r, g, b;
-                var col = _color.slice(1);
-
-                var num = parseInt(col, 16);
-                r = (num >> 16) + _amount;
-
-                if (r > 255) r = 255;
-                else if (r < 0) r = 0;
-
-                b = ((num >> 8) & 0x00ff) + _amount;
-
-                if (b > 255) b = 255;
-                else if (b < 0) b = 0;
-
-                g = (num & 0x0000ff) + _amount;
-
-                if (g > 255) g = 255;
-                else if (g < 0) g = 0;
-
-                return "#" + (g | (b << 8) | (r << 16)).toString(16);
-            };
-
-            if (isNaN(amount)) amount = 10;
-
-            ring = amount > 0;
-
-            type = this.colorType(color).toLowerCase();
-
-            if (type === Types.RGBA || type === Types.HSLA) {
-                alpha = color.a;
-            }
-
-            do {
-                res = calc(this.toHEX(color), amount);
-                ring ? amount-- : amount++;
-            } while (res.length < 7);
-
-            return this.toColor(res, type, alpha);
-        },
-
-        hueShift: function(color, angle){
-            var hsv = this.toHSV(color);
-            var type = this.colorType(color).toLowerCase();
-            var h = hsv.h;
-            var alpha;
-
-            h += angle;
-            while (h >= 360.0) h -= 360.0;
-            while (h < 0.0) h += 360.0;
-            hsv.h = h;
-
-            if (type === Types.RGBA || type === Types.HSLA) {
-                alpha = color.a;
-            }
-
-            return this.toColor(hsv, type, alpha);
-        },
-
-        createScheme: function(color, name, format, options){
-            var opt = $.extend({}, ColorsDefaultConfig, options);
-            var i, scheme = [], hsv, rgb, h, s, v;
-            var self = this;
-
-            hsv = this.toHSV(color);
-            h = hsv.h;
-            s = hsv.s;
-            v = hsv.v;
-
-            if (this.isHSV(hsv) === false) {
-                console.warn("The value is a not supported color format!");
-                return false;
-            }
-
-            function convert(source, format) {
-                var result;
-                switch (format) {
-                    case "hex":
-                        result = source.map(function (v) {
-                            return self.toHEX(v);
-                        });
-                        break;
-                    case "rgb":
-                        result = source.map(function (v) {
-                            return self.toRGB(v);
-                        });
-                        break;
-                    case "rgba":
-                        result = source.map(function (v) {
-                            return self.toRGBA(v, opt.alpha);
-                        });
-                        break;
-                    case "hsl":
-                        result = source.map(function (v) {
-                            return self.toHSL(v);
-                        });
-                        break;
-                    case "hsla":
-                        result = source.map(function (v) {
-                            return self.toHSLA(v, opt.alpha);
-                        });
-                        break;
-                    case "cmyk":
-                        result = source.map(function (v) {
-                            return self.toCMYK(v);
-                        });
-                        break;
-                    default:
-                        result = source;
-                }
-
-                return result;
-            }
-
-            function clamp(num, min, max) {
-                return Math.max(min, Math.min(num, max));
-            }
-
-            function toRange(a, b, c) {
-                return a < b ? b : a > c ? c : a;
-            }
-
-            function shift(h, s) {
-                h += s;
-                while (h >= 360.0) h -= 360.0;
-                while (h < 0.0) h += 360.0;
-                return h;
-            }
-
-            switch (name) {
-                case "monochromatic":
-                case "mono":
-                    if (opt.algorithm === 1) {
-                        rgb = this.hsv2rgb(hsv);
-                        rgb.r = toRange(
-                            Math.round(rgb.r + (255 - rgb.r) * opt.tint1),
-                            0,
-                            255
-                        );
-                        rgb.g = toRange(
-                            Math.round(rgb.g + (255 - rgb.g) * opt.tint1),
-                            0,
-                            255
-                        );
-                        rgb.b = toRange(
-                            Math.round(rgb.b + (255 - rgb.b) * opt.tint1),
-                            0,
-                            255
-                        );
-                        scheme.push(this.rgb2hsv(rgb));
-
-                        rgb = this.hsv2rgb(hsv);
-                        rgb.r = toRange(
-                            Math.round(rgb.r + (255 - rgb.r) * opt.tint2),
-                            0,
-                            255
-                        );
-                        rgb.g = toRange(
-                            Math.round(rgb.g + (255 - rgb.g) * opt.tint2),
-                            0,
-                            255
-                        );
-                        rgb.b = toRange(
-                            Math.round(rgb.b + (255 - rgb.b) * opt.tint2),
-                            0,
-                            255
-                        );
-                        scheme.push(this.rgb2hsv(rgb));
-
-                        scheme.push(hsv);
-
-                        rgb = this.hsv2rgb(hsv);
-                        rgb.r = toRange(Math.round(rgb.r * opt.shade1), 0, 255);
-                        rgb.g = toRange(Math.round(rgb.g * opt.shade1), 0, 255);
-                        rgb.b = toRange(Math.round(rgb.b * opt.shade1), 0, 255);
-                        scheme.push(this.rgb2hsv(rgb));
-
-                        rgb = this.hsv2rgb(hsv);
-                        rgb.r = toRange(Math.round(rgb.r * opt.shade2), 0, 255);
-                        rgb.g = toRange(Math.round(rgb.g * opt.shade2), 0, 255);
-                        rgb.b = toRange(Math.round(rgb.b * opt.shade2), 0, 255);
-                        scheme.push(this.rgb2hsv(rgb));
-
-                    } else if (opt.algorithm === 2) {
-
-                        scheme.push(hsv);
-                        for (i = 1; i <= opt.distance; i++) {
-                            v = clamp(v - opt.step, 0, 1);
-                            s = clamp(s - opt.step, 0, 1);
-                            scheme.push(new HSV(h, s, v));
-                        }
-
-                    } else if (opt.algorithm === 3) {
-
-                        scheme.push(hsv);
-                        for (i = 1; i <= opt.distance; i++) {
-                            v = clamp(v - opt.step, 0, 1);
-                            scheme.push(new HSV(h, s, v));
-                        }
-
-                    } else {
-
-                        v = clamp(hsv.v + opt.step * 2, 0, 1);
-                        scheme.push(new HSV(h, s, v));
-
-                        v = clamp(hsv.v + opt.step, 0, 1);
-                        scheme.push(new HSV(h, s, v));
-
-                        scheme.push(hsv);
-                        s = hsv.s;
-                        v = hsv.v;
-
-                        v = clamp(hsv.v - opt.step, 0, 1);
-                        scheme.push(new HSV(h, s, v));
-
-                        v = clamp(hsv.v - opt.step * 2, 0, 1);
-                        scheme.push(new HSV(h, s, v));
-
-                    }
-                    break;
-
-                case "complementary":
-                case "complement":
-                case "comp":
-                    scheme.push(hsv);
-
-                    h = shift(hsv.h, 180.0);
-                    scheme.push(new HSV(h, s, v));
-                    break;
-
-                case "double-complementary":
-                case "double-complement":
-                case "double":
-                    scheme.push(hsv);
-
-                    h = shift(h, 180.0);
-                    scheme.push(new HSV(h, s, v));
-
-                    h = shift(h, opt.angle);
-                    scheme.push(new HSV(h, s, v));
-
-                    h = shift(h, 180.0);
-                    scheme.push(new HSV(h, s, v));
-
-                    break;
-
-                case "analogous":
-                case "analog":
-                    h = shift(h, opt.angle);
-                    scheme.push(new HSV(h, s, v));
-
-                    scheme.push(hsv);
-
-                    h = shift(hsv.h, 0.0 - opt.angle);
-                    scheme.push(new HSV(h, s, v));
-
-                    break;
-
-                case "triadic":
-                case "triad":
-                    scheme.push(hsv);
-                    for (i = 1; i < 3; i++) {
-                        h = shift(h, 120.0);
-                        scheme.push(new HSV(h, s, v));
-                    }
-                    break;
-
-                case "tetradic":
-                case "tetra":
-                    scheme.push(hsv);
-
-                    h = shift(hsv.h, 180.0);
-                    scheme.push(new HSV(h, s, v));
-
-                    h = shift(hsv.h, -1 * opt.angle);
-                    scheme.push(new HSV(h, s, v));
-
-                    h = shift(h, 180.0);
-                    scheme.push(new HSV(h, s, v));
-
-                    break;
-
-                case "square":
-                    scheme.push(hsv);
-                    for (i = 1; i < 4; i++) {
-                        h = shift(h, 90.0);
-                        scheme.push(new HSV(h, s, v));
-                    }
-                    break;
-
-                case "split-complementary":
-                case "split-complement":
-                case "split":
-                    h = shift(h, 180.0 - opt.angle);
-                    scheme.push(new HSV(h, s, v));
-
-                    scheme.push(hsv);
-
-                    h = shift(hsv.h, 180.0 + opt.angle);
-                    scheme.push(new HSV(h, s, v));
-                    break;
-
-                default:
-                    console.warn("Unknown scheme name");
-            }
-
-            return convert(scheme, format);
-        },
-
-        getScheme: function(){
-            return this.createScheme.apply(this, arguments)
-        }
-    };
-
-    var ColorType = function(color, options){
-        this._setValue(color);
-        this._setOptions(options);
-    }
-
-    ColorType.prototype = {
-        _setValue: function(color){
-            if (typeof color === "string") {
-                color = Colors.expandHexColor(Colors.parse(color));
-            }
-            if (!Colors.isColor(color)) {
-                color = "#000000";
-            }
-            this._value = color;
-        },
-
-        _setOptions: function(options){
-            options = typeof options === "object" ? options : {};
-            this._options = $.extend({}, ColorsDefaultConfig, options);
-        },
-
-        getOptions: function(){
-            return this._options;
-        },
-
-        setOptions: function(options){
-            this._setOptions(options);
-        },
-
-        setValue: function(color){
-            this._setValue(color);
-        },
-
-        getValue: function(){
-            return this._value;
-        },
-
-        toRGB: function() {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.toRGB(this._value);
-            return this;
-        },
-
-        rgb: function(){
-            return this._value ? Colors.toRGB(this._value) : undefined;
-        },
-
-        toRGBA: function(alpha) {
-            if (!this._value) {
-                return;
-            }
-            if (Colors.isRGBA(this._value)) {
-                if (alpha) {
-                    this._value = Colors.toRGBA(this._value, alpha);
-                }
-            } else {
-                this._value = Colors.toRGBA(this._value, alpha);
-            }
-            return this;
-        },
-
-        rgba: function(alpha) {
-            return this._value
-                ? Colors.isRGBA(this._value)
-                    ? this._value
-                    : Colors.toRGBA(this._value, alpha)
-                : undefined;
-        },
-
-        toHEX: function() {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.toHEX(this._value);
-            return this;
-        },
-
-        hex: function() {
-            return this._value ? Colors.toHEX(this._value) : undefined;
-        },
-
-        toHSV: function() {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.toHSV(this._value);
-            return this;
-        },
-
-        hsv: function() {
-            return this._value ? Colors.toHSV(this._value) : undefined;
-        },
-
-        toHSL: function() {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.toHSL(this._value);
-            return this;
-        },
-
-        hsl: function() {
-            return this._value ? Colors.toHSL(this._value) : undefined;
-        },
-
-        toHSLA: function(alpha) {
-            if (!this._value) {
-                return;
-            }
-            if (Colors.isHSLA(this._value)) {
-                if (alpha) {
-                    this._value = Colors.toHSLA(this._value, alpha);
-                }
-            } else {
-                this._value = Colors.toHSLA(this._value, alpha);
-            }
-            return this;
-        },
-
-        hsla: function(alpha) {
-            return this._value
-                ? Colors.isHSLA(this._value)
-                    ? this._value
-                    : Colors.toHSLA(this._value, alpha)
-                : undefined;
-        },
-
-        toCMYK: function() {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.toCMYK(this._value);
-            return this;
-        },
-
-        cmyk: function() {
-            return this._value ? Colors.toCMYK(this._value) : undefined;
-        },
-
-        toWebsafe: function() {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.websafe(this._value);
-            return this;
-        },
-
-        websafe: function() {
-            return this._value ? Colors.websafe(this._value) : undefined;
-        },
-
-        toString: function() {
-            return this._value ? Colors.colorToString(this._value) : undefined;
-        },
-
-        darken: function(amount) {
-            amount = amount || 10;
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.darken(this._value, amount);
-            return this;
-        },
-
-        lighten: function(amount) {
-            amount = amount || 10;
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.lighten(this._value, amount);
-            return this;
-        },
-
-        isDark: function() {
-            return this._value ? Colors.isDark(this._value) : undefined;
-        },
-
-        isLight: function() {
-            return this._value ? Colors.isLight(this._value) : undefined;
-        },
-
-        hueShift: function(angle) {
-            if (!this._value) {
-                return;
-            }
-            this._value = Colors.hueShift(this._value, angle);
-            return this;
-        },
-
-        grayscale: function() {
-            if (!this._value || this.type === Types.UNKNOWN) {
-                return;
-            }
-            this._value = Colors.grayscale(
-                this._value,
-                ("" + this.type).toLowerCase()
-            );
-            return this;
-        },
-
-        type: function() {
-            return Colors.colorType(this._value);
-        },
-
-        createScheme: function(name, format, options) {
-            return this._value
-                ? Colors.createScheme(this._value, name, format, options)
-                : undefined;
-        },
-
-        getScheme: function(){
-            return this.createScheme.apply(this, arguments);
-        },
-
-        equal: function(color) {
-            return Colors.equal(this._value, color);
-        }
-    }
-
-    Metro.colors = Colors.init();
-    window.Color = Metro.Color = ColorType;
-
-    if (window.METRO_GLOBAL_COMMON === true) {
-        window.Colors = Metro.colors;
-    }
-
-}(Metro, m4q));
-
-(function(Metro, $) {
-   'use strict';
-   var Utils = Metro.utils;
-   var Export = {
-
-        init: function(){
-            return this;
-        },
-
-        options: {
-            csvDelimiter: "\t",
-            csvNewLine: "\r\n",
-            includeHeader: true
-        },
-
-        setup: function(options){
-            this.options = $.extend({}, this.options, options);
-            return this;
-        },
-
-        base64: function(data){
-            return window.btoa(unescape(encodeURIComponent(data)));
-        },
-
-        b64toBlob: function (b64Data, contentType, sliceSize) {
-            contentType = contentType || '';
-            sliceSize = sliceSize || 512;
-
-            var byteCharacters = window.atob(b64Data);
-            var byteArrays = [];
-
-            var offset;
-            for (offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                var byteNumbers = new Array(slice.length);
-                var i;
-                for (i = 0; i < slice.length; i = i + 1) {
-                    byteNumbers[i] = slice.charCodeAt(i);
-                }
-
-                var byteArray = new window.Uint8Array(byteNumbers);
-
-                byteArrays.push(byteArray);
-            }
-
-            return new Blob(byteArrays, {
-                type: contentType
-            });
-        },
-
-        tableToCSV: function(table, filename, options){
-            var o = this.options;
-            var body, head, data = "";
-            var i, j, row, cell;
-
-            o = $.extend({}, o, options);
-
-            table = $(table)[0];
-
-            if (Utils.bool(o.includeHeader)) {
-
-                head = table.querySelectorAll("thead")[0];
-
-                for(i = 0; i < head.rows.length; i++) {
-                    row = head.rows[i];
-                    for(j = 0; j < row.cells.length; j++){
-                        cell = row.cells[j];
-                        data += (j ? o.csvDelimiter : '') + cell.textContent.trim();
-                    }
-                    data += o.csvNewLine;
-                }
-            }
-
-            body = table.querySelectorAll("tbody")[0];
-
-            for(i = 0; i < body.rows.length; i++) {
-                row = body.rows[i];
-                for(j = 0; j < row.cells.length; j++){
-                    cell = row.cells[j];
-                    data += (j ? o.csvDelimiter : '') + cell.textContent.trim();
-                }
-                data += o.csvNewLine;
-            }
-
-            if (Utils.isValue(filename)) {
-                return this.createDownload(this.base64("\uFEFF" + data), 'application/csv', filename);
-            }
-
-            return data;
-        },
-
-        createDownload: function (data, contentType, filename) {
-            var blob, anchor, url;
-
-            anchor = document.createElement('a');
-            anchor.style.display = "none";
-            document.body.appendChild(anchor);
-
-            blob = this.b64toBlob(data, contentType);
-
-            url = window.URL.createObjectURL(blob);
-            anchor.href = url;
-            anchor.download = filename || Utils.elementId("download");
-            anchor.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(anchor);
-            return true;
-        }
-    };
-
-    Metro.export = Export.init();
-
-    if (window.METRO_GLOBAL_COMMON === true) {
-        window.Export = Metro.export;
-    }
-}(Metro, m4q));
-
-(function(Metro) {
-    'use strict';
-    Metro.md5 = function (string) {
-        function RotateLeft(lValue, iShiftBits) {
-            return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
-        }
-
-        function AddUnsigned(lX,lY) {
-            var lX4,lY4,lX8,lY8,lResult;
-            lX8 = (lX & 0x80000000);
-            lY8 = (lY & 0x80000000);
-            lX4 = (lX & 0x40000000);
-            lY4 = (lY & 0x40000000);
-            lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
-            if (lX4 & lY4) {
-                return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-            }
-            if (lX4 | lY4) {
-                if (lResult & 0x40000000) {
-                    return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-                } else {
-                    return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
-                }
-            } else {
-                return (lResult ^ lX8 ^ lY8);
-            }
-        }
-
-        function F(x,y,z) { return (x & y) | ((~x) & z); }
-        function G(x,y,z) { return (x & z) | (y & (~z)); }
-        function H(x,y,z) { return (x ^ y ^ z); }
-        function I(x,y,z) { return (y ^ (x | (~z))); }
-
-        function FF(a,b,c,d,x,s,ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        }
-
-        function GG(a,b,c,d,x,s,ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        }
-
-        function HH(a,b,c,d,x,s,ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        }
-
-        function II(a,b,c,d,x,s,ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        }
-
-        function ConvertToWordArray(string) {
-            var lWordCount;
-            var lMessageLength = string.length;
-            var lNumberOfWords_temp1=lMessageLength + 8;
-            var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
-            var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
-            var lWordArray=Array(lNumberOfWords-1);
-            var lBytePosition = 0;
-            var lByteCount = 0;
-            while ( lByteCount < lMessageLength ) {
-                lWordCount = (lByteCount-(lByteCount % 4))/4;
-                lBytePosition = (lByteCount % 4)*8;
-                lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
-                lByteCount++;
-            }
-            lWordCount = (lByteCount-(lByteCount % 4))/4;
-            lBytePosition = (lByteCount % 4)*8;
-            lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
-            lWordArray[lNumberOfWords-2] = lMessageLength<<3;
-            lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
-            return lWordArray;
-        }
-
-        function WordToHex(lValue) {
-            var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
-            for (lCount = 0;lCount<=3;lCount++) {
-                lByte = (lValue>>>(lCount*8)) & 255;
-                WordToHexValue_temp = "0" + lByte.toString(16);
-                WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
-            }
-            return WordToHexValue;
-        }
-
-        function Utf8Encode(string) {
-            string = string.replace(/\r\n/g,"\n");
-            var utftext = "";
-
-            for (var n = 0; n < string.length; n++) {
-
-                var c = string.charCodeAt(n);
-
-                if (c < 128) {
-                    utftext += String.fromCharCode(c);
-                }
-                else if((c > 127) && (c < 2048)) {
-                    utftext += String.fromCharCode((c >> 6) | 192);
-                    utftext += String.fromCharCode((c & 63) | 128);
-                }
-                else {
-                    utftext += String.fromCharCode((c >> 12) | 224);
-                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                    utftext += String.fromCharCode((c & 63) | 128);
-                }
-
-            }
-
-            return utftext;
-        }
-
-        var x=[];
-        var k,AA,BB,CC,DD,a,b,c,d;
-        var S11=7, S12=12, S13=17, S14=22;
-        var S21=5, S22=9 , S23=14, S24=20;
-        var S31=4, S32=11, S33=16, S34=23;
-        var S41=6, S42=10, S43=15, S44=21;
-
-        string = Utf8Encode(string);
-
-        x = ConvertToWordArray(string);
-
-        a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
-
-        for (k=0;k<x.length;k+=16) {
-            AA=a; BB=b; CC=c; DD=d;
-            a=FF(a,b,c,d,x[k], S11,0xD76AA478);
-            d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
-            c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
-            b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
-            a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
-            d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
-            c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
-            b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
-            a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
-            d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
-            c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
-            b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
-            a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
-            d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
-            c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
-            b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
-            a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
-            d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
-            c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
-            b=GG(b,c,d,a,x[k], S24,0xE9B6C7AA);
-            a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
-            d=GG(d,a,b,c,x[k+10],S22,0x2441453);
-            c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
-            b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
-            a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
-            d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
-            c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
-            b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
-            a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
-            d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
-            c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
-            b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
-            a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
-            d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
-            c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
-            b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
-            a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
-            d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
-            c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
-            b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
-            a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
-            d=HH(d,a,b,c,x[k], S32,0xEAA127FA);
-            c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
-            b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
-            a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
-            d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
-            c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
-            b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
-            a=II(a,b,c,d,x[k], S41,0xF4292244);
-            d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
-            c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
-            b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
-            a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
-            d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
-            c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
-            b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
-            a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
-            d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
-            c=II(c,d,a,b,x[k+6], S43,0xA3014314);
-            b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
-            a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
-            d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
-            c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
-            b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
-            a=AddUnsigned(a,AA);
-            b=AddUnsigned(b,BB);
-            c=AddUnsigned(c,CC);
-            d=AddUnsigned(d,DD);
-        }
-
-        var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
-
-        return temp.toLowerCase();
-    };
-
-    if (window.METRO_GLOBAL_COMMON === true) {
-        window.md5 = Metro.md5;
-    }
-}(Metro, m4q));
-
-(function(Metro, $){
-    'use strict';
-    var Utils = Metro.utils;
-    var AccordionDefaultConfig = {
-        accordionDeferred: 0,
-        showMarker: true,
-        material: false,
-        duration: METRO_ANIMATION_DURATION,
-        oneFrame: true,
-        showActive: true,
-        activeFrameClass: "",
-        activeHeadingClass: "",
-        activeContentClass: "",
-        onFrameOpen: Metro.noop,
-        onFrameBeforeOpen: Metro.noop_true,
-        onFrameClose: Metro.noop,
-        onFrameBeforeClose: Metro.noop_true,
-        onAccordionCreate: Metro.noop
-    };
-
-    Metro.accordionSetup = function(options){
-        AccordionDefaultConfig = $.extend({}, AccordionDefaultConfig, options);
-    };
-
-    if (typeof window["metroAccordionSetup"] !== undefined) {
-        Metro.accordionSetup(window["metroAccordionSetup"]);
-    }
-
-    Metro.Component('accordion', {
-        init: function( options, elem ) {
-            this._super(elem, options, AccordionDefaultConfig);
-            return this;
-        },
-
-        _create: function(){
-            var element = this.element;
-
-            this._createStructure();
-            this._createEvents();
-
-            this._fireEvent('accordionCreate', {
-                element: element
-            });
-        },
-
-        _createStructure: function(){
-            var that = this, element = this.element, o = this.options;
-            var frames = element.children(".frame");
-            var active = element.children(".frame.active");
-            var frame_to_open;
-
-            element.addClass("accordion");
-
-            if (o.showMarker === true) {
-                element.addClass("marker-on");
-            }
-
-            if (o.material === true) {
-                element.addClass("material");
-            }
-
-            if (active.length === 0) {
-                frame_to_open = frames[0];
-            } else {
-                frame_to_open = active[0];
-            }
-
-            this._hideAll();
-
-            if (o.showActive === true) {
-                if (o.oneFrame === true) {
-                    this._openFrame(frame_to_open);
-                } else {
-                    $.each(active, function(){
-                        that._openFrame(this);
-                    });
-                }
-            }
-        },
-
-        _createEvents: function(){
-            var that = this, element = this.element, o = this.options;
-            var active = element.children(".frame.active");
-
-            element.on(Metro.events.click, ".heading", function(){
-                var heading = $(this);
-                var frame = heading.parent();
-
-                if (heading.closest(".accordion")[0] !== element[0]) {
-                    return false;
-                }
-
-                if (frame.hasClass("active")) {
-                    if (active.length === 1 && o.oneFrame) {
-                        /* eslint-disable-next-line */
-
-                    } else {
-                        that._closeFrame(frame);
-                    }
-                } else {
-                    that._openFrame(frame);
-                }
-            });
-        },
-
-        _openFrame: function(f){
-            var element = this.element, o = this.options;
-            var frame = $(f);
-
-            if (Utils.exec(o.onFrameBeforeOpen, [frame[0]], element[0]) === false) {
-                return false;
-            }
-
-            if (o.oneFrame === true) {
-                this._closeAll(frame[0]);
-            }
-
-            frame.addClass("active " + o.activeFrameClass);
-            frame.children(".heading").addClass(o.activeHeadingClass);
-            frame.children(".content").addClass(o.activeContentClass).slideDown(o.duration);
-
-            this._fireEvent("frameOpen", {
-                frame: frame[0]
-            });
-        },
-
-        _closeFrame: function(f){
-            var element = this.element, o = this.options;
-            var frame = $(f);
-
-            if (!frame.hasClass("active")) {
-                return ;
-            }
-
-            if (Utils.exec(o.onFrameBeforeClose, [frame[0]], element[0]) === false) {
-                return ;
-            }
-
-            frame.removeClass("active " + o.activeFrameClass);
-            frame.children(".heading").removeClass(o.activeHeadingClass);
-            frame.children(".content").removeClass(o.activeContentClass).slideUp(o.duration);
-
-            this._fireEvent("frameClose", {
-                frame: frame[0]
-            });
-        },
-
-        _closeAll: function(skip){
-            var that = this, element = this.element;
-            var frames = element.children(".frame");
-
-            $.each(frames, function(){
-                if (skip === this) return;
-                that._closeFrame(this);
-            });
-        },
-
-        _hideAll: function(){
-            var element = this.element;
-            var frames = element.children(".frame");
-
-            $.each(frames, function(){
-                $(this).children(".content").hide();
-            });
-        },
-
-        _openAll: function(){
-            var that = this, element = this.element;
-            var frames = element.children(".frame");
-
-            $.each(frames, function(){
-                that._openFrame(this);
-            });
-        },
-
-        /* eslint-disable-next-line */
-        changeAttribute: function(attributeName){
-        },
-
-        destroy: function(){
-            var element = this.element;
-            element.off(Metro.events.click, ".heading");
-            return element;
-        }
-    });
-}(Metro, m4q));
-
-(function(Metro, $) {
-    'use strict';
-    var ActivityDefaultConfig = {
-        activityDeferred: 0,
-        type: "ring",
-        style: "light",
-        size: 64,
-        radius: 20,
-        onActivityCreate: Metro.noop
-    };
-
-    Metro.activitySetup = function(options){
-        ActivityDefaultConfig = $.extend({}, ActivityDefaultConfig, options);
-    };
-
-    if (typeof window["metroActivitySetup"] !== undefined) {
-        Metro.activitySetup(window["metroActivitySetup"]);
-    }
-
-    Metro.Component('activity', {
-        init: function( options, elem ) {
-            this._super(elem, options, ActivityDefaultConfig);
-            return this;
-        },
-
-        _create: function(){
-            var element = this.element, o = this.options;
-            var i, wrap;
-
-            element
-                .html('')
-                .addClass(o.style + "-style")
-                .addClass("activity-" + o.type);
-
-            function _metro(){
-                for(i = 0; i < 5 ; i++) {
-                    $("<div/>").addClass('circle').appendTo(element);
-                }
-            }
-
-            function _square(){
-                for(i = 0; i < 4 ; i++) {
-                    $("<div/>").addClass('square').appendTo(element);
-                }
-            }
-
-            function _cycle(){
-                $("<div/>").addClass('cycle').appendTo(element);
-            }
-
-            function _ring(){
-                for(i = 0; i < 5 ; i++) {
-                    wrap = $("<div/>").addClass('wrap').appendTo(element);
-                    $("<div/>").addClass('circle').appendTo(wrap);
-                }
-            }
-
-            function _simple(){
-                $('<svg class="circular"><circle class="path" cx="'+o.size/2+'" cy="'+o.size/2+'" r="'+o.radius+'" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg>').appendTo(element);
-            }
-
-            switch (o.type) {
-                case 'metro': _metro(); break;
-                case 'square': _square(); break;
-                case 'cycle': _cycle(); break;
-                case 'simple': _simple(); break;
-                default: _ring();
-            }
-
-            this._fireEvent("activity-create", {
-                element: element
-            })
-        },
-
-        /*eslint-disable-next-line*/
-        changeAttribute: function(attributeName){
-        },
-
-        destroy: function(){
-            return this.element;
-        }
-    });
-
-    Metro.activity = {
-        open: function(options){
-            var o = options || {};
-            var activity = '<div data-role="activity" data-type="'+( o.type ? o.type : 'cycle' )+'" data-style="'+( o.style ? o.style : 'color' )+'"></div>';
-            var text = o.text ? '<div class="text-center">'+o.text+'</div>' : '';
-
-            return Metro.dialog.create({
-                content: activity + text,
-                defaultAction: false,
-                clsContent: "d-flex flex-column flex-justify-center flex-align-center bg-transparent no-shadow w-auto",
-                clsDialog: "no-border no-shadow bg-transparent global-dialog",
-                autoHide: o.autoHide ? o.autoHide : 0,
-                overlayClickClose: o.overlayClickClose === true,
-                overlayColor: o.overlayColor ? o.overlayColor : '#000000',
-                overlayAlpha: o.overlayAlpha ? o.overlayAlpha : 0.5,
-                clsOverlay: "global-overlay"
-            });
-        },
-
-        close: function(a){
-            Metro.dialog.close(a);
-        }
-    };
-}(Metro, m4q));
-
-(function(Metro, $) {
-    'use strict';
-    var Utils = Metro.utils;
-    var AdblockDefaultConfig = {
-        adblockDeferred: 0,
-        checkInterval: 1000,
-        fireOnce: true,
-        checkStop: 10,
-        onAlert: Metro.noop,
-        onFishingStart: Metro.noop,
-        onFishingDone: Metro.noop
-    };
-
-    Metro.adblockSetup = function(options){
-        AdblockDefaultConfig = $.extend({}, AdblockDefaultConfig, options);
-    };
-
-    if (typeof window["metroAdblockSetup"] !== undefined) {
-        Metro.adblockSetup(window["metroAdblockSetup"]);
-    }
-
-    var Adblock = {
-        bite: function(){
-            var classes = "adblock-bite adsense google-adsense dblclick advert topad top_ads topAds textads sponsoredtextlink_container show_ads right-banner rekl mpu module-ad mid_ad mediaget horizontal_ad headerAd contentAd brand-link bottombanner bottom_ad_block block_ad bannertop banner-right banner-body b-banner b-article-aside__banner b-advert adwrapper adverts advertisment advertisement:not(body) advertise advert_list adtable adsense adpic adlist adleft adinfo adi adholder adframe addiv ad_text ad_space ad_right ad_links ad_body ad_block ad_Right adTitle adText";
-            $("<div>")
-                .addClass(classes.split(" ").shuffle().join(" "))
-                .css({
-                    position: "fixed",
-                    height: 1,
-                    width: 1,
-                    overflow: "hidden",
-                    visibility: "visible",
-                    top: 0,
-                    left: 0
-                })
-                .append($("<a href='https://dblclick.net'>").html('dblclick.net'))
-                .appendTo('body');
-
-            if (Adblock.options.adblockDeferred) {
-                setTimeout(function () {
-                    Adblock.fishing();
-                }, Adblock.options.adblockDeferred);
-            } else this.fishing();
-        },
-
-        fishing: function(){
-            var o = Adblock.options;
-            var checks = typeof o.fireOnce === "number" ? o.fireOnce : 0;
-            var checkStop = o.checkStop;
-            var interval = false;
-            var run = function(){
-                var a = $(".adsense.google-adsense.dblclick.advert.adblock-bite");
-                var b = a.find("a");
-                var done = function(){
-                    clearInterval(interval);
-
-                    Utils.exec(o.onFishingDone);
-                    $(window).fire("fishing-done");
-
-                    a.remove();
-                };
-
-                if (   !a.length
-                    || !b.length
-                    || a.css("display").indexOf('none') > -1
-                    || b.css("display").indexOf('none') > -1
-                ) {
-
-                    Utils.exec(Adblock.options.onAlert);
-                    $(window).fire("adblock-alert");
-
-                    if (Adblock.options.fireOnce === true) {
-                        done();
-                    } else {
-                        checks--;
-                        if (checks === 0) {
-                            done();
-                        }
-                    }
-                } else {
-                    if (checkStop !== false) {
-                        checkStop--;
-                        if (checkStop === 0) {
-                            done();
-                        }
-                    }
-                }
-            };
-
-            Utils.exec(o.onFishingStart);
-            $(window).fire("fishing-start");
-
-            interval = setInterval(function(){
-                run();
-            }, Adblock.options.checkInterval);
-
-            run();
-        }
-    };
-
-    Metro.Adblock = Adblock;
-
-    $(function(){
-        Adblock.options = $.extend({}, AdblockDefaultConfig);
-        $(window).on("metro-initiated", function(){
-            Adblock.bite();
-        });
-    });
-}(Metro, m4q));
-
-(function(Metro, $) {
-    'use strict';
-    var Colors = Metro.colors;
     var Utils = Metro.utils;
     var AppBarDefaultConfig = {
         appbarDeferred: 0,
@@ -9298,6 +7619,8 @@ $.noConflict = function() {
         duration: 100,
         onMenuOpen: Metro.noop,
         onMenuClose: Metro.noop,
+        onBeforeMenuOpen: Metro.noop,
+        onBeforeMenuClose: Metro.noop,
         onMenuCollapse: Metro.noop,
         onMenuExpand: Metro.noop,
         onAppBarCreate: Metro.noop
@@ -9333,7 +7656,7 @@ $.noConflict = function() {
 
         _createStructure: function () {
             var element = this.element, o = this.options;
-            var hamburger, menu;
+            var hamburger, menu, elementColor = Utils.getStyleOne(element, "background-color");
 
             element.addClass("app-bar");
 
@@ -9344,7 +7667,7 @@ $.noConflict = function() {
                     $("<span>").addClass("line").appendTo(hamburger);
                 }
 
-                if (Colors.isLight(Utils.computedRgbToHex(Utils.getStyleOne(element, "background-color"))) === true) {
+                if (elementColor === "rgba(0, 0, 0, 0)" || Metro.colors.isLight(elementColor) === true) {
                     hamburger.addClass("dark");
                 }
             }
@@ -9422,32 +7745,40 @@ $.noConflict = function() {
         },
 
         close: function () {
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
             var menu = element.find(".app-bar-menu");
             var hamburger = element.find(".hamburger");
+
+            that._fireEvent("before-menu-close", {
+                menu: menu[0]
+            });
 
             menu.slideUp(o.duration, function () {
                 menu.addClass("collapsed").removeClass("opened");
                 hamburger.removeClass("active");
-            });
 
-            this._fireEvent("menu-close", {
-                menu: menu[0]
+                that._fireEvent("menu-close", {
+                    menu: menu[0]
+                });
             });
         },
 
         open: function () {
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
             var menu = element.find(".app-bar-menu");
             var hamburger = element.find(".hamburger");
+
+            that._fireEvent("before-menu-open", {
+                menu: menu[0]
+            });
 
             menu.slideDown(o.duration, function () {
                 menu.removeClass("collapsed").addClass("opened");
                 hamburger.addClass("active");
-            });
 
-            this._fireEvent("menu-open", {
-                menu: menu[0]
+                that._fireEvent("menu-open", {
+                    menu: menu[0]
+                });
             });
         },
 
@@ -11294,6 +9625,7 @@ $.noConflict = function() {
     'use strict';
     var Utils = Metro.utils;
     var CalendarPickerDefaultConfig = {
+        label: "",
         value:'',
         calendarpickerDeferred: 0,
         nullValue: true,
@@ -11346,6 +9678,7 @@ $.noConflict = function() {
         clsSelected: "",
         clsExcluded: "",
         clsPrepend: "",
+        clsLabel: "",
 
         onDayClick: Metro.noop,
         onCalendarPickerCreate: Metro.noop,
@@ -11530,6 +9863,16 @@ $.noConflict = function() {
                 }
             }
 
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(container);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
+            }
+
             if (element.is(":disabled")) {
                 this.disable();
             } else {
@@ -11583,9 +9926,12 @@ $.noConflict = function() {
                         that.overlay.appendTo($('body'));
                     }
                     cal.addClass("open");
-                    if (Utils.isOutsider(cal) === false) {
+                    if (!Utils.inViewport(cal[0])) {
                         cal.addClass("open-up");
                     }
+                    // if (Utils.isOutsider(cal) === false) {
+                    //     cal.addClass("open-up");
+                    // }
 
                     that._fireEvent("calendar-show", {
                         calendar: cal
@@ -11627,7 +9973,7 @@ $.noConflict = function() {
                 overlay.addClass("transparent");
             } else {
                 overlay.css({
-                    background: Utils.hex2rgba(o.overlayColor, o.overlayAlpha)
+                    background: Metro.colors.toRGBA(o.overlayColor, o.overlayAlpha)
                 });
             }
 
@@ -11859,6 +10205,12 @@ $.noConflict = function() {
             this.dir = this.options.direction;
 
             element.addClass("carousel").addClass(o.clsCarousel);
+
+            element.css({
+                maxWidth: o.width
+            });
+
+
             if (o.controlsOutside === true) {
                 element.addClass("controls-outside");
             }
@@ -11985,6 +10337,8 @@ $.noConflict = function() {
                             slide.css("opacity", "0");
                             break;
                     }
+                } else {
+                    slide.addClass("active-slide");
                 }
 
                 slide.addClass(o.clsSlide);
@@ -12366,7 +10720,7 @@ $.noConflict = function() {
             this.origin.background = element.css("background-color");
 
             element.css({
-                backgroundColor: Utils.computedRgbToRgba(Utils.getStyleOne(element, "background-color"), o.opacity)
+                backgroundColor: Metro.colors.toRGBA(Utils.getStyleOne(element, "background-color"), o.opacity)
             });
         },
 
@@ -12414,7 +10768,7 @@ $.noConflict = function() {
             }
             o.opacity = opacity;
             element.css({
-                backgroundColor: Utils.computedRgbToRgba(Utils.getStyleOne(element, "background-color"), opacity)
+                backgroundColor: Metro.colors.toRGBA(Utils.getStyleOne(element, "background-color"), opacity)
             });
         },
 
@@ -13206,6 +11560,1445 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+    var Types = {
+        HEX: "hex",
+        HEXA: "hexa",
+        RGB: "rgb",
+        RGBA: "rgba",
+        HSV: "hsv",
+        HSL: "hsl",
+        HSLA: "hsla",
+        CMYK: "cmyk",
+        UNKNOWN: "unknown"
+    };
+
+    Metro.colorsSetup = function (options) {
+        ColorsDefaultConfig = $.extend({}, ColorsDefaultConfig, options);
+    };
+
+    if (typeof window["metroColorsSetup"] !== undefined) {
+        Metro.colorsSetup(window["metroColorsSetup"]);
+    }
+
+    var ColorsDefaultConfig = {
+        angle: 30,
+        algorithm: 1,
+        step: 0.1,
+        distance: 5,
+        tint1: 0.8,
+        tint2: 0.4,
+        shade1: 0.6,
+        shade2: 0.3,
+        alpha: 1
+    };
+
+    // function HEX(r, g, b) {
+    //     this.r = r || "00";
+    //     this.g = g || "00";
+    //     this.b = b || "00";
+    // }
+    //
+    // HEX.prototype.toString = function(){
+    //     return "#" + [this.r, this.g, this.b].join("");
+    // }
+
+    function RGB(r, g, b){
+        this.r = r || 0;
+        this.g = g || 0;
+        this.b = b || 0;
+    }
+
+    RGB.prototype.toString = function(){
+        return "rgb(" + [this.r, this.g, this.b].join(",") + ")";
+    }
+
+    function RGBA(r, g, b, a){
+        this.r = r || 0;
+        this.g = g || 0;
+        this.b = b || 0;
+        this.a = typeof a !== "undefined" ? a ? a : 1 : 1;
+    }
+
+    RGBA.prototype.toString = function(){
+        return "rgba(" + [this.r, this.g, this.b, this.a].join(",") + ")";
+    }
+
+    function HSV(h, s, v){
+        this.h = h || 0;
+        this.s = s || 0;
+        this.v = v || 0;
+    }
+
+    HSV.prototype.toString = function(){
+        return "hsv(" + [this.h, this.s, this.v].join(",") + ")";
+    }
+
+    function HSL(h, s, l){
+        this.h = h || 0;
+        this.s = s || 0;
+        this.l = l || 0;
+    }
+
+    HSL.prototype.toString = function(){
+        return "hsl(" + [this.h, this.s, this.l].join(",") + ")";
+    }
+
+    function HSLA(h, s, l, a){
+        this.h = h || 0;
+        this.s = s || 0;
+        this.l = l || 0;
+        this.a = typeof a !== "undefined" ? a ? a : 1 : 1;
+    }
+
+    HSLA.prototype.toString = function(){
+        return "hsla(" + [this.h, this.s, this.l, this.a].join(",") + ")";
+    }
+
+    function CMYK(c, m, y, k){
+        this.c = c || 0;
+        this.m = m || 0;
+        this.y = y || 0;
+        this.k = k || 0;
+    }
+
+    CMYK.prototype.toString = function(){
+        return "cmyk(" + [this.c, this.m, this.y, this.k].join(",") + ")";
+    }
+
+    var Colors = {
+
+        PALETTES: {
+            ALL: "all",
+            METRO: "metro",
+            STANDARD: "standard"
+        },
+
+        metro: {
+            lime: '#a4c400',
+            green: '#60a917',
+            emerald: '#008a00',
+            blue: '#00AFF0',
+            teal: '#00aba9',
+            cyan: '#1ba1e2',
+            cobalt: '#0050ef',
+            indigo: '#6a00ff',
+            violet: '#aa00ff',
+            pink: '#dc4fad',
+            magenta: '#d80073',
+            crimson: '#a20025',
+            red: '#CE352C',
+            orange: '#fa6800',
+            amber: '#f0a30a',
+            yellow: '#fff000',
+            brown: '#825a2c',
+            olive: '#6d8764',
+            steel: '#647687',
+            mauve: '#76608a',
+            taupe: '#87794e'
+        },
+
+        standard: {
+            aliceBlue: "#f0f8ff",
+            antiqueWhite: "#faebd7",
+            aqua: "#00ffff",
+            aquamarine: "#7fffd4",
+            azure: "#f0ffff",
+            beige: "#f5f5dc",
+            bisque: "#ffe4c4",
+            black: "#000000",
+            blanchedAlmond: "#ffebcd",
+            blue: "#0000ff",
+            blueViolet: "#8a2be2",
+            brown: "#a52a2a",
+            burlyWood: "#deb887",
+            cadetBlue: "#5f9ea0",
+            chartreuse: "#7fff00",
+            chocolate: "#d2691e",
+            coral: "#ff7f50",
+            cornflowerBlue: "#6495ed",
+            cornsilk: "#fff8dc",
+            crimson: "#dc143c",
+            cyan: "#00ffff",
+            darkBlue: "#00008b",
+            darkCyan: "#008b8b",
+            darkGoldenRod: "#b8860b",
+            darkGray: "#a9a9a9",
+            darkGreen: "#006400",
+            darkKhaki: "#bdb76b",
+            darkMagenta: "#8b008b",
+            darkOliveGreen: "#556b2f",
+            darkOrange: "#ff8c00",
+            darkOrchid: "#9932cc",
+            darkRed: "#8b0000",
+            darkSalmon: "#e9967a",
+            darkSeaGreen: "#8fbc8f",
+            darkSlateBlue: "#483d8b",
+            darkSlateGray: "#2f4f4f",
+            darkTurquoise: "#00ced1",
+            darkViolet: "#9400d3",
+            deepPink: "#ff1493",
+            deepSkyBlue: "#00bfff",
+            dimGray: "#696969",
+            dodgerBlue: "#1e90ff",
+            fireBrick: "#b22222",
+            floralWhite: "#fffaf0",
+            forestGreen: "#228b22",
+            fuchsia: "#ff00ff",
+            gainsboro: "#DCDCDC",
+            ghostWhite: "#F8F8FF",
+            gold: "#ffd700",
+            goldenRod: "#daa520",
+            gray: "#808080",
+            green: "#008000",
+            greenYellow: "#adff2f",
+            honeyDew: "#f0fff0",
+            hotPink: "#ff69b4",
+            indianRed: "#cd5c5c",
+            indigo: "#4b0082",
+            ivory: "#fffff0",
+            khaki: "#f0e68c",
+            lavender: "#e6e6fa",
+            lavenderBlush: "#fff0f5",
+            lawnGreen: "#7cfc00",
+            lemonChiffon: "#fffacd",
+            lightBlue: "#add8e6",
+            lightCoral: "#f08080",
+            lightCyan: "#e0ffff",
+            lightGoldenRodYellow: "#fafad2",
+            lightGray: "#d3d3d3",
+            lightGreen: "#90ee90",
+            lightPink: "#ffb6c1",
+            lightSalmon: "#ffa07a",
+            lightSeaGreen: "#20b2aa",
+            lightSkyBlue: "#87cefa",
+            lightSlateGray: "#778899",
+            lightSteelBlue: "#b0c4de",
+            lightYellow: "#ffffe0",
+            lime: "#00ff00",
+            limeGreen: "#32dc32",
+            linen: "#faf0e6",
+            magenta: "#ff00ff",
+            maroon: "#800000",
+            mediumAquaMarine: "#66cdaa",
+            mediumBlue: "#0000cd",
+            mediumOrchid: "#ba55d3",
+            mediumPurple: "#9370db",
+            mediumSeaGreen: "#3cb371",
+            mediumSlateBlue: "#7b68ee",
+            mediumSpringGreen: "#00fa9a",
+            mediumTurquoise: "#48d1cc",
+            mediumVioletRed: "#c71585",
+            midnightBlue: "#191970",
+            mintCream: "#f5fffa",
+            mistyRose: "#ffe4e1",
+            moccasin: "#ffe4b5",
+            navajoWhite: "#ffdead",
+            navy: "#000080",
+            oldLace: "#fdd5e6",
+            olive: "#808000",
+            oliveDrab: "#6b8e23",
+            orange: "#ffa500",
+            orangeRed: "#ff4500",
+            orchid: "#da70d6",
+            paleGoldenRod: "#eee8aa",
+            paleGreen: "#98fb98",
+            paleTurquoise: "#afeeee",
+            paleVioletRed: "#db7093",
+            papayaWhip: "#ffefd5",
+            peachPuff: "#ffdab9",
+            peru: "#cd853f",
+            pink: "#ffc0cb",
+            plum: "#dda0dd",
+            powderBlue: "#b0e0e6",
+            purple: "#800080",
+            rebeccaPurple: "#663399",
+            red: "#ff0000",
+            rosyBrown: "#bc8f8f",
+            royalBlue: "#4169e1",
+            saddleBrown: "#8b4513",
+            salmon: "#fa8072",
+            sandyBrown: "#f4a460",
+            seaGreen: "#2e8b57",
+            seaShell: "#fff5ee",
+            sienna: "#a0522d",
+            silver: "#c0c0c0",
+            slyBlue: "#87ceeb",
+            slateBlue: "#6a5acd",
+            slateGray: "#708090",
+            snow: "#fffafa",
+            springGreen: "#00ff7f",
+            steelBlue: "#4682b4",
+            tan: "#d2b48c",
+            teal: "#008080",
+            thistle: "#d8bfd8",
+            tomato: "#ff6347",
+            turquoise: "#40e0d0",
+            violet: "#ee82ee",
+            wheat: "#f5deb3",
+            white: "#ffffff",
+            whiteSmoke: "#f5f5f5",
+            yellow: "#ffff00",
+            yellowGreen: "#9acd32"
+        },
+
+        all: {},
+
+        init: function(){
+            this.all = $.extend( {}, this.standard, this.metro );
+            return this;
+        },
+
+        color: function(name, palette){
+            palette = palette || this.PALETTES.ALL;
+            return this[palette][name] !== undefined ? this[palette][name] : false;
+        },
+
+        palette: function(palette){
+            palette = palette || this.PALETTES.ALL;
+            return Object.keys(this[palette]);
+        },
+
+        expandHexColor: function(hex){
+            if (typeof hex !== "string") {
+                throw new Error("Value is not a string!");
+            }
+            if (hex[0] === "#" && hex.length === 4) {
+                var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+                return (
+                    "#" +
+                    hex.replace(shorthandRegex, function(m, r, g, b) {
+                        return r + r + g + g + b + b;
+                    })
+                );
+            }
+            return hex[0] === "#" ? hex : "#" + hex;
+        },
+
+        colors: function(palette){
+            palette = palette || this.PALETTES.ALL;
+            return Object.values(this[palette]);
+        },
+
+        random: function(colorType, alpha){
+            colorType = colorType || Types.HEX;
+            alpha = typeof alpha !== "undefined" ? alpha : 1;
+
+            var hex, r, g, b;
+
+            r = $.random(0, 255);
+            g = $.random(0, 255);
+            b = $.random(0, 255);
+
+            hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+
+            return colorType === "hex" ? hex : this.toColor(hex, colorType, alpha);
+        },
+
+        parse: function(color){
+            var _color = color.toLowerCase().trim();
+
+            var a = _color
+                .replace(/[^\d.,]/g, "")
+                .split(",")
+                .map(function(v) {
+                    return v.indexOf(".") > -1 ? parseFloat(v) : parseInt(v);
+                });
+
+            if (this.metro[_color]) {
+                return this.expandHexColor(this.metro[_color]);
+            }
+
+            if (this.standard[_color]) {
+                return this.expandHexColor(this.standard[_color]);
+            }
+
+            if (_color[0] === "#") {
+                return this.expandHexColor(_color);
+            }
+
+            if (_color.indexOf("rgba") === 0 && a.length === 4) {
+                return new RGBA(a[0], a[1], a[2], a[3]);
+            }
+            if (_color.indexOf("rgb") === 0 && a.length === 3) {
+                return new RGB(a[0], a[1], a[2]);
+            }
+            if (_color.indexOf("cmyk") === 0 && a.length === 4) {
+                return new CMYK(a[0], a[1], a[2], a[3]);
+            }
+            if (_color.indexOf("hsv") === 0 && a.length === 3) {
+                return new HSV(a[0], a[1], a[2]);
+            }
+            if (_color.indexOf("hsla") === 0 && a.length === 4) {
+                return new HSLA(a[0], a[1], a[2], a[3]);
+            }
+            if (_color.indexOf("hsl")  === 0 && a.length === 3) {
+                return new HSL(a[0], a[1], a[2]);
+            }
+            return undefined;
+        },
+
+        createColor: function(colorType, from){
+            colorType = colorType || "hex";
+            from = from || "#000000";
+
+            var baseColor;
+
+            if (typeof from === "string") {
+                baseColor = this.parse(from);
+            }
+
+            if (!this.isColor(baseColor)) {
+                baseColor = "#000000";
+            }
+
+            return this.toColor(baseColor, colorType.toLowerCase());
+        },
+
+        isDark: function(color){
+            if (!this.isColor(color)) return;
+            var rgb = this.toRGB(color);
+            var YIQ = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+            return YIQ < 128;
+        },
+
+        isLight: function(color){
+            return !this.isDark(color);
+        },
+
+        isHSV: function(color){
+            return color instanceof HSV;
+        },
+
+        isHSL: function(color){
+            return color instanceof HSL;
+        },
+
+        isHSLA: function(color){
+            return color instanceof HSLA;
+        },
+
+        isRGB: function(color){
+            return color instanceof RGB;
+        },
+
+        isRGBA: function(color){
+            return color instanceof RGBA;
+        },
+
+        isCMYK: function(color){
+            return color instanceof CMYK;
+        },
+
+        isHEX: function(color){
+            return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
+        },
+
+        isColor: function(val){
+            var color = typeof val === "string" ? this.parse(val) : val;
+
+            return !color
+                ? false
+                : this.isHEX(color) ||
+                  this.isRGB(color) ||
+                  this.isRGBA(color) ||
+                  this.isHSV(color) ||
+                  this.isHSL(color) ||
+                  this.isHSLA(color) ||
+                  this.isCMYK(color);
+        },
+
+        check: function(color, type){
+            if (!this["is"+type.toUpperCase()](color)) {
+                throw new Error("Value is not a " + type + " color type!");
+            }
+        },
+
+        colorType: function(color){
+            if (this.isHEX(color)) return Types.HEX;
+            if (this.isRGB(color)) return Types.RGB;
+            if (this.isRGBA(color)) return Types.RGBA;
+            if (this.isHSV(color)) return Types.HSV;
+            if (this.isHSL(color)) return Types.HSL;
+            if (this.isHSLA(color)) return Types.HSLA;
+            if (this.isCMYK(color)) return Types.CMYK;
+
+            return Types.UNKNOWN;
+        },
+
+        equal: function(color1, color2){
+            if (!this.isColor(color1) || !this.isColor(color2)) {
+                return false;
+            }
+
+            return this.toHEX(color1) === this.toHEX(color2);
+        },
+
+        colorToString: function(color){
+            return color.toString();
+        },
+
+        hex2rgb: function(color){
+            if (typeof color !== "string") {
+                throw new Error("Value is not a string!")
+            }
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+                this.expandHexColor(color)
+            );
+            var rgb = [
+                parseInt(result[1], 16),
+                parseInt(result[2], 16),
+                parseInt(result[3], 16)
+            ];
+            return result ? new RGB(rgb[0], rgb[1], rgb[2]) : null;
+        },
+
+        rgb2hex: function(color){
+            this.check(color, "rgb");
+            return (
+                "#" +
+                ((1 << 24) + (color.r << 16) + (color.g << 8) + color.b).toString(16).slice(1)
+            );
+        },
+
+        rgb2hsv: function(color){
+            this.check(color, "rgb");
+            var hsv = new HSV();
+            var h, s, v;
+            var r = color.r / 255,
+                g = color.g / 255,
+                b = color.b / 255;
+
+            var max = Math.max(r, g, b);
+            var min = Math.min(r, g, b);
+            var delta = max - min;
+
+            v = max;
+
+            if (max === 0) {
+                s = 0;
+            } else {
+                s = 1 - min / max;
+            }
+
+            if (max === min) {
+                h = 0;
+            } else if (max === r && g >= b) {
+                h = 60 * ((g - b) / delta);
+            } else if (max === r && g < b) {
+                h = 60 * ((g - b) / delta) + 360;
+            } else if (max === g) {
+                h = 60 * ((b - r) / delta) + 120;
+            } else if (max === b) {
+                h = 60 * ((r - g) / delta) + 240;
+            } else {
+                h = 0;
+            }
+
+            hsv.h = h;
+            hsv.s = s;
+            hsv.v = v;
+
+            return hsv;
+        },
+
+        hsv2rgb: function(color){
+            this.check(color, "hsv");
+            var r, g, b;
+            var h = color.h,
+                s = color.s * 100,
+                v = color.v * 100;
+            var Hi = Math.floor(h / 60);
+            var Vmin = ((100 - s) * v) / 100;
+            var alpha = (v - Vmin) * ((h % 60) / 60);
+            var Vinc = Vmin + alpha;
+            var Vdec = v - alpha;
+
+            switch (Hi) {
+                case 0:
+                    r = v;
+                    g = Vinc;
+                    b = Vmin;
+                    break;
+                case 1:
+                    r = Vdec;
+                    g = v;
+                    b = Vmin;
+                    break;
+                case 2:
+                    r = Vmin;
+                    g = v;
+                    b = Vinc;
+                    break;
+                case 3:
+                    r = Vmin;
+                    g = Vdec;
+                    b = v;
+                    break;
+                case 4:
+                    r = Vinc;
+                    g = Vmin;
+                    b = v;
+                    break;
+                case 5:
+                    r = v;
+                    g = Vmin;
+                    b = Vdec;
+                    break;
+            }
+
+            return new RGB(
+                Math.round((r * 255) / 100),
+                Math.round((g * 255) / 100),
+                Math.round((b * 255) / 100)
+            );
+        },
+
+        hsv2hex: function(color){
+            this.check(color, "hsv");
+            return this.rgb2hex(this.hsv2rgb(color));
+        },
+
+        hex2hsv: function(color){
+            this.check(color, "hex");
+            return this.rgb2hsv(this.hex2rgb(color));
+        },
+
+        rgb2cmyk: function(color){
+            this.check(color, "rgb");
+            var cmyk = new CMYK();
+
+            var r = color.r / 255;
+            var g = color.g / 255;
+            var b = color.b / 255;
+
+            cmyk.k = Math.min(1 - r, 1 - g, 1 - b);
+
+            cmyk.c = 1 - cmyk.k === 0 ? 0 : (1 - r - cmyk.k) / (1 - cmyk.k);
+            cmyk.m = 1 - cmyk.k === 0 ? 0 : (1 - g - cmyk.k) / (1 - cmyk.k);
+            cmyk.y = 1 - cmyk.k === 0 ? 0 : (1 - b - cmyk.k) / (1 - cmyk.k);
+
+            cmyk.c = Math.round(cmyk.c * 100);
+            cmyk.m = Math.round(cmyk.m * 100);
+            cmyk.y = Math.round(cmyk.y * 100);
+            cmyk.k = Math.round(cmyk.k * 100);
+
+            return cmyk;
+        },
+
+        cmyk2rgb: function(color){
+            this.check(color, "cmyk");
+            var r = Math.floor(255 * (1 - color.c / 100) * (1 - color.k / 100));
+            var g = Math.ceil(255 * (1 - color.m / 100) * (1 - color.k / 100));
+            var b = Math.ceil(255 * (1 - color.y / 100) * (1 - color.k / 100));
+
+            return new RGB(r, g, b);
+        },
+
+        hsv2hsl: function(color){
+            this.check(color, "hsv");
+            var h, s, l, d;
+            h = color.h;
+            l = (2 - color.s) * color.v;
+            s = color.s * color.v;
+            if (l === 0) {
+                s = 0;
+            } else {
+                d = l <= 1 ? l : 2 - l;
+                if (d === 0) {
+                    s = 0;
+                } else {
+                    s /= d;
+                }
+            }
+            l /= 2;
+            return new HSL(h, s, l);
+        },
+
+        hsl2hsv: function(color){
+            this.check(color, "hsl");
+            var h, s, v, l;
+            h = color.h;
+            l = color.l * 2;
+            s = color.s * (l <= 1 ? l : 2 - l);
+
+            v = (l + s) / 2;
+
+            if (l + s === 0) {
+                s = 0;
+            } else {
+                s = (2 * s) / (l + s);
+            }
+
+            return new HSV(h, s, v);
+        },
+
+        rgb2websafe: function(color){
+            this.check(color, "rgb");
+            return new RGB(
+                Math.round(color.r / 51) * 51,
+                Math.round(color.g / 51) * 51,
+                Math.round(color.b / 51) * 51
+            );
+        },
+
+        rgba2websafe: function(color){
+            this.check(color, "rgba");
+            var rgbWebSafe = this.rgb2websafe(color);
+            return new RGBA(rgbWebSafe.r, rgbWebSafe.g, rgbWebSafe.b, color.a);
+        },
+
+        hex2websafe: function(color){
+            this.check(color, "hex");
+            return this.rgb2hex(this.rgb2websafe(this.hex2rgb(color)));
+        },
+
+        hsv2websafe: function(color){
+            this.check(color, "hsv");
+            return this.rgb2hsv(this.rgb2websafe(this.toRGB(color)));
+        },
+
+        hsl2websafe: function(color){
+           this.check(color, "hsl");
+            return this.hsv2hsl(this.rgb2hsv(this.rgb2websafe(this.toRGB(color))));
+        },
+
+        cmyk2websafe: function(color){
+            this.check(color, "cmyk");
+            return this.rgb2cmyk(this.rgb2websafe(this.cmyk2rgb(color)));
+        },
+
+        websafe: function(color){
+            if (this.isHEX(color)) return this.hex2websafe(color);
+            if (this.isRGB(color)) return this.rgb2websafe(color);
+            if (this.isRGBA(color)) return this.rgba2websafe(color);
+            if (this.isHSV(color)) return this.hsv2websafe(color);
+            if (this.isHSL(color)) return this.hsl2websafe(color);
+            if (this.isCMYK(color)) return this.cmyk2websafe(color);
+
+            return color;
+        },
+
+        toColor: function(color, type, alpha){
+            var result;
+            switch (type.toLowerCase()) {
+                case "hex":
+                    result = this.toHEX(color);
+                    break;
+                case "rgb":
+                    result = this.toRGB(color);
+                    break;
+                case "rgba":
+                    result = this.toRGBA(color, alpha);
+                    break;
+                case "hsl":
+                    result = this.toHSL(color);
+                    break;
+                case "hsla":
+                    result = this.toHSLA(color, alpha);
+                    break;
+                case "hsv":
+                    result = this.toHSV(color);
+                    break;
+                case "cmyk":
+                    result = this.toCMYK(color);
+                    break;
+                default:
+                    result = color;
+            }
+            return result;
+        },
+
+        toHEX: function(val){
+            var color = typeof val === "string" ? this.parse(val) : val;
+
+            if (!color) {
+                throw new Error("Unknown color format!");
+            }
+
+            return typeof color === "string"
+                ? color
+                : this.rgb2hex(this.toRGB(color));
+        },
+
+        toRGB: function(val){
+            var color = typeof val === "string" ? this.parse(val) : val;
+
+            if (this.isRGB(color)) return color;
+            if (this.isRGBA(color)) return new RGB(color.r, color.g, color.b);
+            if (this.isHSV(color)) return this.hsv2rgb(color);
+            if (this.isHSL(color)) return this.hsv2rgb(this.hsl2hsv(color));
+            if (this.isHSLA(color)) return this.hsv2rgb(this.hsl2hsv(color));
+            if (this.isHEX(color)) return this.hex2rgb(color);
+            if (this.isCMYK(color)) return this.cmyk2rgb(color);
+
+            throw new Error("Unknown color format!");
+        },
+
+        toRGBA: function(color, alpha){
+            if (this.isRGBA(color)) {
+                if (alpha) {
+                    color.a = alpha;
+                }
+                return color;
+            }
+            var rgb = this.toRGB(color);
+            return new RGBA(rgb.r, rgb.g, rgb.b, alpha);
+        },
+
+        toHSV: function(color){
+            return this.rgb2hsv(this.toRGB(color));
+        },
+
+        toHSL: function(color){
+            return this.hsv2hsl(this.rgb2hsv(this.toRGB(color)));
+        },
+
+        toHSLA: function(color, alpha){
+            if (this.isHSLA(color)) {
+                if (alpha) {
+                    color.a = alpha;
+                }
+                return color;
+            }
+            var hsla = this.hsv2hsl(this.rgb2hsv(this.toRGB(color)));
+            hsla.a = alpha;
+            return new HSLA(hsla.h, hsla.s, hsla.l, hsla.a);
+        },
+
+        toCMYK: function(color){
+            return this.rgb2cmyk(this.toRGB(color));
+        },
+
+        grayscale: function(color){
+            var rgb = this.toRGB(color);
+            var type = this.colorType(color).toLowerCase();
+            var gray = Math.round(rgb.r * 0.2125 + rgb.g * 0.7154 + rgb.b * 0.0721);
+            var mono = new RGB(gray, gray, gray);
+
+            return this.toColor(mono, type);
+        },
+
+        darken: function(color, amount){
+            amount = amount || 10;
+            return this.lighten(color, -1 * Math.abs(amount));
+        },
+
+        lighten: function(val, amount){
+            var type, res, alpha, ring;
+            var color = typeof val === "string" ? this.parse(val) : val;
+
+            amount = amount || 10;
+
+            var calc = function (_color, _amount) {
+                var r, g, b;
+                var col = _color.slice(1);
+
+                var num = parseInt(col, 16);
+                r = (num >> 16) + _amount;
+
+                if (r > 255) r = 255;
+                else if (r < 0) r = 0;
+
+                b = ((num >> 8) & 0x00ff) + _amount;
+
+                if (b > 255) b = 255;
+                else if (b < 0) b = 0;
+
+                g = (num & 0x0000ff) + _amount;
+
+                if (g > 255) g = 255;
+                else if (g < 0) g = 0;
+
+                return "#" + (g | (b << 8) | (r << 16)).toString(16);
+            };
+
+            ring = amount > 0;
+
+            type = this.colorType(color).toLowerCase();
+
+            if (type === Types.RGBA || type === Types.HSLA) {
+                alpha = color.a;
+            }
+
+            do {
+                res = calc(this.toHEX(color), amount);
+                ring ? amount-- : amount++;
+            } while (res.length < 7);
+
+            return this.toColor(res, type, alpha);
+        },
+
+        hueShift: function(color, hue, saturation, value){
+            var hsv = this.toHSV(color);
+            var type = this.colorType(color).toLowerCase();
+            var h = hsv.h;
+            var alpha;
+            var _h = hue || 0;
+            var _s = saturation || 0;
+            var _v = value || 0;
+
+            h += _h;
+            while (h >= 360.0) h -= 360.0;
+            while (h < 0.0) h += 360.0;
+            hsv.h = h;
+
+            hsv.s += _s;
+            if (hsv.s > 1) {hsv.s = 1;}
+            if (hsv.s < 0) {hsv.s = 0;}
+
+            hsv.v += _v;
+            if (hsv.v > 1) {hsv.v = 1;}
+            if (hsv.v < 0) {hsv.v = 0;}
+
+            if (type === Types.RGBA || type === Types.HSLA) {
+                alpha = color.a;
+            }
+
+            return this.toColor(hsv, type, alpha);
+        },
+
+        createScheme: function(color, name, format, options){
+            var opt = $.extend({}, ColorsDefaultConfig, options);
+            var i, scheme = [], hsv, rgb, h, s, v;
+            var self = this;
+
+            hsv = this.toHSV(color);
+            h = hsv.h;
+            s = hsv.s;
+            v = hsv.v;
+
+            if (this.isHSV(hsv) === false) {
+                console.warn("The value is a not supported color format!");
+                return false;
+            }
+
+            function convert(source, format) {
+                var result;
+                switch (format) {
+                    case "hex":
+                        result = source.map(function (v) {
+                            return self.toHEX(v);
+                        });
+                        break;
+                    case "rgb":
+                        result = source.map(function (v) {
+                            return self.toRGB(v);
+                        });
+                        break;
+                    case "rgba":
+                        result = source.map(function (v) {
+                            return self.toRGBA(v, opt.alpha);
+                        });
+                        break;
+                    case "hsl":
+                        result = source.map(function (v) {
+                            return self.toHSL(v);
+                        });
+                        break;
+                    case "hsla":
+                        result = source.map(function (v) {
+                            return self.toHSLA(v, opt.alpha);
+                        });
+                        break;
+                    case "cmyk":
+                        result = source.map(function (v) {
+                            return self.toCMYK(v);
+                        });
+                        break;
+                    default:
+                        result = source;
+                }
+
+                return result;
+            }
+
+            function clamp(num, min, max) {
+                return Math.max(min, Math.min(num, max));
+            }
+
+            function toRange(a, b, c) {
+                return a < b ? b : a > c ? c : a;
+            }
+
+            function shift(h, s) {
+                h += s;
+                while (h >= 360.0) h -= 360.0;
+                while (h < 0.0) h += 360.0;
+                return h;
+            }
+
+            switch (name) {
+                case "monochromatic":
+                case "mono":
+                    if (opt.algorithm === 1) {
+                        rgb = this.hsv2rgb(hsv);
+                        rgb.r = toRange(
+                            Math.round(rgb.r + (255 - rgb.r) * opt.tint1),
+                            0,
+                            255
+                        );
+                        rgb.g = toRange(
+                            Math.round(rgb.g + (255 - rgb.g) * opt.tint1),
+                            0,
+                            255
+                        );
+                        rgb.b = toRange(
+                            Math.round(rgb.b + (255 - rgb.b) * opt.tint1),
+                            0,
+                            255
+                        );
+                        scheme.push(this.rgb2hsv(rgb));
+
+                        rgb = this.hsv2rgb(hsv);
+                        rgb.r = toRange(
+                            Math.round(rgb.r + (255 - rgb.r) * opt.tint2),
+                            0,
+                            255
+                        );
+                        rgb.g = toRange(
+                            Math.round(rgb.g + (255 - rgb.g) * opt.tint2),
+                            0,
+                            255
+                        );
+                        rgb.b = toRange(
+                            Math.round(rgb.b + (255 - rgb.b) * opt.tint2),
+                            0,
+                            255
+                        );
+                        scheme.push(this.rgb2hsv(rgb));
+
+                        scheme.push(hsv);
+
+                        rgb = this.hsv2rgb(hsv);
+                        rgb.r = toRange(Math.round(rgb.r * opt.shade1), 0, 255);
+                        rgb.g = toRange(Math.round(rgb.g * opt.shade1), 0, 255);
+                        rgb.b = toRange(Math.round(rgb.b * opt.shade1), 0, 255);
+                        scheme.push(this.rgb2hsv(rgb));
+
+                        rgb = this.hsv2rgb(hsv);
+                        rgb.r = toRange(Math.round(rgb.r * opt.shade2), 0, 255);
+                        rgb.g = toRange(Math.round(rgb.g * opt.shade2), 0, 255);
+                        rgb.b = toRange(Math.round(rgb.b * opt.shade2), 0, 255);
+                        scheme.push(this.rgb2hsv(rgb));
+
+                    } else if (opt.algorithm === 2) {
+
+                        scheme.push(hsv);
+                        for (i = 1; i <= opt.distance; i++) {
+                            v = clamp(v - opt.step, 0, 1);
+                            s = clamp(s - opt.step, 0, 1);
+                            scheme.push(new HSV(h, s, v));
+                        }
+
+                    } else if (opt.algorithm === 3) {
+
+                        scheme.push(hsv);
+                        for (i = 1; i <= opt.distance; i++) {
+                            v = clamp(v - opt.step, 0, 1);
+                            scheme.push(new HSV(h, s, v));
+                        }
+
+                    } else {
+
+                        v = clamp(hsv.v + opt.step * 2, 0, 1);
+                        scheme.push(new HSV(h, s, v));
+
+                        v = clamp(hsv.v + opt.step, 0, 1);
+                        scheme.push(new HSV(h, s, v));
+
+                        scheme.push(hsv);
+                        s = hsv.s;
+                        v = hsv.v;
+
+                        v = clamp(hsv.v - opt.step, 0, 1);
+                        scheme.push(new HSV(h, s, v));
+
+                        v = clamp(hsv.v - opt.step * 2, 0, 1);
+                        scheme.push(new HSV(h, s, v));
+
+                    }
+                    break;
+
+                case "complementary":
+                case "complement":
+                case "comp":
+                    scheme.push(hsv);
+
+                    h = shift(hsv.h, 180.0);
+                    scheme.push(new HSV(h, s, v));
+                    break;
+
+                case "double-complementary":
+                case "double-complement":
+                case "double":
+                    scheme.push(hsv);
+
+                    h = shift(h, 180.0);
+                    scheme.push(new HSV(h, s, v));
+
+                    h = shift(h, opt.angle);
+                    scheme.push(new HSV(h, s, v));
+
+                    h = shift(h, 180.0);
+                    scheme.push(new HSV(h, s, v));
+
+                    break;
+
+                case "analogous":
+                case "analog":
+                    h = shift(h, opt.angle);
+                    scheme.push(new HSV(h, s, v));
+
+                    scheme.push(hsv);
+
+                    h = shift(hsv.h, 0.0 - opt.angle);
+                    scheme.push(new HSV(h, s, v));
+
+                    break;
+
+                case "triadic":
+                case "triad":
+                    scheme.push(hsv);
+                    for (i = 1; i < 3; i++) {
+                        h = shift(h, 120.0);
+                        scheme.push(new HSV(h, s, v));
+                    }
+                    break;
+
+                case "tetradic":
+                case "tetra":
+                    scheme.push(hsv);
+
+                    h = shift(hsv.h, 180.0);
+                    scheme.push(new HSV(h, s, v));
+
+                    h = shift(hsv.h, -1 * opt.angle);
+                    scheme.push(new HSV(h, s, v));
+
+                    h = shift(h, 180.0);
+                    scheme.push(new HSV(h, s, v));
+
+                    break;
+
+                case "square":
+                    scheme.push(hsv);
+                    for (i = 1; i < 4; i++) {
+                        h = shift(h, 90.0);
+                        scheme.push(new HSV(h, s, v));
+                    }
+                    break;
+
+                case "split-complementary":
+                case "split-complement":
+                case "split":
+                    h = shift(h, 180.0 - opt.angle);
+                    scheme.push(new HSV(h, s, v));
+
+                    scheme.push(hsv);
+
+                    h = shift(hsv.h, 180.0 + opt.angle);
+                    scheme.push(new HSV(h, s, v));
+                    break;
+
+                default:
+                    console.warn("Unknown scheme name");
+            }
+
+            return convert(scheme, format);
+        },
+
+        getScheme: function(){
+            return this.createScheme.apply(this, arguments)
+        },
+
+        mix: function(val1, val2, returnAs){
+            var color1 = typeof val1 === "string" ? this.parse(val1) : val1;
+            var color2 = typeof val2 === "string" ? this.parse(val2) : val2;
+            var c1 = this.toRGBA(color1);
+            var c2 = this.toRGBA(color2);
+            var result = new RGBA();
+            var to = (""+returnAs).toLowerCase() || "hex";
+
+            result.r = Math.round((c1.r + c2.r) / 2);
+            result.g = Math.round((c1.g + c2.g) / 2);
+            result.b = Math.round((c1.b + c2.b) / 2);
+            result.a = Math.round((c1.a + c2.a) / 2);
+
+            return this["to"+to.toUpperCase()](result);
+        }
+    };
+
+    var Color = function(color, options){
+        this._setValue(color);
+        this._setOptions(options);
+    }
+
+    Color.prototype = {
+        _setValue: function(color){
+            var _color;
+
+            if (typeof color === "string") {
+                _color = Colors.parse(color);
+            } else {
+                _color = color;
+            }
+
+            if (!Colors.isColor(_color)) {
+                _color = "#000000";
+            }
+
+            this._value = _color;
+            this._type = Colors.colorType(this._value);
+        },
+
+        _setOptions: function(options){
+            options = typeof options === "object" ? options : {};
+            this._options = $.extend({}, ColorsDefaultConfig, options);
+        },
+
+        getOptions: function(){
+            return this._options;
+        },
+
+        setOptions: function(options){
+            this._setOptions(options);
+        },
+
+        setValue: function(color){
+            this._setValue(color);
+        },
+
+        getValue: function(){
+            return this._value;
+        },
+
+        channel: function(ch, val){
+            var currentType = this._type.toUpperCase();
+
+            if (["red", "green", "blue"].indexOf(ch) > -1) {
+                this.toRGB();
+                this._value[ch[0]] = val;
+                this["to"+currentType]();
+            }
+            if (ch === "alpha" && this._value.a) {
+                this._value.a = val;
+            }
+            if (["hue", "saturation", "value"].indexOf(ch) > -1) {
+                this.toHSV();
+                this._value[ch[0]] = val;
+                this["to"+currentType]();
+            }
+            if (["lightness"].indexOf(ch) > -1) {
+                this.toHSL();
+                this._value[ch[0]] = val;
+                this["to"+currentType]();
+            }
+            if (["cyan", "magenta", "yellow", "black"].indexOf(ch) > -1) {
+                this.toCMYK();
+                this._value[ch[0]] = val;
+                this["to"+currentType]();
+            }
+
+            return this;
+        },
+
+        channels: function(obj){
+            var that = this;
+
+            $.each(obj, function(key, val){
+                that.channel(key, val);
+            });
+
+            return this;
+        },
+
+        toRGB: function() {
+            this._value = Colors.toRGB(this._value);
+            this._type = Types.RGB;
+            return this;
+        },
+
+        rgb: function(){
+            return this._value ? new Color(Colors.toRGB(this._value)) : undefined;
+        },
+
+        toRGBA: function(alpha) {
+            if (Colors.isRGBA(this._value)) {
+                if (alpha) {
+                    this._value = Colors.toRGBA(this._value, alpha);
+                }
+            } else {
+                this._value = Colors.toRGBA(this._value, alpha);
+            }
+            this._type = Types.RGBA;
+            return this;
+        },
+
+        rgba: function(alpha) {
+            return this._value ? new Color(Colors.toRGBA(this._value, alpha)) : undefined;
+        },
+
+        toHEX: function() {
+            this._value = Colors.toHEX(this._value);
+            this._type = Types.HEX;
+            return this;
+        },
+
+        hex: function() {
+            return this._value ? new Color(Colors.toHEX(this._value)) : undefined;
+        },
+
+        toHSV: function() {
+            this._value = Colors.toHSV(this._value);
+            this._type = Types.HSV;
+            return this;
+        },
+
+        hsv: function() {
+            return this._value ? new Color(Colors.toHSV(this._value)) : undefined;
+        },
+
+        toHSL: function() {
+            this._value = Colors.toHSL(this._value);
+            this._type = Types.HSL;
+            return this;
+        },
+
+        hsl: function() {
+            return this._value ? new Color(Colors.toHSL(this._value)) : undefined;
+        },
+
+        toHSLA: function(alpha) {
+            if (Colors.isHSLA(this._value)) {
+                if (alpha) {
+                    this._value = Colors.toHSLA(this._value, alpha);
+                }
+            } else {
+                this._value = Colors.toHSLA(this._value, alpha);
+            }
+            this._type = Types.HSLA;
+            return this;
+        },
+
+        hsla: function(alpha) {
+            return this._value ? new Color(Colors.toHSLA(this._value, alpha)) : undefined;
+        },
+
+        toCMYK: function() {
+            this._value = Colors.toCMYK(this._value);
+            this._type = Types.CMYK;
+            return this;
+        },
+
+        cmyk: function() {
+            return this._value ? new Color(Colors.toCMYK(this._value)) : undefined;
+        },
+
+        toWebsafe: function() {
+            this._value = Colors.websafe(this._value);
+            this._type = Colors.colorType(this._value);
+            return this;
+        },
+
+        websafe: function() {
+            return this._value ? new Color(Colors.websafe(this._value)) : undefined;
+        },
+
+        toString: function() {
+            return this._value ? Colors.colorToString(this._value) : "undefined";
+        },
+
+        toDarken: function(amount) {
+            this._value = Colors.darken(this._value, amount);
+            return this;
+        },
+
+        darken: function(amount){
+            return new Color(Colors.darken(this._value, amount));
+        },
+
+        toLighten: function(amount) {
+            this._value = Colors.lighten(this._value, amount);
+            return this;
+        },
+
+        lighten: function(amount){
+            return new Color(Colors.lighten(this._value, amount))
+        },
+
+        isDark: function() {
+            return this._value ? Colors.isDark(this._value) : undefined;
+        },
+
+        isLight: function() {
+            return this._value ? Colors.isLight(this._value) : undefined;
+        },
+
+        toHueShift: function(hue, saturation, value) {
+            this._value = Colors.hueShift(this._value, hue, saturation, value);
+            return this;
+        },
+
+        hueShift: function (hue, saturation, value) {
+            return new Color(Colors.hueShift(this._value, hue, saturation, value));
+        },
+
+        toGrayscale: function() {
+            this._value = Colors.grayscale(this._value, this._type);
+            return this;
+        },
+
+        grayscale: function(){
+            return new Color(Colors.grayscale(this._value, this._type));
+        },
+
+        type: function() {
+            return Colors.colorType(this._value);
+        },
+
+        createScheme: function(name, format, options) {
+            return this._value
+                ? Colors.createScheme(this._value, name, format, options)
+                : undefined;
+        },
+
+        getScheme: function(){
+            return this.createScheme.apply(this, arguments);
+        },
+
+        equal: function(color) {
+            return Colors.equal(this._value, color);
+        },
+
+        toMix: function(color){
+            this._value = Colors.mix(this._value, color, this._type);
+            return this;
+        },
+
+        mix: function(color){
+            return new Color(Colors.mix(this._value, color, this._type));
+        }
+    }
+
+    Metro.colors = Colors.init();
+    window.Color = Metro.Color = Color;
+    window.ColorPrimitive = Metro.colorPrimitive = {
+        RGB: RGB,
+        RGBA: RGBA,
+        HSV: HSV,
+        HSL: HSL,
+        HSLA: HSLA,
+        CMYK: CMYK
+    };
+
+    if (window.METRO_GLOBAL_COMMON === true) {
+        window.Colors = Metro.colors;
+    }
+
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
     var Utils = Metro.utils;
     var cookieDisclaimerDefaults = {
         name: 'cookies_accepted',
@@ -13587,6 +13380,7 @@ $.noConflict = function() {
             }
 
             d = Math.floor(left / dm);
+
             left -= d * dm;
             if (this.current.d !== d) {
                 this.current.d = d;
@@ -13676,7 +13470,7 @@ $.noConflict = function() {
             var digits, digits_length, digit_value, digit_current, digit;
             var len, i, duration = 900;
 
-            var slideDigit = function(digit){
+            var slideDigit = function(digit, value){
                 var digit_copy, height = digit.height();
 
                 digit.siblings("-old-digit").remove();
@@ -13700,7 +13494,7 @@ $.noConflict = function() {
                     });
 
                 digit_copy
-                    .html(digit_value)
+                    .html(value)
                     .animate({
                         draw: {
                             top: 0,
@@ -13711,7 +13505,7 @@ $.noConflict = function() {
                     });
             };
 
-            var fadeDigit = function(digit){
+            var fadeDigit = function(digit, value){
                 var digit_copy;
                 digit.siblings("-old-digit").remove();
                 digit_copy = digit.clone().appendTo(digit.parent());
@@ -13733,7 +13527,7 @@ $.noConflict = function() {
                     });
 
                 digit_copy
-                    .html(digit_value)
+                    .html(value)
                     .animate({
                         draw: {
                             opacity: 1
@@ -13743,7 +13537,7 @@ $.noConflict = function() {
                     });
             };
 
-            var zoomDigit = function(digit){
+            var zoomDigit = function(digit, value) {
                 var digit_copy, height = digit.height(), fs = parseInt(digit.style("font-size"));
 
                 digit.siblings("-old-digit").remove();
@@ -13770,7 +13564,7 @@ $.noConflict = function() {
                     });
 
                 digit_copy
-                    .html(digit_value)
+                    .html(value)
                     .animate({
                         draw: {
                             top: 0,
@@ -13798,18 +13592,18 @@ $.noConflict = function() {
                 digit_value = Math.floor( parseInt(value) / Math.pow(10, i) ) % 10;
                 digit_current = parseInt(digit.text());
 
+                digits_length--;
+
                 if (digit_current === digit_value) {
                     continue;
                 }
 
                 switch ((""+o.animate).toLowerCase()) {
-                    case "slide": slideDigit(digit); break;
-                    case "fade": fadeDigit(digit); break;
-                    case "zoom": zoomDigit(digit); break;
+                    case "slide": slideDigit(digit, digit_value); break;
+                    case "fade": fadeDigit(digit, digit_value); break;
+                    case "zoom": zoomDigit(digit, digit_value); break;
                     default: digit.html(digit_value);
                 }
-
-                digits_length--;
             }
         },
 
@@ -14258,7 +14052,7 @@ $.noConflict = function() {
 
             var cells  = element.find(".cube-cell");
             if (o.color !== null) {
-                if (Utils.isColor(o.color)) {
+                if (Metro.colors.isColor(o.color)) {
                     cells.css({
                         backgroundColor: o.color,
                         borderColor: o.color
@@ -14336,8 +14130,8 @@ $.noConflict = function() {
                 return ;
             }
 
-            rule1 = "0 0 10px " + Utils.hexColorToRgbA(o.flashColor, 1);
-            rule2 = "0 0 10px " + Utils.hexColorToRgbA(o.flashColor, o.attenuation);
+            rule1 = "0 0 10px " + Metro.colors.toRGBA(o.flashColor, 1);
+            rule2 = "0 0 10px " + Metro.colors.toRGBA(o.flashColor, o.attenuation);
 
             for(i = 0; i < 3; i++) {
                 rules1.push(rule1);
@@ -14552,6 +14346,7 @@ $.noConflict = function() {
     'use strict';
     var Utils = Metro.utils;
     var DatePickerDefaultConfig = {
+        label: "",
         datepickerDeferred: 0,
         gmt: 0,
         format: "%Y-%m-%d",
@@ -14571,6 +14366,10 @@ $.noConflict = function() {
         clsMonth: "",
         clsDay: "",
         clsYear: "",
+        clsLabel: "",
+        clsButton: "",
+        clsOkButton: "",
+        clsCancelButton: "",
         okButtonIcon: "<span class='default-icon-check'></span>",
         cancelButtonIcon: "<span class='default-icon-cross'></span>",
         onSet: Metro.noop,
@@ -14655,20 +14454,22 @@ $.noConflict = function() {
             var picker, month, day, year, i, j;
             var dateWrapper, selectWrapper, selectBlock, actionBlock;
 
-            var prev = element.prev();
-            var parent = element.parent();
             var id = Utils.elementId("datepicker");
 
             picker = $("<div>").attr("id", id).addClass("wheel-picker date-picker " + element[0].className).addClass(o.clsPicker);
 
-            if (prev.length === 0) {
-                parent.prepend(picker);
-            } else {
-                picker.insertAfter(prev);
-            }
-
+            picker.insertBefore(element);
             element.appendTo(picker);
 
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(picker);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
+            }
 
             dateWrapper = $("<div>").addClass("date-wrapper").appendTo(picker);
 
@@ -14716,8 +14517,8 @@ $.noConflict = function() {
             selectBlock.height((o.distance * 2 + 1) * 40);
 
             actionBlock = $("<div>").addClass("action-block").appendTo(selectWrapper);
-            $("<button>").attr("type", "button").addClass("button action-ok").html(o.okButtonIcon).appendTo(actionBlock);
-            $("<button>").attr("type", "button").addClass("button action-cancel").html(o.cancelButtonIcon).appendTo(actionBlock);
+            $("<button>").attr("type", "button").addClass("button action-ok").addClass(o.clsButton).addClass(o.clsOkButton).html(o.okButtonIcon).appendTo(actionBlock);
+            $("<button>").attr("type", "button").addClass("button action-cancel").addClass(o.clsButton).addClass(o.clsCancelButton).html(o.cancelButtonIcon).appendTo(actionBlock);
 
 
             element[0].className = '';
@@ -14725,6 +14526,10 @@ $.noConflict = function() {
                 for (i = 0; i < element[0].style.length; i++) {
                     picker.css(element[0].style[i], element.css(element[0].style[i]));
                 }
+            }
+
+            if (element.prop("disabled")) {
+                picker.addClass("disabled");
             }
 
             this.picker = picker;
@@ -14978,27 +14783,34 @@ $.noConflict = function() {
             this._set();
         },
 
-        changeAttribute: function(attributeName){
-            var that = this;
 
-            function changeValue() {
-                that.val(that.element.attr("data-value"));
+        disable: function(){
+            this.element.data("disabled", true);
+            this.element.parent().addClass("disabled");
+        },
+
+        enable: function(){
+            this.element.data("disabled", false);
+            this.element.parent().removeClass("disabled");
+        },
+
+        toggleState: function(){
+            if (this.elem.disabled) {
+                this.disable();
+            } else {
+                this.enable();
             }
+        },
 
-            function changeLocale() {
-                that.i18n(that.element.attr("data-locale"));
-            }
-
-            function changeFormat() {
-                that.options.format = that.element.attr("data-format");
-                // that.element.val(that.value.format(that.options.format, that.options.locale)).trigger("change");
-                that._set();
-            }
-
+        changeAttribute: function(attributeName, newValue){
             switch (attributeName) {
-                case "data-value": changeValue(); break;
-                case "data-locale": changeLocale(); break;
-                case "data-format": changeFormat(); break;
+                case "disabled": this.toggleState(); break;
+                case "data-value": this.val(newValue); break;
+                case "data-locale": this.i18n(newValue); break;
+                case "data-format":
+                    this.options.format = newValue;
+                    this._set();
+                    break;
             }
         },
 
@@ -15196,7 +15008,7 @@ $.noConflict = function() {
                 overlay.addClass("transparent");
             } else {
                 overlay.css({
-                    background: Utils.hex2rgba(o.overlayColor, o.overlayAlpha)
+                    background: Metro.colors.toRGBA(o.overlayColor, o.overlayAlpha)
                 });
             }
 
@@ -15652,6 +15464,7 @@ $.noConflict = function() {
 
         _createSlider: function(){
             var element = this.element, o = this.options;
+            var slider_wrapper = $("<div>").addClass("slider-wrapper");
             var slider = $("<div>").addClass("slider").addClass(o.clsSlider).addClass(this.elem.className);
             var backside = $("<div>").addClass("backside").addClass(o.clsBackside);
             var complete = $("<div>").addClass("complete").addClass(o.clsComplete);
@@ -15667,6 +15480,9 @@ $.noConflict = function() {
 
             slider.insertBefore(element);
             element.appendTo(slider);
+            slider_wrapper.insertBefore(slider);
+            slider.appendTo(slider_wrapper);
+
             backside.appendTo(slider);
             complete.appendTo(slider);
             markerMin.appendTo(slider);
@@ -15681,9 +15497,9 @@ $.noConflict = function() {
             }
 
             if (o.showMinMax === true) {
-                var min_max_wrapper = $("<div>").addClass("slider-min-max clear").addClass(o.clsMinMax);
-                $("<span>").addClass("place-left").addClass(o.clsMin).html(o.min).appendTo(min_max_wrapper);
-                $("<span>").addClass("place-right").addClass(o.clsMax).html(o.max).appendTo(min_max_wrapper);
+                var min_max_wrapper = $("<div>").addClass("slider-min-max").addClass(o.clsMinMax);
+                $("<span>").addClass("slider-text-min").addClass(o.clsMin).html(o.min).appendTo(min_max_wrapper);
+                $("<span>").addClass("slider-text-max").addClass(o.clsMax).html(o.max).appendTo(min_max_wrapper);
                 if (o.minMaxPosition === Metro.position.TOP) {
                     min_max_wrapper.insertBefore(slider);
                 } else {
@@ -16236,6 +16052,7 @@ $.noConflict = function() {
         dragElement: 'self',
         dragArea: "parent",
         timeout: 0,
+        boundaryRestriction: true,
         onCanDrag: Metro.noop_true,
         onDragStart: Metro.noop,
         onDragStop: Metro.noop,
@@ -16327,11 +16144,13 @@ $.noConflict = function() {
                     var top = Utils.pageXY(e).y - shiftY;
                     var left = Utils.pageXY(e).x - shiftX;
 
-                    if (top < 0) top = 0;
-                    if (left < 0) left = 0;
+                    if (o.boundaryRestriction) {
+                        if (top < 0) top = 0;
+                        if (left < 0) left = 0;
 
-                    if (top > that.dragArea.outerHeight() - element.outerHeight()) top = that.dragArea.outerHeight() - element.outerHeight();
-                    if (left > that.dragArea.outerWidth() - element.outerWidth()) left = that.dragArea.outerWidth() - element.outerWidth();
+                        if (top > that.dragArea.outerHeight() - element.outerHeight()) top = that.dragArea.outerHeight() - element.outerHeight();
+                        if (left > that.dragArea.outerWidth() - element.outerWidth()) left = that.dragArea.outerWidth() - element.outerWidth();
+                    }
 
                     position.y = top;
                     position.x = left;
@@ -16428,6 +16247,8 @@ $.noConflict = function() {
         toggleElement: null,
         noClose: false,
         duration: 50,
+        checkDropUp: false,
+        dropUp: false,
         onDrop: Metro.noop,
         onUp: Metro.noop,
         onDropdownCreate: Metro.noop
@@ -16464,15 +16285,20 @@ $.noConflict = function() {
 
             if (element.hasClass("open")) {
                 element.removeClass("open");
-                setImmediate(function(){
+                setTimeout(function(){
                     that.open(true);
-                })
+                },0);
             }
         },
 
         _createStructure: function(){
             var element = this.element, o = this.options;
             var toggle;
+
+            if (o.dropUp) {
+                element.addClass("drop-up");
+            }
+
             toggle = o.toggleElement !== null ? $(o.toggleElement) : element.siblings('.dropdown-toggle').length > 0 ? element.siblings('.dropdown-toggle') : element.prev();
 
             this.displayOrigin = Utils.getStyleOne(element, "display");
@@ -16559,10 +16385,13 @@ $.noConflict = function() {
             }
 
             el[func](immediate ? 0 : options.duration, function(){
-                el.trigger("onClose", null, el);
-            });
+                dropdown._fireEvent("close");
+                dropdown._fireEvent("up");
 
-            this._fireEvent("up");
+                if (!options.dropUp && options.checkDropUp) {
+                    dropdown.element.removeClass("drop-up");
+                }
+            });
 
             this.isOpen = false;
         },
@@ -16578,10 +16407,19 @@ $.noConflict = function() {
             toggle.addClass('active-toggle').addClass("active-control");
 
             el[func](immediate ? 0 : options.duration, function(){
-                el.fire("onopen");
+
+                if (!options.dropUp && options.checkDropUp) {
+                    // dropdown.element.removeClass("drop-up");
+                    if (!Utils.inViewport(dropdown.element[0])) {
+                        dropdown.element.addClass("drop-up");
+                    }
+                }
+
+                dropdown._fireEvent("open");
+                dropdown._fireEvent("drop");
             });
 
-            this._fireEvent("drop");
+            // this._fireEvent("drop");
 
             this.isOpen = true;
         },
@@ -16602,7 +16440,7 @@ $.noConflict = function() {
         },
 
         /* eslint-disable-next-line */
-        changeAttribute: function(attributeName){
+        changeAttribute: function(){
         },
 
         destroy: function(){
@@ -16621,10 +16459,154 @@ $.noConflict = function() {
     });
 }(Metro, m4q));
 
+(function (Metro, $) {
+    'use strict';
+    var Utils = Metro.utils;
+    var Export = {
+
+        init: function () {
+            return this;
+        },
+
+        options: {
+            csvDelimiter: "\t",
+            csvNewLine: "\r\n",
+            includeHeader: true
+        },
+
+        setup: function (options) {
+            this.options = $.extend({}, this.options, options);
+            return this;
+        },
+
+        base64: function (data) {
+            return window.btoa(unescape(encodeURIComponent(data)));
+        },
+
+        b64toBlob: function (b64Data, contentType, sliceSize) {
+            contentType = contentType || '';
+            sliceSize = sliceSize || 512;
+
+            var byteCharacters = window.atob(b64Data);
+            var byteArrays = [];
+
+            var offset;
+            for (offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                var byteNumbers = new Array(slice.length);
+                var i;
+                for (i = 0; i < slice.length; i = i + 1) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                var byteArray = new window.Uint8Array(byteNumbers);
+
+                byteArrays.push(byteArray);
+            }
+
+            return new Blob(byteArrays, {
+                type: contentType
+            });
+        },
+
+        tableToCSV: function (table, filename, options) {
+            var o;
+            var body, head, data = "";
+            var i, j, row, cell;
+
+            o = $.extend({}, this.options, options);
+
+            table = $(table)[0];
+
+            if (Utils.bool(o.includeHeader)) {
+
+                head = table.querySelectorAll("thead")[0];
+
+                for (i = 0; i < head.rows.length; i++) {
+                    row = head.rows[i];
+                    for (j = 0; j < row.cells.length; j++) {
+                        cell = row.cells[j];
+                        data += (j ? o.csvDelimiter : '') + cell.textContent.trim();
+                    }
+                    data += o.csvNewLine;
+                }
+            }
+
+            body = table.querySelectorAll("tbody")[0];
+
+            for (i = 0; i < body.rows.length; i++) {
+                row = body.rows[i];
+                for (j = 0; j < row.cells.length; j++) {
+                    cell = row.cells[j];
+                    data += (j ? o.csvDelimiter : '') + cell.textContent.trim();
+                }
+                data += o.csvNewLine;
+            }
+
+            if (Utils.isValue(filename)) {
+                return this.createDownload(this.base64("\uFEFF" + data), 'application/csv', filename);
+            }
+
+            return data;
+        },
+
+        createDownload: function (data, contentType, filename) {
+            var blob, anchor, url;
+
+            anchor = document.createElement('a');
+            anchor.style.display = "none";
+            document.body.appendChild(anchor);
+
+            blob = this.b64toBlob(data, contentType);
+
+            url = window.URL.createObjectURL(blob);
+            anchor.href = url;
+            anchor.download = filename || Utils.elementId("download");
+            anchor.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(anchor);
+            return true;
+        },
+
+        arrayToCsv: function(array, filename, options){
+            var o, data = "", i, row;
+
+            o = $.extend({}, this.options, options);
+
+            for (i = 0; i < array.length; i++) {
+                row = array[i];
+
+                if (typeof row !== "object") {
+                    data += row + o.csvNewLine;
+                } else {
+                    $.each(row, function(key, val){
+                        data += (key ? o.csvDelimiter : '') + val.toString();
+                    });
+                    data += o.csvNewLine;
+                }
+            }
+
+            if (Utils.isValue(filename)) {
+                return this.createDownload(this.base64("\uFEFF" + data), 'application/csv', filename);
+            }
+
+            return data;
+        }
+    };
+
+    Metro.export = Export.init();
+
+    if (window.METRO_GLOBAL_COMMON === true) {
+        window.Export = Metro.export;
+    }
+}(Metro, m4q));
+
 (function(Metro, $) {
     'use strict';
     var FileDefaultConfig = {
         fileDeferred: 0,
+        label: "",
         mode: "input",
         buttonTitle: "Choose file(s)",
         filesTitle: "file(s) selected",
@@ -16635,6 +16617,7 @@ $.noConflict = function() {
         clsPrepend: "",
         clsButton: "",
         clsCaption: "",
+        clsLabel: "",
         copyInlineStyles: false,
         onSelect: Metro.noop,
         onFileCreate: Metro.noop
@@ -16709,6 +16692,16 @@ $.noConflict = function() {
             if (o.copyInlineStyles === true) {
                 for (var i = 0, l = element[0].style.length; i < l; i++) {
                     container.css(element[0].style[i], element.css(element[0].style[i]));
+                }
+            }
+
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(container);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
                 }
             }
 
@@ -16846,7 +16839,127 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
     var Utils = Metro.utils;
+    var GradientBoxDefaultConfig = {
+        gradientType: "linear", // linear, radial
+        gradientShape: "",
+        gradientPosition: "",
+        gradientSize: "",
+        gradientColors: "#000, #fff",
+        gradientRepeat: false,
+        onGradientBoxCreate: Metro.noop
+    };
+
+    Metro.gradientBoxSetup = function (options) {
+        GradientBoxDefaultConfig = $.extend({}, GradientBoxDefaultConfig, options);
+    };
+
+    if (typeof window["metroGradientBoxSetup"] !== undefined) {
+        Metro.gradientBoxSetup(window["metroGradientBoxSetup"]);
+    }
+
+    Metro.Component('gradient-box', {
+        init: function( options, elem ) {
+            this._super(elem, options, GradientBoxDefaultConfig, {
+                // define instance vars here
+                colors: [],
+                shape: "",
+                size: "",
+                position: "",
+                type: "linear",
+                func: "linear-gradient",
+                repeat: false
+            });
+            return this;
+        },
+
+        _create: function(){
+            var o = this.options;
+
+            this.colors = o.gradientColors.toArray(",");
+            this.type = o.gradientType.toLowerCase();
+            this.shape = o.gradientShape.toLowerCase();
+            this.size = o.gradientSize.toLowerCase();
+            this.repeat = o.gradientRepeat;
+            this.func = (this.repeat ? "repeating-" : "") + this.type + "-gradient";
+
+
+            if (this.type === "linear") {
+                if ( !o.gradientPosition ) {
+                    this.position = "to bottom";
+                } else {
+                    this.position = isNaN(o.gradientPosition) === false ? o.gradientPosition + "deg" : o.gradientPosition;
+
+                    if (this.position.indexOf("deg") === -1 && this.position.indexOf("to ") === -1) {
+                        this.position = "to " + this.position;
+                    }
+                }
+            } else {
+                this.position = o.gradientPosition.toLowerCase();
+                if (this.position && this.position.indexOf("at ") === -1) {
+                    this.position = "at " + this.position;
+                }
+            }
+
+            this._createStructure();
+            this._setGradient();
+            this._fireEvent('gradient-box-create');
+        },
+
+        _createStructure: function(){
+            this.element.addClass("gradient-box");
+        },
+
+        _setGradient: function (){
+            var element = this.element;
+            var gradientRule, gradientOptions = [];
+
+            if (this.type === "radial" && this.shape) {
+                gradientOptions.push(this.shape);
+            }
+
+            if (this.type === "radial" && this.size) {
+                gradientOptions.push(this.size);
+            }
+
+            if (this.position) {
+                gradientOptions.push(this.position);
+            }
+
+            gradientRule = this.func + "(" + (gradientOptions.length ? gradientOptions.join(" ") + ", " : "") + this.colors.join(", ") + ")";
+
+            element.css({
+                background: gradientRule
+            });
+        },
+
+        changeAttribute: function(attr, newValue){
+            if (attr.indexOf("data-gradient-") === -1) {
+                return ;
+            }
+
+            switch (attr) {
+                case "data-gradient-type": this.type = newValue; this.func = newValue.toLowerCase() + "-gradient"; break;
+                case "data-gradient-colors": this.colors = newValue ? newValue.toArray(",") : ["#fff", "#000"]; break;
+                case "data-gradient-shape": this.shape = newValue.toLowerCase(); break;
+                case "data-gradient-size": this.size = newValue.toLowerCase(); break;
+                case "data-gradient-position": this.position = newValue.toLowerCase(); break;
+                case "data-gradient-repeat": this.repeat = Utils.bool(newValue); break;
+            }
+
+            this._setGradient();
+        },
+
+        destroy: function(){
+            return this.element;
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
+
     var GravatarDefaultConfig = {
         gravatarDeferred: 0,
         email: "",
@@ -16894,7 +17007,7 @@ $.noConflict = function() {
             }
 
             size = size || 80;
-            def = Utils.encodeURI(def) || '404';
+            def = Metro.utils.encodeURI(def) || '404';
 
             return "//www.gravatar.com/avatar/" + Metro.md5((email.toLowerCase()).trim()) + '?size=' + size + '&d=' + def;
         },
@@ -17011,7 +17124,7 @@ $.noConflict = function() {
             if (elem.tagName === 'TD' || elem.tagName === 'TH') {
                 var wrp = $("<div/>").css("display", "inline-block").html(element.html());
                 element.html(wrp);
-                element = wrp;
+                this.element = wrp;
             }
 
             this.setPosition();
@@ -17364,6 +17477,90 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
+    var ImageBoxDefaultConfig = {
+        image: null,
+        size: "cover",
+        repeat: false,
+        color: "transparent",
+        attachment: "scroll",
+        origin: "border",
+        onImageBoxCreate: Metro.noop
+    };
+
+    Metro.imageBoxSetup = function (options) {
+        ImageBoxDefaultConfig = $.extend({}, ImageBoxDefaultConfig, options);
+    };
+
+    if (typeof window["metroImageBoxSetup"] !== undefined) {
+        Metro.imageBoxSetup(window["metroImageBoxSetup"]);
+    }
+
+    Metro.Component('image-box', {
+        init: function( options, elem ) {
+            this._super(elem, options, ImageBoxDefaultConfig, {
+                // define instance vars here
+            });
+            return this;
+        },
+
+        _create: function(){
+            this._createStructure();
+
+            this._fireEvent('image-box-create');
+        },
+
+        _createStructure: function(){
+            var element = this.element;
+
+            element.addClass("image-box");
+
+            this._drawImage();
+        },
+
+        _drawImage: function(){
+            var element = this.element, o = this.options;
+            var image = new Image();
+            var portrait;
+
+            if (!element.attr("data-original"))
+                element.attr("data-original", o.image);
+
+            element.css({
+                backgroundImage: "url("+o.image+")",
+                backgroundSize: o.size,
+                backgroundRepeat: o.repeat ? "repeat" : "no-repeat",
+                backgroundColor: o.color,
+                backgroundAttachment: o.attachment,
+                backgroundOrigin: o.origin
+            });
+
+            image.src = o.image;
+            image.onload = function(){
+                portrait = this.height >= this.width;
+                element
+                    .removeClass("image-box__portrait image-box__landscape")
+                    .addClass("image-box__" + (portrait ? "portrait" : "landscape"));
+            }
+        },
+
+        changeAttribute: function(attr, newValue){
+            var attrName = attr.replace("data-", "");
+
+            if (["image", "size", "repeat", "color", "attachment", "origin"].indexOf(attrName) > -1) {
+                this.options[attrName] = newValue;
+                this._drawImage();
+            }
+        },
+
+        destroy: function(){
+            return this.element;
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
     var Utils = Metro.utils;
     var ImageCompareDefaultConfig = {
         imagecompareDeferred: 0,
@@ -17537,15 +17734,20 @@ $.noConflict = function() {
     });
 }(Metro, m4q));
 
-/* eslint-disable */
 (function(Metro, $) {
     'use strict';
 
+    var Utils = Metro.utils;
     var ImageGridDefaultConfig = {
+        useBackground: false,
+        backgroundSize: "cover",
+        backgroundPosition: "top left",
+
         clsImageGrid: "",
         clsImageGridItem: "",
         clsImageGridImage: "",
 
+        onItemClick: Metro.noop,
         onDrawItem: Metro.noop,
         onImageGridCreate: Metro.noop
     };
@@ -17568,9 +17770,9 @@ $.noConflict = function() {
         },
 
         _create: function(){
+            this.items = this.element.children("img");
             this._createStructure();
             this._createEvents();
-
             this._fireEvent('image-grid-create');
         },
 
@@ -17583,24 +17785,46 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
 
+            element.on(Metro.events.click, ".image-grid__item", function(){
+                that._fireEvent("item-click", {
+                    item: this
+                });
+            });
         },
 
         _createItems: function(){
             var that = this, element = this.element, o = this.options;
-            var items = element.children("img");
+            var items = this.items;
+
+            element.clear();
 
             items.each(function(){
                 var el = $(this);
+                var src = this.src;
                 var wrapper = $("<div>").addClass("image-grid__item").addClass(o.clsImageGridItem).appendTo(element);
                 var img = new Image();
 
-                img.src = this.src;
+                img.src = src;
                 img.onload = function(){
                     var port = this.height >= this.width;
                     wrapper.addClass(port ? "image-grid__item-portrait" : "image-grid__item-landscape");
                     el.addClass(o.clsImageGridImage).appendTo(wrapper);
+
+                    if (o.useBackground) {
+                        wrapper
+                            .css({
+                                background: "url("+src+")",
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: o.backgroundSize,
+                                backgroundPosition: o.backgroundPosition
+                            })
+                            .attr("data-original", el.attr("data-original") || src)
+                            .attr("data-title", el.attr("alt") || el.attr("data-title") || "");
+                        el.visible(false);
+                    }
+
                     that._fireEvent("draw-item", {
                         item: wrapper[0],
                         image: el[0]
@@ -17609,7 +17833,23 @@ $.noConflict = function() {
             });
         },
 
-        changeAttribute: function(){
+        changeAttribute: function(attr, val){
+            var o = this.options;
+
+            if (attr === "data-use-background") {
+                o.useBackground = Utils.bool(val);
+                this._createItems();
+            }
+
+            if (attr === "data-background-size") {
+                o.backgroundSize = val;
+                this._createItems();
+            }
+
+            if (attr === "data-background-position") {
+                o.backgroundPosition = val;
+                this._createItems();
+            }
         },
 
         destroy: function(){
@@ -17874,6 +18114,97 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
+    var ImagePlaceholderDefaultConfig = {
+        size: "100x100",
+        width: null,
+        height: null,
+        color: "#f8f8f8",
+        textColor: "#292929",
+        font: "12px sans-serif",
+        text: "",
+        showText: true,
+        onImagePlaceholderCreate: Metro.noop
+    };
+
+    Metro.imagePlaceholderSetup = function (options) {
+        ImagePlaceholderDefaultConfig = $.extend({}, ImagePlaceholderDefaultConfig, options);
+    };
+
+    if (typeof window["metroImagePlaceholderSetup"] !== undefined) {
+        Metro.imagePlaceholderSetup(window["metroImagePlaceholderSetup"]);
+    }
+
+    Metro.Component('image-placeholder', {
+        init: function( options, elem ) {
+            this._super(elem, options, ImagePlaceholderDefaultConfig, {
+                // define instance vars here
+                width: 0,
+                height: 0
+            });
+            return this;
+        },
+
+        _create: function(){
+            this._createStructure();
+            this._createEvents();
+
+            this._fireEvent('image-placeholder-create');
+        },
+
+        _createStructure: function(){
+            var element = this.element, o = this.options;
+            var size = o.size.toArray("x");
+
+            this.width = o.width ? o.width : size[0];
+            this.height = o.height ? o.height : size[1];
+
+            element.attr("src", this._createPlaceholder());
+        },
+
+        _createEvents: function(){
+        },
+
+        _createPlaceholder: function(){
+            var o = this.options;
+            var canvas = document.createElement("canvas"),
+                context = canvas.getContext("2d");
+
+            var width = this.width, height = this.height;
+
+            canvas.width = parseInt(width);
+            canvas.height = parseInt(height);
+
+            // background
+            context.clearRect(0, 0, width, height);
+            context.fillStyle = o.color;
+            context.fillRect(0, 0, width, height);
+
+            // text
+            context.fillStyle = o.textColor;
+            context.font = o.font;
+
+            context.translate(width / 2, height / 2);
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+
+            if (o.showText)
+                context.fillText(o.text ? o.text : width + " \u00d7 " + height, 0, 0);
+
+            return canvas.toDataURL();
+        },
+
+        // changeAttribute: function(attr, newValue){
+        // },
+
+        destroy: function(){
+            this.element.remove();
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
     var Utils = Metro.utils;
     var InfoBoxDefaultConfig = {
         infoboxDeferred: 0,
@@ -17933,7 +18264,7 @@ $.noConflict = function() {
                 overlay.addClass("transparent");
             } else {
                 overlay.css({
-                    background: Utils.hex2rgba(o.overlayColor, o.overlayAlpha)
+                    background: Metro.colors.toRGBA(o.overlayColor, o.overlayAlpha)
                 });
             }
 
@@ -18173,6 +18504,217 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
+    var Utils = Metro.utils;
+    var InputMaskDefaultConfig = {
+        maskPattern: ".",
+        mask: null,
+        maskPlaceholder: "_",
+        maskEditableStart: 0,
+        thresholdInterval: 300,
+        onChar: Metro.noop,
+        onInputMaskCreate: Metro.noop
+    };
+
+    Metro.inputMaskSetup = function (options) {
+        InputMaskDefaultConfig = $.extend({}, InputMaskDefaultConfig, options);
+    };
+
+    if (typeof window["metroInputMaskSetup"] !== undefined) {
+        Metro.inputMaskSetup(window["metroInputMaskSetup"]);
+    }
+
+    Metro.Component('input-mask', {
+        init: function( options, elem ) {
+            if ($.device) {
+                if (elem.setAttribute) elem.setAttribute("placeholder", options.mask);
+                console.warn("The component input-mask can't be initialized, because you run it on a mobile device!");
+                return ;
+            }
+            this._super(elem, options, InputMaskDefaultConfig, {
+                // define instance vars here
+                pattern: null,
+                mask: "",
+                maskArray: [],
+                placeholder: "",
+                length: 0,
+                thresholdTimer: null,
+                id: Utils.elementId("input-mask")
+            });
+            return this;
+        },
+
+        _create: function(){
+            this._createStructure();
+            this._createEvents();
+
+            this._fireEvent('input-mask-create');
+        },
+
+        _createStructure: function(){
+            var o = this.options;
+
+            if (!o.mask) {
+                throw new Error('You must provide a pattern for masked input.')
+            }
+
+            if (typeof o.maskPlaceholder !== 'string' || o.maskPlaceholder.length > 1) {
+                throw new Error('Mask placeholder should be a single character or an empty string.')
+            }
+
+            this.placeholder = o.maskPlaceholder;
+            this.mask = (""+o.mask);
+            this.maskArray = this.mask.split("");
+            this.pattern = new RegExp("^"+o.maskPattern+"+$");
+            this.length = this.mask.length;
+
+            this._showValue();
+        },
+
+        _createEvents: function(){
+            var that = this, element = this.element, o = this.options;
+            var editableStart = o.maskEditableStart;
+            var id = this.id;
+
+            var checkEditablePosition = function(pos){
+                if (pos < editableStart) {
+                    setPosition(editableStart);
+                    return false;
+                }
+                return true;
+            }
+
+            var checkEditableChar = function(pos){
+                return pos < that.mask.length && that.mask.charAt(pos) === that.placeholder;
+            }
+
+            var findNextEditablePosition = function (pos){
+                var i, a = that.maskArray;
+
+                for (i = pos; i <= a.length; i++) {
+                    if (a[i] === that.placeholder) {
+                        return i;
+                    }
+                }
+                return pos;
+            }
+
+            var setPosition = function(pos){
+                that.elem.setSelectionRange(pos, pos);
+            }
+
+            var clearThresholdInterval = function(){
+                clearInterval(that.thresholdTimer);
+                that.thresholdTimer = null;
+            }
+
+            element.on("change", function(){
+                if (this.value === "") {
+                    this.value = that.mask;
+                    setPosition(editableStart);
+                }
+            }, {ns: id});
+
+            element.on("focus click", function(){
+                checkEditablePosition(this.selectionStart);
+                setPosition(findNextEditablePosition(this.selectionStart));
+            }, {ns: id});
+
+            element.on("keydown", function(e){
+                var pos = this.selectionStart;
+                var val = this.value;
+                var code = e.code, key = e.key;
+
+                if (code === "ArrowRight" || code === "End") {
+                    return true;
+                } else {
+                    if (pos >= that.length && (["Backspace", "Home", "ArrowLeft", "ArrowUp"].indexOf(code) === -1)) {
+                        // Don't move over mask length
+                        e.preventDefault();
+                    } else if (code === "Home" || code === "ArrowUp") {
+                        // Goto editable start position
+                        e.preventDefault();
+                        setPosition(editableStart);
+                    } else if (code === "ArrowLeft") {
+                        if (pos - 1 < editableStart) {
+                            // Don't move behind a editable start position
+                            e.preventDefault();
+                        }
+                    } else if (code === "Backspace") {
+                        e.preventDefault();
+                        if (pos - 1 >= editableStart) {
+                            if (checkEditableChar(pos - 1)) {
+                                if (this.value.charAt(pos - 1) !== that.placeholder) {
+                                    // Replace char if it is not a mask placeholder
+                                    this.value = val.substr(0, pos - 1) + that.placeholder + val.substr(pos);
+                                }
+                            }
+                            // Move to prev char position
+                            setPosition(pos - 1);
+                        }
+                    } else if (code === "Space") {
+                        e.preventDefault();
+                        setPosition(pos + 1);
+                    } else if (!that.pattern.test(key)) {
+                        e.preventDefault();
+                    } else {
+                        e.preventDefault();
+                        if (checkEditableChar(pos)) {
+                            this.value = val.substr(0, pos) + (o.onChar === Metro.noop ? key : Utils.exec(o.onChar, [key], this)) + val.substr(pos + 1);
+                            setPosition(findNextEditablePosition(pos + 1));
+                        }
+                    }
+                }
+            }, {ns: id});
+
+            element.on("keyup", function(){
+                var el = this;
+
+                clearThresholdInterval();
+
+                that.thresholdTimer = setInterval(function(){
+                    clearThresholdInterval();
+                    setPosition(findNextEditablePosition(el.selectionStart));
+                }, o.thresholdInterval)
+            }, {ns: id});
+        },
+
+        _showValue: function(){
+            var that = this, elem = this.elem;
+            var a = new Array(this.length);
+            var val;
+            if (!elem.value) {
+                elem.value = this.mask;
+            } else {
+                val = elem.value;
+                $.each(this.maskArray, function(i, v){
+                    if (val[i] !== v && !that.pattern.test(val[i])) {
+                        a[i] = that.placeholder;
+                    } else {
+                        a[i] = val[i];
+                    }
+                });
+                this.elem.value = a.join("");
+            }
+        },
+
+        destroy: function(){
+            var element = this.element, id = this.id;
+
+            element.off("change", {ns: id});
+            element.off("focus", {ns: id});
+            element.off("click", {ns: id});
+            element.off("keydown", {ns: id});
+            element.off("keyup", {ns: id});
+
+            return element;
+        }
+    });
+}(Metro, m4q));
+
+
+(function(Metro, $) {
+    'use strict';
     var Utils = Metro.utils;
     var MaterialInputDefaultConfig = {
         materialinputDeferred: 0,
@@ -18307,6 +18849,7 @@ $.noConflict = function() {
         inputDeferred: 0,
 
         // mask: null,
+        label: "",
 
         autocomplete: null,
         autocompleteDivider: ",",
@@ -18338,7 +18881,9 @@ $.noConflict = function() {
         clsRevealButton: "",
         clsCustomButton: "",
         clsSearchButton: "",
+        clsLabel: "",
 
+        onAutocompleteSelect: Metro.noop,
         onHistoryChange: Metro.noop,
         onHistoryUp: Metro.noop,
         onHistoryDown: Metro.noop,
@@ -18493,6 +19038,16 @@ $.noConflict = function() {
                     maxHeight: o.autocompleteListHeight,
                     display: "none"
                 }).appendTo(container);
+            }
+
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(container);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
             }
 
             if (element.is(":disabled")) {
@@ -18662,11 +19217,15 @@ $.noConflict = function() {
             });
 
             container.on(Metro.events.click, ".autocomplete-list .item", function(){
-                element.val($(this).attr("data-autocomplete-value"));
+                var val = $(this).attr("data-autocomplete-value");
+                element.val(val);
                 autocompleteList.css({
                     display: "none"
                 });
                 element.trigger("change");
+                that._fireEvent("autocomplete-select", {
+                    value: val
+                });
             });
         },
 
@@ -18774,6 +19333,7 @@ $.noConflict = function() {
     var Utils = Metro.utils;
     var KeypadDefaultConfig = {
         keypadDeferred: 0,
+        label: "",
         keySize: 48,
         keys: "1, 2, 3, 4, 5, 6, 7, 8, 9, 0",
         copyInlineStyles: false,
@@ -18795,6 +19355,7 @@ $.noConflict = function() {
         clsServiceKey: "",
         clsBackspace: "",
         clsClear: "",
+        clsLabel: "",
 
         onChange: Metro.noop,
         onClear: Metro.noop,
@@ -18891,6 +19452,16 @@ $.noConflict = function() {
 
             element.on(Metro.events.blur, function(){keypad.removeClass("focused");});
             element.on(Metro.events.focus, function(){keypad.addClass("focused");});
+
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(keypad);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
+            }
 
             if (o.disabled === true || element.is(":disabled")) {
                 this.disable();
@@ -19172,6 +19743,7 @@ $.noConflict = function() {
         clsImageWrapper: "",
         clsLightbox: "",
 
+        onDrawImage: Metro.noop,
         onLightboxCreate: Metro.noop
     };
 
@@ -19263,18 +19835,21 @@ $.noConflict = function() {
         },
 
         _goto: function(el){
-            var o = this.options;
+            var that = this, o = this.options;
             var $el = $(el);
-            var isImage = el.tagName === "IMG";
             var img = $("<img>"), src;
-            var imageContainer = this.lightbox.find(".lightbox__image").html("");
-            var imageWrapper = $("<div>")
+            var imageContainer, imageWrapper, activity;
+
+            imageContainer = this.lightbox.find(".lightbox__image");
+
+            imageContainer.find(".lightbox__image-wrapper").remove();
+            imageWrapper = $("<div>")
                 .addClass("lightbox__image-wrapper")
                 .addClass(o.clsImageWrapper)
-                .attr("data-title", $el.attr("alt"))
+                .attr("data-title", ($el.attr("alt") || $el.attr("data-title") || ""))
                 .appendTo(imageContainer);
 
-            var activity = $("<div>").appendTo(imageWrapper);
+            activity = $("<div>").appendTo(imageWrapper);
 
             Metro.makePlugin(activity, "activity", {
                 type: "cycle",
@@ -19283,7 +19858,7 @@ $.noConflict = function() {
 
             this.current = el;
 
-            if (isImage) {
+            if (el.tagName === "IMG" || el.tagName === "DIV") {
                 src = $el.attr("data-original") || $el.attr("src");
                 img.attr("src", src);
                 img[0].onload = function(){
@@ -19292,9 +19867,10 @@ $.noConflict = function() {
                     img.attr("alt", $el.attr("alt"));
                     img.appendTo(imageWrapper);
                     activity.remove();
-                    // setTimeout(function(){
-                    //     img.addClass("showing");
-                    // }, 100);
+                    that._fireEvent("draw-image", {
+                        image: img[0],
+                        item: imageWrapper[0]
+                    });
                 }
             }
         },
@@ -19344,15 +19920,12 @@ $.noConflict = function() {
         },
 
         open: function(el){
-            var lightbox = $(this.component), overlay = $(this.overlay);
-
-
             this._setupItems();
 
             this._goto(el);
 
-            overlay.show();
-            lightbox.show();
+            this.overlay.show();
+            this.lightbox.show();
 
             return this;
         },
@@ -21057,6 +21630,213 @@ $.noConflict = function() {
     });
 }(Metro, m4q));
 
+(function(Metro) {
+    'use strict';
+    Metro.md5 = function (string) {
+        function RotateLeft(lValue, iShiftBits) {
+            return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
+        }
+
+        function AddUnsigned(lX,lY) {
+            var lX4,lY4,lX8,lY8,lResult;
+            lX8 = (lX & 0x80000000);
+            lY8 = (lY & 0x80000000);
+            lX4 = (lX & 0x40000000);
+            lY4 = (lY & 0x40000000);
+            lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
+            if (lX4 & lY4) {
+                return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+            }
+            if (lX4 | lY4) {
+                if (lResult & 0x40000000) {
+                    return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+                } else {
+                    return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+                }
+            } else {
+                return (lResult ^ lX8 ^ lY8);
+            }
+        }
+
+        function F(x,y,z) { return (x & y) | ((~x) & z); }
+        function G(x,y,z) { return (x & z) | (y & (~z)); }
+        function H(x,y,z) { return (x ^ y ^ z); }
+        function I(x,y,z) { return (y ^ (x | (~z))); }
+
+        function FF(a,b,c,d,x,s,ac) {
+            a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
+            return AddUnsigned(RotateLeft(a, s), b);
+        }
+
+        function GG(a,b,c,d,x,s,ac) {
+            a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
+            return AddUnsigned(RotateLeft(a, s), b);
+        }
+
+        function HH(a,b,c,d,x,s,ac) {
+            a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
+            return AddUnsigned(RotateLeft(a, s), b);
+        }
+
+        function II(a,b,c,d,x,s,ac) {
+            a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
+            return AddUnsigned(RotateLeft(a, s), b);
+        }
+
+        function ConvertToWordArray(string) {
+            var lWordCount;
+            var lMessageLength = string.length;
+            var lNumberOfWords_temp1=lMessageLength + 8;
+            var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
+            var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
+            var lWordArray=Array(lNumberOfWords-1);
+            var lBytePosition = 0;
+            var lByteCount = 0;
+            while ( lByteCount < lMessageLength ) {
+                lWordCount = (lByteCount-(lByteCount % 4))/4;
+                lBytePosition = (lByteCount % 4)*8;
+                lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
+                lByteCount++;
+            }
+            lWordCount = (lByteCount-(lByteCount % 4))/4;
+            lBytePosition = (lByteCount % 4)*8;
+            lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
+            lWordArray[lNumberOfWords-2] = lMessageLength<<3;
+            lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
+            return lWordArray;
+        }
+
+        function WordToHex(lValue) {
+            var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
+            for (lCount = 0;lCount<=3;lCount++) {
+                lByte = (lValue>>>(lCount*8)) & 255;
+                WordToHexValue_temp = "0" + lByte.toString(16);
+                WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
+            }
+            return WordToHexValue;
+        }
+
+        function Utf8Encode(string) {
+            string = string.replace(/\r\n/g,"\n");
+            var utftext = "";
+
+            for (var n = 0; n < string.length; n++) {
+
+                var c = string.charCodeAt(n);
+
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                }
+                else if((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+                else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+
+            }
+
+            return utftext;
+        }
+
+        var x=[];
+        var k,AA,BB,CC,DD,a,b,c,d;
+        var S11=7, S12=12, S13=17, S14=22;
+        var S21=5, S22=9 , S23=14, S24=20;
+        var S31=4, S32=11, S33=16, S34=23;
+        var S41=6, S42=10, S43=15, S44=21;
+
+        string = Utf8Encode(string);
+
+        x = ConvertToWordArray(string);
+
+        a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+
+        for (k=0;k<x.length;k+=16) {
+            AA=a; BB=b; CC=c; DD=d;
+            a=FF(a,b,c,d,x[k], S11,0xD76AA478);
+            d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
+            c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
+            b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
+            a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
+            d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
+            c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
+            b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
+            a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
+            d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
+            c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
+            b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
+            a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
+            d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
+            c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
+            b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
+            a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
+            d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
+            c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
+            b=GG(b,c,d,a,x[k], S24,0xE9B6C7AA);
+            a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
+            d=GG(d,a,b,c,x[k+10],S22,0x2441453);
+            c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
+            b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
+            a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
+            d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
+            c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
+            b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
+            a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
+            d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
+            c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
+            b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
+            a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
+            d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
+            c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
+            b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
+            a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
+            d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
+            c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
+            b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
+            a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
+            d=HH(d,a,b,c,x[k], S32,0xEAA127FA);
+            c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
+            b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
+            a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
+            d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
+            c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
+            b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
+            a=II(a,b,c,d,x[k], S41,0xF4292244);
+            d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
+            c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
+            b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
+            a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
+            d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
+            c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
+            b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
+            a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
+            d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
+            c=II(c,d,a,b,x[k+6], S43,0xA3014314);
+            b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
+            a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
+            d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
+            c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
+            b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
+            a=AddUnsigned(a,AA);
+            b=AddUnsigned(b,BB);
+            c=AddUnsigned(c,CC);
+            d=AddUnsigned(d,DD);
+        }
+
+        var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
+
+        return temp.toLowerCase();
+    };
+
+    if (window.METRO_GLOBAL_COMMON === true) {
+        window.md5 = Metro.md5;
+    }
+}(Metro, m4q));
+
 (function(Metro, $) {
     'use strict';
     var Utils = Metro.utils;
@@ -22454,9 +23234,9 @@ $.noConflict = function() {
 (function(Metro, $) {
     'use strict';
     var Utils = Metro.utils;
-    var Colors = Metro.colors;
     var RatingDefaultConfig = {
         ratingDeferred: 0,
+        label: "",
         static: false,
         title: null,
         value: 0,
@@ -22471,6 +23251,7 @@ $.noConflict = function() {
         clsTitle: "",
         clsStars: "",
         clsResult: "",
+        clsLabel: "",
         onStarClick: Metro.noop,
         onRatingCreate: Metro.noop
     };
@@ -22521,18 +23302,6 @@ $.noConflict = function() {
             this.originValue = o.value;
             this.value = o.value > 0 ? Math[o.roundFunc](o.value) : 0;
 
-            if (o.starColor !== null) {
-                if (!Utils.isColor(o.starColor)) {
-                    o.starColor = Colors.color(o.starColor);
-                }
-            }
-
-            if (o.staredColor !== null) {
-                if (!Utils.isColor(o.staredColor)) {
-                    o.staredColor = Colors.color(o.staredColor);
-                }
-            }
-
             this._createRating();
             this._createEvents();
 
@@ -22570,10 +23339,10 @@ $.noConflict = function() {
 
             result.html(o.message);
 
-            if (o.starColor !== null) {
+            if (o.starColor !== null && Metro.colors.isColor(o.starColor)) {
                 Utils.addCssRule(sheet, "#" + id + " .stars:hover li", "color: " + o.starColor + ";");
             }
-            if (o.staredColor !== null) {
+            if (o.staredColor !== null && Metro.colors.isColor(o.staredColor)) {
                 Utils.addCssRule(sheet, "#"+id+" .stars li.on", "color: "+o.staredColor+";");
                 Utils.addCssRule(sheet, "#"+id+" .stars li.half::after", "color: "+o.staredColor+";");
             }
@@ -22597,6 +23366,16 @@ $.noConflict = function() {
             if (o.copyInlineStyles === true) {
                 for (i = 0; i < element[0].style.length; i++) {
                     rating.css(element[0].style[i], element.css(element[0].style[i]));
+                }
+            }
+
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(rating);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
                 }
             }
 
@@ -23160,6 +23939,7 @@ $.noConflict = function() {
         var el = $(target);
         var rect = Utils.rect(el[0]);
         var x, y;
+        var Colors = Metro.colors;
 
         if (el.length === 0) {
             return ;
@@ -23204,7 +23984,7 @@ $.noConflict = function() {
         }
 
         ripple.css({
-            background: Utils.hex2rgba(color, alpha),
+            background: Colors.toRGBA(color, alpha),
             width: size,
             height: size,
             top: y + 'px',
@@ -23240,7 +24020,7 @@ $.noConflict = function() {
 
             function changeColor(){
                 var color = element.attr("data-ripple-color");
-                if (!Utils.isColor(color)) {
+                if (!Metro.colors.isColor(color)) {
                     return;
                 }
                 o.rippleColor = color;
@@ -23274,6 +24054,7 @@ $.noConflict = function() {
     'use strict';
     var Utils = Metro.utils;
     var SelectDefaultConfig = {
+        label: "",
         size: "normal",
         selectDeferred: 0,
         clearButton: false,
@@ -23282,13 +24063,17 @@ $.noConflict = function() {
         placeholder: "",
         addEmptyValue: false,
         emptyValue: "",
-        duration: 100,
+        duration: 0,
         prepend: "",
         append: "",
-        filterPlaceholder: "",
+        filterPlaceholder: "Search...",
         filter: true,
         copyInlineStyles: false,
         dropHeight: 200,
+        checkDropUp: true,
+        dropUp: false,
+        showGroupName: false,
+        shortTag: true,
 
         clsSelect: "",
         clsSelectInput: "",
@@ -23301,6 +24086,7 @@ $.noConflict = function() {
         clsDropContainer: "",
         clsSelectedItem: "",
         clsSelectedItemRemover: "",
+        clsLabel: "",
 
         onChange: Metro.noop,
         onUp: Metro.noop,
@@ -23350,7 +24136,7 @@ $.noConflict = function() {
         _addTag: function(val, data){
             var element = this.element, o = this.options;
             var tag, tagSize, container = element.closest(".select");
-            tag = $("<div>").addClass("tag").addClass(o.clsSelectedItem).html("<span class='title'>"+val+"</span>").data("option", data);
+            tag = $("<div>").addClass("tag").addClass(o.shortTag ? "short-tag" : "").addClass(o.clsSelectedItem).html("<span class='title'>"+val+"</span>").data("option", data);
             $("<span>").addClass("remover").addClass(o.clsSelectedItemRemover).html("&times;").appendTo(tag);
 
             if (container.hasClass("input-large")) {
@@ -23364,7 +24150,7 @@ $.noConflict = function() {
             return tag;
         },
 
-        _addOption: function(item, parent, input, multiple){
+        _addOption: function(item, parent, input, multiple, group){
             var option = $(item);
             var l, a;
             var element = this.element, o = this.options;
@@ -23375,11 +24161,18 @@ $.noConflict = function() {
 
             l.addClass(item.className);
 
+            l.data("group", group);
+
             if (option.is(":disabled")) {
                 l.addClass("disabled");
             }
 
             if (option.is(":selected")) {
+
+                if (o.showGroupName && group) {
+                    html += "&nbsp;<span class='selected-item__group-name'>" + group + "</span>";
+                }
+
                 if (multiple) {
                     l.addClass("d-none");
                     input.append(this._addTag(html, l));
@@ -23397,13 +24190,13 @@ $.noConflict = function() {
         },
 
         _addOptionGroup: function(item, parent, input, multiple){
-            var that = this;
+            var that = this, o = this.options;
             var group = $(item);
 
-            $("<li>").html(item.label).addClass("group-title").appendTo(parent);
+            $("<li>").html(item.label).addClass("group-title").addClass(o.clsOptionGroup).appendTo(parent);
 
             $.each(group.children(), function(){
-                that._addOption(this, parent, input, multiple);
+                that._addOption(this, parent, input, multiple, item.label);
             })
         },
 
@@ -23422,7 +24215,7 @@ $.noConflict = function() {
 
             $.each(element.children(), function(){
                 if (this.tagName === "OPTION") {
-                    that._addOption(this, list, input, multiple);
+                    that._addOption(this, list, input, multiple, null);
                 } else if (this.tagName === "OPTGROUP") {
                     that._addOptionGroup(this, list, input, multiple);
                 }
@@ -23484,6 +24277,8 @@ $.noConflict = function() {
                 dropFilter: ".select",
                 duration: o.duration,
                 toggleElement: [container],
+                checkDropUp: o.checkDropUp,
+                dropUp: o.dropUp,
                 onDrop: function(){
                     var dropped, target;
                     dropdown_toggle.addClass("active-toggle");
@@ -23493,13 +24288,13 @@ $.noConflict = function() {
                         if (drop.is(drop_container)) {
                             return ;
                         }
-                        var dataDrop = drop.data('dropdown');
+                        var dataDrop = Metro.getPlugin(drop, 'dropdown');
                         if (dataDrop && dataDrop.close) {
                             dataDrop.close();
                         }
                     });
 
-                    filter_input.val("").trigger(Metro.events.keyup).focus();
+                    filter_input.val("").trigger(Metro.events.keyup);//.focus();
 
                     target = list.find("li.active").length > 0 ? $(list.find("li.active")[0]) : undefined;
                     if (target !== undefined) {
@@ -23509,7 +24304,6 @@ $.noConflict = function() {
                     that._fireEvent("drop", {
                         list: list[0]
                     });
-
                 },
                 onUp: function(){
                     dropdown_toggle.removeClass("active-toggle");
@@ -23549,6 +24343,16 @@ $.noConflict = function() {
                 container.addClass("rtl").attr("dir", "rtl");
             }
 
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(container);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
+            }
+
             if (element.is(':disabled')) {
                 this.disable();
             } else {
@@ -23579,6 +24383,7 @@ $.noConflict = function() {
                 element.val(o.emptyValue);
                 if (element[0].multiple) {
                     list.find("li").removeClass("d-none");
+                    input.clear();
                 }
                 that._setPlaceholder();
                 e.preventDefault();
@@ -23607,10 +24412,15 @@ $.noConflict = function() {
                 }
                 var leaf = $(this);
                 var val = leaf.data('value');
+                var group = leaf.data('group');
                 var html = leaf.children('a').html();
                 var selected;
                 var option = leaf.data("option");
                 var options = element.find("option");
+
+                if (o.showGroupName && group) {
+                    html += "&nbsp;<span class='selected-item__group-name'>" + group + "</span>";
+                }
 
                 if (element[0].multiple) {
                     leaf.addClass("d-none");
@@ -23747,14 +24557,14 @@ $.noConflict = function() {
         },
 
         val: function(val){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
             var input = element.siblings(".select-input");
             var options = element.find("option");
             var list_items = this.list.find("li");
             var result = [];
             var multiple = element.attr("multiple") !== undefined;
             var option;
-            var i, html, list_item, option_value, tag, selected;
+            var i, html, list_item, option_value, selected, group;
 
             if (Utils.isNull(val)) {
                 $.each(options, function(){
@@ -23766,7 +24576,7 @@ $.noConflict = function() {
             $.each(options, function(){
                 this.selected = false;
             });
-            list_items.removeClass("active");
+            list_items.removeClass("active").removeClass(o.clsOptionActive);
             input.html('');
 
             if (Array.isArray(val) === false) {
@@ -23785,15 +24595,23 @@ $.noConflict = function() {
 
                 for(i = 0; i < list_items.length; i++) {
                     list_item = $(list_items[i]);
+                    group = list_item.data("group");
                     option_value = list_item.attr("data-value");
                     if (""+option_value === ""+this) {
+
+                        if (o.showGroupName && group) {
+                            html += "&nbsp;<span class='selected-item__group-name'>" + group + "</span>";
+                        }
+
                         if (multiple) {
                             list_item.addClass("d-none");
-                            tag = $("<div>").addClass("tag").addClass(o.clsSelectedItem).html("<span class='title'>"+html+"</span>").appendTo(input);
-                            tag.data("option", list_item);
-                            $("<span>").addClass("remover").addClass(o.clsSelectedItemRemover).html("&times;").appendTo(tag);
+                            input.append(that._addTag(html, list_item));
+
+                            // tag = $("<div>").addClass("tag").addClass(o.clsSelectedItem).html("<span class='title'>"+html+"</span>").appendTo(input);
+                            // tag.data("option", list_item);
+                            // $("<span>").addClass("remover").addClass(o.clsSelectedItemRemover).html("&times;").appendTo(tag);
                         } else {
-                            list_item.addClass("active");
+                            list_item.addClass("active").addClass(o.clsOptionActive);
                             input.html(html);
                         }
                         break;
@@ -23808,11 +24626,14 @@ $.noConflict = function() {
             });
         },
 
+        options: function(op, selected, delimiter){
+            return this.data(op, selected, delimiter);
+        },
+
         data: function(op, selected, delimiter){
             var element = this.element;
             var option_group, _selected;
             var _delimiter = delimiter || ",";
-
 
             if (typeof selected === "string") {
                 _selected = selected.toArray(_delimiter).map(function(v){
@@ -24298,9 +25119,9 @@ $.noConflict = function() {
             hint.appendTo(marker);
 
             if (o.showMinMax === true) {
-                var min_max_wrapper = $("<div>").addClass("slider-min-max clear").addClass(o.clsMinMax);
-                $("<span>").addClass("place-left").addClass(o.clsMin).html(o.min).appendTo(min_max_wrapper);
-                $("<span>").addClass("place-right").addClass(o.clsMax).html(o.max).appendTo(min_max_wrapper);
+                var min_max_wrapper = $("<div>").addClass("slider-min-max").addClass(o.clsMinMax);
+                $("<span>").addClass("slider-text-min").addClass(o.clsMin).html(o.min).appendTo(min_max_wrapper);
+                $("<span>").addClass("slider-text-max").addClass(o.clsMax).html(o.max).appendTo(min_max_wrapper);
                 if (o.minMaxPosition === Metro.position.TOP) {
                     min_max_wrapper.insertBefore(slider);
                 } else {
@@ -24983,6 +25804,7 @@ $.noConflict = function() {
     var Utils = Metro.utils;
     var SpinnerDefaultConfig = {
         spinnerDeferred: 0,
+        label: "",
         step: 1,
         plusIcon: "<span class='default-icon-plus'></span>",
         minusIcon: "<span class='default-icon-minus'></span>",
@@ -24998,6 +25820,7 @@ $.noConflict = function() {
         clsSpinnerButton: "",
         clsSpinnerButtonPlus: "",
         clsSpinnerButtonMinus: "",
+        clsLabel: "",
         onBeforeChange: Metro.noop_true,
         onChange: Metro.noop,
         onPlusClick: Metro.noop,
@@ -25060,6 +25883,16 @@ $.noConflict = function() {
 
             if (o.hideCursor === true) {
                 spinner.addClass("hide-cursor");
+            }
+
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(spinner);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
             }
 
             if (o.disabled === true || element.is(":disabled")) {
@@ -25847,7 +26680,7 @@ $.noConflict = function() {
                 this.build();
             }
 
-            if (o.chromeNotice === true && Utils.detectChrome() === true && Utils.isTouchDevice() === false) {
+            if (o.chromeNotice === true && Utils.detectChrome() === true && $.touchable === false) {
                 $("<p>").addClass("text-small text-muted").html("*) In Chrome browser please press and hold Shift and turn the mouse wheel.").insertAfter(element);
             }
         },
@@ -25944,8 +26777,8 @@ $.noConflict = function() {
                     $("<div>").addClass("stream-secondary").html(stream_item.secondary).appendTo(stream);
                     $(stream_item.icon).addClass("stream-icon").appendTo(stream);
 
-                    var bg = Utils.computedRgbToHex(Utils.getStyleOne(stream, "background-color"));
-                    var fg = Utils.computedRgbToHex(Utils.getStyleOne(stream, "color"));
+                    var bg = Metro.colors.toHEX(Utils.getStyleOne(stream, "background-color"));
+                    var fg = Metro.colors.toHEX(Utils.getStyleOne(stream, "color"));
 
                     var stream_events = $("<div>").addClass("stream-events")
                         .data("background-color", bg)
@@ -26283,7 +27116,7 @@ $.noConflict = function() {
                 that._fireScroll();
             });
 
-            if (Utils.isTouchDevice() === true) {
+            if ($.touchable === true) {
                 element.off(Metro.events.click, ".stream").on(Metro.events.click, ".stream", function(){
                     var stream = $(this);
                     stream.toggleClass("focused");
@@ -26663,8 +27496,8 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
     var Utils = Metro.utils;
-    var Export = Metro.export;
     var TableDefaultConfig = {
         tableDeferred: 0,
         emptyTableTitle: "Nothing to show",
@@ -28123,7 +28956,7 @@ $.noConflict = function() {
                         var td = $("<td>");
 
                         if (Utils.isValue(that.heads[cell_index].template)) {
-                            val = that.heads[cell_index].template.replace("%VAL%", val);
+                            val = that.heads[cell_index].template.replace(/%VAL%/g, val);
                         }
 
                         td.html(val);
@@ -28726,6 +29559,7 @@ $.noConflict = function() {
         },
 
         export: function(to, mode, filename, options){
+            var Export = Metro.export;
             var that = this, o = this.options;
             var table = document.createElement("table");
             var head = $("<thead>").appendTo(table);
@@ -28928,19 +29762,6 @@ $.noConflict = function() {
             });
         },
 
-        _applyColor: function(to, color, option){
-
-            to = $(to);
-
-            if (Utils.isValue(color)) {
-                if (Utils.isColor(color)) {
-                    to.css(option, color);
-                } else {
-                    to.addClass(color);
-                }
-            }
-        },
-
         _createStructure: function(){
             var element = this.element, o = this.options;
             var tabs = element.find("li"), active_tab = element.find("li.active");
@@ -29093,8 +29914,8 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
     var Utils = Metro.utils;
-    var Colors = Metro.colors;
     var TabsDefaultConfig = {
         tabsDeferred: 0,
         expand: false,
@@ -29171,7 +29992,7 @@ $.noConflict = function() {
                     $("<span>").addClass("line").appendTo(hamburger);
                 }
 
-                if (Colors.isLight(Utils.computedRgbToHex(Utils.getStyleOne(container, "background-color"))) === true) {
+                if (Metro.colors.isLight(Utils.getStyleOne(container, "background-color")) === true) {
                     hamburger.addClass("dark");
                 }
             }
@@ -29369,9 +30190,10 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
-    var Colors = Metro.colors;
+
     var Utils = Metro.utils;
     var TagInputDefaultConfig = {
+        label: "",
         size: "normal",
         taginputDeferred: 0,
         static: false,
@@ -29390,6 +30212,8 @@ $.noConflict = function() {
         clsTag: "",
         clsTagTitle: "",
         clsTagRemover: "",
+        clsLabel: "",
+
         onBeforeTagAdd: Metro.noop_true,
         onTagAdd: Metro.noop,
         onBeforeTagRemove: Metro.noop_true,
@@ -29464,6 +30288,16 @@ $.noConflict = function() {
                 $.each(values.toArray(o.tagSeparator), function(){
                     that._addTag(this);
                 })
+            }
+
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(container);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
             }
 
             if (element.is(":disabled")) {
@@ -29597,11 +30431,11 @@ $.noConflict = function() {
             remover.appendTo(tag);
 
             if (o.randomColor === true) {
-                var colors = Colors.colors(Colors.PALETTES.ALL), bg, fg, bg_r;
+                var colors = Metro.colors.colors(Metro.colors.PALETTES.ALL), bg, fg, bg_r;
 
                 bg = colors[$.random(0, colors.length - 1)];
-                bg_r = Colors.darken(bg, 15);
-                fg = Colors.isDark(bg) ? "#ffffff" : "#000000";
+                bg_r = Metro.colors.darken(bg, 15);
+                fg = Metro.colors.isDark(bg) ? "#ffffff" : "#000000";
 
                 tag.css({
                     backgroundColor: bg,
@@ -29660,19 +30494,49 @@ $.noConflict = function() {
         },
 
         val: function(v){
-            var that = this, o = this.options;
+            var that = this, element = this.element, o = this.options;
+            var container = element.closest(".tag-input");
+            var newValues = [];
 
             if (!Utils.isValue(v)) {
                 return this.tags();
             }
 
             this.values = [];
+            container.find(".tag").remove();
 
-            if (Utils.isValue(v)) {
-                $.each((""+v).toArray(o.tagSeparator), function(){
-                    that._addTag(this);
-                })
+            if (typeof v === "string") {
+                newValues = (""+v).toArray(o.tagSeparator);
+            } else {
+                if (Array.isArray(v)) {
+                    newValues = v;
+                }
             }
+
+            $.each(newValues, function(){
+                that._addTag(this);
+            });
+
+            return this;
+        },
+
+        append: function(v){
+            var that = this, o = this.options;
+            var newValues = this.values;
+
+            if (typeof v === "string") {
+                newValues = (""+v).toArray(o.tagSeparator);
+            } else {
+                if (Array.isArray(v)) {
+                    newValues = v;
+                }
+            }
+
+            $.each(newValues, function(){
+                that._addTag(this);
+            });
+
+            return this;
         },
 
         clear: function(){
@@ -29684,6 +30548,8 @@ $.noConflict = function() {
             element.val("").trigger("change");
 
             container.find(".tag").remove();
+
+            return this;
         },
 
         disable: function(){
@@ -29758,8 +30624,10 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
     var Utils = Metro.utils;
-    Metro.template = function(html, options, conf) {
+
+    var Engine = function(html, options, conf) {
         var ReEx, re = '<%(.+?)%>',
             reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g,
             code = 'with(obj) { var r=[];\n',
@@ -29797,13 +30665,7 @@ $.noConflict = function() {
         catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
         return result;
     };
-}(Metro, m4q));
 
-(function(Metro, $) {
-    'use strict';
-
-    var Utils = Metro.utils;
-    var Tpl = Metro.template;
     var TemplateDefaultConfig = {
         templateData: null,
         onTemplateCompile: Metro.noop,
@@ -29837,7 +30699,7 @@ $.noConflict = function() {
                 .replace(/(&lt;)/gm, "<")
                 .replace(/(&gt;)/gm, ">");
 
-            compiled = Tpl(template, this.data);
+            compiled = Engine(template, this.data);
             element.html(compiled);
 
             this._fireEvent('template-compile', {
@@ -29878,12 +30740,15 @@ $.noConflict = function() {
             return this.element;
         }
     });
+
+    Metro.template = Engine;
 }(Metro, m4q));
 
 (function(Metro, $) {
     'use strict';
     var Utils = Metro.utils;
     var TextareaDefaultConfig = {
+        label: "",
         textareaDeferred: 0,
         charsCounter: null,
         charsCounterTemplate: "$1",
@@ -29894,10 +30759,12 @@ $.noConflict = function() {
         clearButton: true,
         clearButtonIcon: "<span class='default-icon-cross'></span>",
         autoSize: true,
+        maxHeight: 0,
         clsPrepend: "",
         clsAppend: "",
         clsComponent: "",
         clsTextarea: "",
+        clsLabel: "",
         onChange: Metro.noop,
         onTextareaCreate: Metro.noop
     };
@@ -29973,6 +30840,16 @@ $.noConflict = function() {
             container.addClass(o.clsComponent);
             element.addClass(o.clsTextarea);
 
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(container);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
+            }
+
             if (element.is(':disabled')) {
                 this.disable();
             } else {
@@ -29982,7 +30859,6 @@ $.noConflict = function() {
             fakeTextarea.val(element.val());
 
             if (o.autoSize === true) {
-
                 container.addClass("autosize no-scroll-vertical");
 
                 setTimeout(function(){
@@ -30029,14 +30905,23 @@ $.noConflict = function() {
         },
 
         resize: function(){
-            var element = this.element,
+            var element = this.element, o = this.options,
                 textarea = element.closest(".textarea"),
-                fakeTextarea = textarea.find(".fake-textarea");
+                fakeTextarea = textarea.find(".fake-textarea"),
+                currentHeight = fakeTextarea[0].scrollHeight;
+
+            if (o.maxHeight && currentHeight >= o.maxHeight) {
+                textarea.removeClass("no-scroll-vertical");
+                return ;
+            }
+
+            if (o.maxHeight && currentHeight < o.maxHeight) {
+                textarea.addClass("no-scroll-vertical");
+            }
 
             fakeTextarea[0].style.cssText = 'height:auto;';
             fakeTextarea[0].style.cssText = 'height:' + fakeTextarea[0].scrollHeight + 'px';
             element[0].style.cssText = 'height:' + fakeTextarea[0].scrollHeight + 'px';
-
         },
 
         clear: function(){
@@ -30112,7 +30997,7 @@ $.noConflict = function() {
         effectDuration: 500,
         target: null,
         canTransform: true,
-        onClick: Metro.noop,
+        onTileClick: Metro.noop,
         onTileCreate: Metro.noop
     };
 
@@ -30222,7 +31107,7 @@ $.noConflict = function() {
 
                 $.setInterval(function(){
                     var temp = that.images.slice();
-                    var bg = Utils.randomColor();
+                    var bg = Metro.colors.random();
 
                     element.css("background-color", bg);
 
@@ -30253,19 +31138,9 @@ $.noConflict = function() {
 
                 next = that.slides[that.currentSlide];
 
-                
                 if (effects.includes(o.effect)) {
                     Metro.animations[o.effect.camelCase()]($(current), $(next), {duration: o.effectDuration});
                 }
-
-                // if (o.effect === "slide-up") Metro.animations.slideUp($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "slide-down") Metro.animations.slideDown($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "slide-left") Metro.animations.slideLeft($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "slide-right") Metro.animations.slideRight($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "fade") Metro.animations.fade($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "zoom") Metro.animations.zoom($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "swirl") Metro.animations.swirl($(current), $(next), {duration: o.effectDuration});
-                // if (o.effect === "switch") Metro.animations.swirl($(current), $(next), {duration: o.effectDuration});
 
             }, o.effectInterval);
         },
@@ -30317,7 +31192,7 @@ $.noConflict = function() {
                         }, 100);
                     }
 
-                    that._fireEvent("click", {
+                    that._fireEvent("tile-click", {
                         side: side
                     });
                 }
@@ -30351,6 +31226,7 @@ $.noConflict = function() {
     'use strict';
     var Utils = Metro.utils;
     var TimePickerDefaultConfig = {
+        label: "",
         timepickerDeferred: 0,
         hoursStep: 1,
         minutesStep: 1,
@@ -30369,6 +31245,10 @@ $.noConflict = function() {
         clsHours: "",
         clsMinutes: "",
         clsSeconds: "",
+        clsLabel: "",
+        clsButton: "",
+        clsOkButton: "",
+        clsCancelButton: "",
         okButtonIcon: "<span class='default-icon-check'></span>",
         cancelButtonIcon: "<span class='default-icon-cross'></span>",
         onSet: Metro.noop,
@@ -30470,20 +31350,22 @@ $.noConflict = function() {
             var picker, hours, minutes, seconds, i;
             var timeWrapper, selectWrapper, selectBlock, actionBlock;
 
-            var prev = element.prev();
-            var parent = element.parent();
             var id = Utils.elementId("time-picker");
 
             picker = $("<div>").attr("id", id).addClass("wheel-picker time-picker " + element[0].className).addClass(o.clsPicker);
 
-            if (prev.length === 0) {
-                parent.prepend(picker);
-            } else {
-                picker.insertAfter(prev);
-            }
-
+            picker.insertBefore(element);
             element.attr("readonly", true).appendTo(picker);
 
+            if (o.label) {
+                var label = $("<label>").addClass("label-for-input").addClass(o.clsLabel).html(o.label).insertBefore(picker);
+                if (element.attr("id")) {
+                    label.attr("for", element.attr("id"));
+                }
+                if (element.attr("dir") === "rtl") {
+                    label.addClass("rtl");
+                }
+            }
 
             timeWrapper = $("<div>").addClass("time-wrapper").appendTo(picker);
 
@@ -30528,8 +31410,8 @@ $.noConflict = function() {
             selectBlock.height((o.distance * 2 + 1) * 40);
 
             actionBlock = $("<div>").addClass("action-block").appendTo(selectWrapper);
-            $("<button>").attr("type", "button").addClass("button action-ok").html(o.okButtonIcon).appendTo(actionBlock);
-            $("<button>").attr("type", "button").addClass("button action-cancel").html(o.cancelButtonIcon).appendTo(actionBlock);
+            $("<button>").attr("type", "button").addClass("button action-ok").addClass(o.clsButton).addClass(o.clsOkButton).html(o.okButtonIcon).appendTo(actionBlock);
+            $("<button>").attr("type", "button").addClass("button action-cancel").addClass(o.clsButton).addClass(o.clsCancelButton).html(o.cancelButtonIcon).appendTo(actionBlock);
 
 
             element[0].className = '';
@@ -30541,6 +31423,10 @@ $.noConflict = function() {
 
             if (o.showLabels === true) {
                 picker.addClass("show-labels");
+            }
+
+            if (element.prop("disabled")) {
+                picker.addClass("disabled");
             }
 
             this.picker = picker;
@@ -30797,15 +31683,32 @@ $.noConflict = function() {
             this._set();
         },
 
-        changeAttribute: function(attributeName){
-            var that = this, element = this.element;
+        disable: function(){
+            this.element.data("disabled", true);
+            this.element.parent().addClass("disabled");
+        },
 
-            var changeValueAttribute = function(){
-                that.val(element.attr("data-value"));
-            };
+        enable: function(){
+            this.element.data("disabled", false);
+            this.element.parent().removeClass("disabled");
+        },
 
-            if (attributeName === "data-value") {
-                changeValueAttribute();
+        toggleState: function(){
+            if (this.elem.disabled) {
+                this.disable();
+            } else {
+                this.enable();
+            }
+        },
+
+        changeAttribute: function(attr, newValue){
+            switch (attr) {
+                case "data-value":
+                    this.val(newValue);
+                    break;
+                case "disabled":
+                    this.toggleState();
+                    break;
             }
         },
 
@@ -30914,6 +31817,118 @@ $.noConflict = function() {
 
     Metro['toast'] = Toast;
     Metro['createToast'] = Toast.create;
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
+
+    var TokenizerDefaultConfig = {
+        textToTokenize: "",
+        spaceSymbol: "",
+        spaceClass: "space",
+        tokenClass: "",
+        splitter: "",
+        tokenElement: "span",
+        useTokenSymbol: true,
+        useTokenIndex: true,
+        clsTokenizer: "",
+        clsToken: "",
+        clsTokenOdd: "",
+        clsTokenEven: "",
+        onTokenCreate: Metro.noop,
+        onTokenize: Metro.noop,
+        onTokenizerCreate: Metro.noop
+    };
+
+    Metro.tokenizerSetup = function (options) {
+        TokenizerDefaultConfig = $.extend({}, TokenizerDefaultConfig, options);
+    };
+
+    if (typeof window["metroTokenizerSetup"] !== undefined) {
+        Metro.tokenizerSetup(window["metroTokenizerSetup"]);
+    }
+
+    Metro.Component('tokenizer', {
+        init: function( options, elem ) {
+            this._super(elem, options, TokenizerDefaultConfig, {
+                // define instance vars here
+                originalText: ""
+            });
+            return this;
+        },
+
+        _create: function(){
+            var element = this.element, o = this.options;
+            this.originalText = o.textToTokenize ? o.textToTokenize.trim() : element.text().trim().replace(/[\r\n\t]/gi, '').replace(/\s\s+/g, " ");
+
+            this._createStructure();
+            this._fireEvent('tokenizer-create');
+        },
+
+        _tokenize: function(){
+            var that = this, element = this.element, o = this.options;
+            var index = 0, append, prepend;
+
+            element.clear().attr("aria-label", this.originalText);
+
+            $.each(this.originalText.split(o.splitter), function(i){
+                var symbol = this;
+                var isSpace = symbol === " ";
+                var token;
+
+                token = $("<"+o.tokenElement+">")
+                    .html(isSpace ? o.spaceSymbol : symbol)
+                    .attr("aria-hidden", true)
+                    .addClass(isSpace ? o.spaceClass : "")
+                    .addClass(isSpace && o.useTokenSymbol ? "" : "ts-"+symbol.replace(" ", "_"))
+                    .addClass(isSpace && o.useTokenIndex ? "" : "ti-" + (i + 1))
+                    .addClass(o.tokenClass ? o.tokenClass : "")
+                    .addClass(!isSpace ? o.clsToken : "");
+
+                if (!isSpace) {
+                    index++;
+                    token.addClass(index % 2 === 0 ? "te-even" : "te-odd");
+                    token.addClass(index % 2 === 0 ? o.clsTokenEven : o.clsTokenOdd);
+                }
+
+                if (o.prepend) {
+                    prepend = $.isSelector(o.prepend) ? $(o.prepend) : $("<span>").html(o.prepend);
+                    token.prepend(prepend);
+                }
+
+                if (o.append) {
+                    append = $.isSelector(o.append) ? $(o.append) : $("<span>").html(o.append);
+                    token.append(append);
+                }
+
+                element.append(token);
+
+                that._fireEvent("token-create", {
+                    token: token[0]
+                });
+            });
+
+            that._fireEvent("tokenize", {
+                tokens: element.children().items(),
+                originalText: this.originalText
+            });
+        },
+
+        _createStructure: function(){
+            var element = this.element,  o = this.options;
+            element.addClass(o.clsTokenizer);
+            this._tokenize();
+        },
+
+        tokenize: function(v){
+            this.originalText = v;
+            this._tokenize();
+        },
+
+        destroy: function(){
+            this.element.remove();
+        }
+    });
 }(Metro, m4q));
 
 (function(Metro, $) {
@@ -32479,8 +33494,8 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
     var Utils = Metro.utils;
-    var Colors = Metro.colors;
     var ValidatorFuncs = {
         required: function(val){
             if (Array.isArray(val)) {
@@ -32571,7 +33586,7 @@ $.noConflict = function() {
         },
         color: function(val){
             if (!Utils.isValue(val)) return false;
-            return Colors.color(val, Colors.PALETTES.STANDARD) !== false;
+            return Metro.colors.color(val, Metro.colors.PALETTES.STANDARD) !== false || Metro.colors.isColor(Metro.colors.parse(val));
         },
         pattern: function(val, pat){
             if (!Utils.isValue(val)) return false;
@@ -32661,6 +33676,7 @@ $.noConflict = function() {
             var funcs = input.data('validate') !== undefined ? String(input.data('validate')).split(" ").map(function(s){return s.trim();}) : [];
             var errors = [];
             var hasForm = input.closest('form').length > 0;
+            var attr_name, radio_checked;
 
             if (funcs.length === 0) {
                 return true;
@@ -32683,13 +33699,16 @@ $.noConflict = function() {
                     result.val += this_result ? 0 : 1;
                 }
             } else if (input.attr('type') && input.attr('type').toLowerCase() === "radio") {
-                if (input.attr('name') === undefined) {
+                attr_name = input.attr('name');
+                if (typeof attr_name  === undefined) {
                     this_result = true;
+                } else {
+                    /*
+                    * Fix with escaped name by nlared https://github.com/nlared
+                    * */
+                    radio_checked = $("input[name=" + attr_name.replace("[", "\\\[").replace("]", "\\\]") + "]:checked"); // eslint-disable-line
+                    this_result = radio_checked.length > 0;
                 }
-
-                var radio_selector = 'input[name=' + input.attr('name') + ']:checked';
-                this_result = $(radio_selector).length > 0;
-
                 if (result !== undefined) {
                     result.val += this_result ? 0 : 1;
                 }
@@ -34121,6 +35140,77 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+
+    var Utils = Metro.utils;
+    var ViewportCheckDefaultConfig = {
+        onViewport: Metro.noop,
+        onViewportEnter: Metro.noop,
+        onViewportLeave: Metro.noop,
+        onViewportCheckCreate: Metro.noop
+    };
+
+    Metro.viewportCheckSetup = function (options) {
+        ViewportCheckDefaultConfig = $.extend({}, ViewportCheckDefaultConfig, options);
+    };
+
+    if (typeof window["metroViewportCheckSetup"] !== undefined) {
+        Metro.viewportCheckSetup(window["metroViewportCheckSetup"]);
+    }
+
+    Metro.Component('viewport-check', {
+        init: function( options, elem ) {
+            this._super(elem, options, ViewportCheckDefaultConfig, {
+                // define instance vars here
+                inViewport: false,
+                id: Utils.elementId("viewport-check")
+            });
+            return this;
+        },
+
+        _create: function(){
+            this.inViewport = Utils.inViewport(this.elem);
+
+            this._createEvents();
+
+            this._fireEvent('viewport-check-create');
+        },
+
+        _createEvents: function(){
+            var that = this, elem = this.elem;
+
+            $(window).on(Metro.events.scroll, function(){
+                var oldState = that.inViewport;
+
+                that.inViewport = Utils.inViewport(elem);
+
+                if (oldState !== that.inViewport) {
+                    if (that.inViewport) {
+                        that._fireEvent("viewport-enter");
+                    } else {
+                        that._fireEvent("viewport-leave");
+                    }
+                }
+
+                that._fireEvent("viewport", {
+                    state: that.inViewport
+                });
+            }, {ns: that.id});
+        },
+
+        state: function(){
+            return this.inViewport;
+        },
+
+        destroy: function(){
+            $(window).off(Metro.events.scroll, {ns: this.id});
+
+            return this.element;
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
     var Utils = Metro.utils;
     var WindowDefaultConfig = {
         windowDeferred: 0,
@@ -34206,6 +35296,7 @@ $.noConflict = function() {
             var that = this, element = this.element, o = this.options;
             var win, overlay;
             var parent = o.dragArea === "parent" ? element.parent() : $(o.dragArea);
+            var _content;
 
             if (o.modal === true) {
                 o.btnMax = false;
@@ -34227,7 +35318,12 @@ $.noConflict = function() {
                     o.content = Utils.exec(o.content);
                 }
 
-                element.append(o.content);
+                _content = $(o.content);
+                if (_content.length === 0) {
+                    element.appendText(o.content);
+                } else {
+                    element.append(_content);
+                }
                 o.content = element;
             }
 
@@ -34333,7 +35429,6 @@ $.noConflict = function() {
             title.appendTo(caption);
 
             if (!Utils.isNull(o.content)) {
-
                 if (Utils.isQ(o.content)) {
                     o.content.appendTo(content);
                 } else {
@@ -34488,7 +35583,7 @@ $.noConflict = function() {
                 overlay.addClass("transparent");
             } else {
                 overlay.css({
-                    background: Utils.hex2rgba(o.overlayColor, o.overlayAlpha)
+                    background: Metro.colors.toRGBA(o.overlayColor, o.overlayAlpha)
                 });
             }
 
@@ -34520,11 +35615,15 @@ $.noConflict = function() {
         },
 
         maximized: function(e){
-            var win = this.win;
+            var win = this.win, o = this.options;
             var target = $(e.currentTarget);
-            win.removeClass("minimized");
-            win.toggleClass("maximized");
-            if (target.hasClass("window-caption")) {
+
+            if (o.btnMax) {
+                win.removeClass("minimized");
+                win.toggleClass("maximized");
+            }
+
+            if (target.hasClass && target.hasClass("window-caption")) {
 
                 this._fireEvent("caption-dbl-click", {
                     win: win[0]
@@ -34540,9 +35639,12 @@ $.noConflict = function() {
         },
 
         minimized: function(){
-            var win = this.win;
-            win.removeClass("maximized");
-            win.toggleClass("minimized");
+            var win = this.win, o = this.options;
+
+            if (o.btnMin) {
+                win.removeClass("maximized");
+                win.toggleClass("minimized");
+            }
 
             this._fireEvent("min-click", {
                 win: win[0]
@@ -34909,15 +36011,14 @@ $.noConflict = function() {
             Metro.getPlugin(el, "window").height(height);
         },
 
-        create: function(options){
+        create: function(options, parent){
             var w;
 
-            w = $("<div>").appendTo($("body"));
+            w = $("<div>").appendTo(parent ? $(parent) : $("body"));
 
-            var w_options = $.extend({}, {
-            }, (options !== undefined ? options : {}));
-
-            w_options._runtime = true;
+            var w_options = $.extend({
+                _runtime: true
+            }, (options ? options : {}));
 
             return Metro.makePlugin(w, "window", w_options);
         }

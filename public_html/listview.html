@@ -429,15 +429,15 @@
                 </ul>
                 <div class="example">
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').addGroup({
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.addGroup({
                             caption: 'Group'
                         })
                     ">Add group</button>
 
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').add(null, {
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.add(null, {
                             caption: 'New node',
                             icon: '<span class=\'mif-air\'>'
                         })
@@ -446,41 +446,41 @@
                     <button class="button" onclick="
                         var lv = $('#lv_1');
                         var t = lv.find('.current-group').length > 0 ? lv.find('.current-group') : $(lv.find('.node-group')[0]);
-                        lv.data('listview').add(t, {
+                        Metro.getPlugin('#lv_1', 'listview').add(t, {
                             caption: 'Sub item',
                             icon: '<span class=\'mif-folder\'>'
                         })
                     ">Add SubItem</button>
 
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').insertBefore(lv.find('.current'), {
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.insertBefore(lv.find('.current'), {
                             caption: 'Before node',
                             icon: '<span class=\'mif-folder\'>'
                         })
                     ">Insert before</button>
 
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').insertAfter(lv.find('.current'), {
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.insertAfter(lv.find('.current'), {
                             caption: 'After node',
                             icon: '<span class=\'mif-folder\'>'
                         })
                     ">Insert after</button>
 
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').del(lv.find('.current'))
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.del(lv.find('.current'))
                     ">Delete item</button>
 
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').del(lv.find('.current-group'))
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.del(lv.find('.current-group'))
                     ">Delete group</button>
 
                     <button class="button" onclick="
-                        var lv = $('#lv_1');
-                        lv.data('listview').clean(lv.find('.current-group'))
+                        var lv = Metro.getPlugin('#lv_1', 'listview');
+                        lv.clean(lv.find('.current-group'))
                     ">Clean</button>
 
                     <hr>
@@ -522,6 +522,6 @@
     </script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

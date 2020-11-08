@@ -166,7 +166,7 @@
                     </div>
                 </div>
                 <pre><code class="html">
-                    &lt;div data-role="stepper" data-steps="5" id="stepper_methods"&gt;&lt;/div&gt;
+                    &lt;div data-role="stepper" data-steps="5" id="stepper"&gt;&lt;/div&gt;
 
                     &lt;div class="d-flex flex-justify-center mt-4"&gt;
                         &lt;button class="button m-1" onclick="stepperMethod('first')"&gt;First&lt;/button&gt;
@@ -177,7 +177,7 @@
 
                     &lt;script&gt;
                         function stepperMethod (m){
-                            var stepper = $("#stepper_methods").data('stepper');
+                            var stepper = Metro.getPlugin('#stepper','stepper');
                             stepper[m]();
                         }
                     &lt;/script&gt;
@@ -227,6 +227,6 @@
 
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

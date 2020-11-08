@@ -91,7 +91,7 @@
                             <button class="expand-button"><span></span></button>
                             <span class="app-title">Metro 4</span>
                         </div>
-                        <ul class="app-bar-present pos-absolute" data-role="materialtabs">
+                        <ul data-role="materialtabs" data-app-bar="true">
                             <li><a href="#games">Games</a></li>
                             <li><a href="#applications">Applications</a></li>
                             <li class="active"><a href="#music">Music</a></li>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <pre><code>
-                    &lt;ul class="app-bar-present pos-absolute" data-role="materialtabs"&gt;
+                    &lt;ul data-app-bar="true" data-role="materialtabs"&gt;
                         &lt;li&gt;&lt;a href="#games"&gt;Games&lt;/a&gt;&lt;/li&gt;
                         &lt;li&gt;&lt;a href="#applications"&gt;Applications&lt;/a&gt;&lt;/li&gt;
                         &lt;li class="active"&gt;&lt;a href="#music"&gt;Music&lt;/a&gt;&lt;/li&gt;
@@ -139,7 +139,7 @@
                             <button class="expand-button"><span></span></button>
                             <span class="app-title">Metro 4</span>
                         </div>
-                        <ul class="app-bar-present pos-absolute" data-role="materialtabs" data-fixed-tabs="true">
+                        <ul data-role="materialtabs" data-fixed-tabs="true" data-app-bar="true">
                             <li><a href="#">Music</a></li>
                             <li><a href="#">Films</a></li>
                             <li><a href="#">Books</a></li>
@@ -147,8 +147,7 @@
                     </div>
                 </div>
                 <pre><code>
-                    &lt;ul class="app-bar-present pos-absolute"
-                        data-role="materialtabs" data-fixed-tabs="true"&gt;
+                    &lt;ul data-app-bar="true" data-role="materialtabs" data-fixed-tabs="true"&gt;
                         &lt;li&gt;&lt;a href="#"&gt;Music&lt;/a&gt;&lt;/li&gt;
                         &lt;li&gt;&lt;a href="#"&gt;Films&lt;/a&gt;&lt;/li&gt;
                         &lt;li&gt;&lt;a href="#"&gt;Books&lt;/a&gt;&lt;/li&gt;
@@ -165,7 +164,7 @@
                             <button class="expand-button"><span></span></button>
                             <span class="app-title">Metro 4</span>
                         </div>
-                        <ul class="app-bar-present pos-absolute" data-role="materialtabs" data-fixed-tabs="true" data-deep="true">
+                        <ul data-role="materialtabs" data-fixed-tabs="true" data-deep="true" data-app-bar="true">
                             <li><a href="#">Music</a></li>
                             <li><a href="#">Films</a></li>
                             <li><a href="#">Books</a></li>
@@ -173,8 +172,10 @@
                     </div>
                 </div>
                 <pre><code>
-                    &lt;ul class="app-bar-present pos-absolute"
-                        data-role="materialtabs" data-fixed-tabs="true"  data-deep="true"&gt;
+                    &lt;ul data-app-bar="true"
+                        data-role="materialtabs"
+                        data-fixed-tabs="true"
+                        data-deep="true"&gt;
                         &lt;li&gt;&lt;a href="#"&gt;Music&lt;/a&gt;&lt;/li&gt;
                         &lt;li&gt;&lt;a href="#"&gt;Films&lt;/a&gt;&lt;/li&gt;
                         &lt;li&gt;&lt;a href="#"&gt;Books&lt;/a&gt;&lt;/li&gt;
@@ -277,9 +278,9 @@
                             <button class="expand-button light"><span></span></button>
                             <span class="app-title">Metro 4</span>
                         </div>
-                        <ul class="app-bar-present pos-absolute"
-                            data-role="materialtabs"
+                        <ul data-role="materialtabs"
                             data-fixed-tabs="true"
+                            data-app-bar="true"
                             data-deep="true"
                             data-cls-tab="bg-red fg-white text-light"
                             data-cls-tab-active="text-bold fg-yellow"
@@ -296,7 +297,7 @@
                         &lt;button class="expand-button light"&gt;&lt;span&gt;&lt;/span&gt;&lt;/button&gt;
                         &lt;span class="app-title"&gt;Metro 4&lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;ul class="app-bar-present pos-absolute"
+                    &lt;ul data-app-bar="true"
                         data-role="materialtabs"
                         data-fixed-tabs="true"
                         data-deep="true"
@@ -323,6 +324,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

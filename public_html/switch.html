@@ -55,6 +55,7 @@
                     <li class="toc-entry"><a href="#_checkbox_events">Events</a></li>
                     <li class="toc-entry"><a href="#_checkbox_methods">Methods</a></li>
                     <li class="toc-entry"><a href="#_checkbox_customize">Customize</a></li>
+                    <li class="toc-entry"><a href="#_checkbox_text_status">Text status</a></li>
                 </ul>
 
             </div>
@@ -178,7 +179,7 @@
                         <code>toggleState()</code>.
                 </p>
                 <pre><code>
-                    var checkbox = $(el).data('checkbox');
+                    var checkbox = Metro.getPlugin(el,'checkbox');
                     checkbox.disable();
                 </code></pre>
 
@@ -257,6 +258,17 @@
                            data-cls-check="bd-cyan myCheck"&gt;
                 </code></pre>
 
+                <h3 id="_checkbox_text_status">Switch text status</h3>
+                <p class="text-small">New in 4.4.0</p>
+                <p>You can add to switch text status with attributes <code>data-on</code> and <code>data-off</code></p>
+                <div class="example">
+                    <input type="checkbox" checked data-role="switch" data-on="on">
+                    <input type="checkbox" data-role="switch" data-off="off">
+                </div>
+                <pre><code>
+                    &lt;input type="checkbox" checked data-role="switch" data-on="on"&gt;
+                    &lt;input type="checkbox" data-role="switch" data-off="off"&gt;
+                </code></pre>
             </main>
         </div>
     </div>
@@ -270,6 +282,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

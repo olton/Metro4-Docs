@@ -34,6 +34,11 @@
     <link href="css/site.css" rel="stylesheet">
 
     <title>Buttons - Metro 4 :: Popular HTML, CSS and JS library</title>
+    <style>
+        .button * + * {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body class="m4-cloak">
 
@@ -312,22 +317,23 @@
 
                 <h4 id="_push_buttons_shadow">Shadowed button</h4>
                 <p>
-                    You can easy create button with shadow. Add class <span class="tally">.drop-shadow</span> to button and get button with shadow.
+                    You can easy create button with shadow. Add class <span class="tally">.shadowed</span> to button and get button with shadow.
+                    Class <code>.shadowed</code> defined in <code>shadow.less</code>.
                 </p>
                 <div class="example">
-                    <button class="button drop-shadow">Default</button>
-                    <button class="button primary drop-shadow">Primary</button>
-                    <button class="button secondary drop-shadow">Secondary</button>
-                    <button class="button success drop-shadow">Success</button>
-                    <button class="button alert drop-shadow">Alert</button>
-                    <button class="button warning drop-shadow">Warning</button>
-                    <button class="button yellow drop-shadow">Yellow</button>
-                    <button class="button info drop-shadow">Info</button>
-                    <button class="button dark drop-shadow">Dark</button>
-                    <button class="button light drop-shadow">Light</button>
+                    <button class="button shadowed">Default</button>
+                    <button class="button primary shadowed">Primary</button>
+                    <button class="button secondary shadowed">Secondary</button>
+                    <button class="button success shadowed">Success</button>
+                    <button class="button alert shadowed">Alert</button>
+                    <button class="button warning shadowed">Warning</button>
+                    <button class="button yellow shadowed">Yellow</button>
+                    <button class="button info shadowed">Info</button>
+                    <button class="button dark shadowed">Dark</button>
+                    <button class="button light shadowed">Light</button>
                 </div>
                 <pre class=""><code>
-                    &lt;button class="button drop-shadow"&gt;Default&lt;/button&gt;
+                    &lt;button class="button shadowed"&gt;Default&lt;/button&gt;
                 </code></pre>
 
                 <!-- ads-html -->
@@ -1244,6 +1250,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

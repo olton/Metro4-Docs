@@ -287,19 +287,19 @@
                 </div>
                 <pre><code class="html">
                     &lt;button class="button"
-                            onclick="$('#input_popover').data('popover').show()"&gt;
+                            onclick="Metro.getPlugin('#input', 'popover').show()"&gt;
                         Show popover
                     &lt;/button&gt;
 
                     &lt;button class="button"
-                            onclick="$('#input_popover').data('popover').hide()"&gt;
+                            onclick="Metro.getPlugin('#input', 'popover').hide()"&gt;
                         Hide popover
                     &lt;/button&gt;
 
                     &lt;input type="text" data-role="popover"
                            data-popover-text="This is popover!"
                            data-popover-trigger="focus"
-                           data-popover-hide="0" id="input_popover"&gt;
+                           data-popover-hide="0" id="input"&gt;
                 </code></pre>
 
             </main>
@@ -316,6 +316,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

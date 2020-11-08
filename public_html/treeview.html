@@ -462,43 +462,42 @@
                 </div>
                 <pre><code class="html">
                     &lt;button class="button" onclick="
-                        $('#tv_1').data('treeview').addTo(null, {
+                        Metro.getPlugin('#tv_1','treeview').addTo(null, {
                             caption: 'New node',
                             icon: '&lt;span class=\'mif-air\'&gt;&lt;/span&gt;'
                         })
                     "&gt;Add node&lt;/button&gt;
 
                     &lt;button class="button" onclick="
-                        $('#tv_1').data('treeview').addTo($('#tv_1').find('.current'), {
+                        Metro.getPlugin('#tv_1','treeview').addTo($('#tv_1').find('.current'), {
                             caption: 'New node'
                         })
                     "&gt;Add subnode&lt;/button&gt;
 
                     &lt;button class="button" onclick="
-                        var tv = $('#tv_1');
-                        tv.data('treeview').addTo(tv.find('.current'), {
+                        Metro.getPlugin('#tv_1','treeview').addTo($('#tv_1').find('.current'), {
                             html: '&lt;input data-role=checkbox data-caption=Checkbox&gt;'
                         })
                     "&gt;Add checkbox&lt;/button&gt;
 
                     &lt;button class="button" onclick="
-                        $('#tv_1').data('treeview').insertBefore($('#tv_1').find('.current'), {
+                        Metro.getPlugin('#tv_1','treeview').insertBefore($('#tv_1').find('.current'), {
                             caption: 'Before node'
                         })
                     "&gt;Insert before&lt;/button&gt;
 
                     &lt;button class="button" onclick="
-                        $('#tv_1').data('treeview').insertAfter($('#tv_1').find('.current'), {
+                        Metro.getPlugin('#tv_1','treeview').insertAfter($('#tv_1').find('.current'), {
                             caption: 'After node'
                         })
                     "&gt;Insert after&lt;/button&gt;
 
                     &lt;button class="button" onclick="
-                        $('#tv_1').data('treeview').del($('#tv_1').find('.current'))
+                        Metro.getPlugin('#tv_1','treeview').del($('#tv_1').find('.current'))
                     "&gt;Delete&lt;/button&gt;
 
                     &lt;button class="button" onclick="
-                        $('#tv_1').data('treeview').clean($('#tv_1').find('.current'))
+                        Metro.getPlugin('#tv_1','treeview').clean($('#tv_1').find('.current'))
                     "&gt;Clear&lt;/button&gt;
 
                     &lt;hr&gt;
@@ -519,6 +518,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

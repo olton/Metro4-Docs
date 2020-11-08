@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="twitter:site" content="@metroui">
+    <meta name="twitter:creator" content="@pimenov_sergey">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Metro 4 Components Library">
+    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+
+    <meta property="og:url" content="https://metroui.org.ua/index.html">
+    <meta property="og:title" content="Metro 4 Components Library">
+    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="968">
+    <meta property="og:image:height" content="504">
+
+    <meta name="author" content="Sergey Pimenov">
+    <meta name="description" content="The most popular HTML, CSS, and JS library in Metro style.">
+    <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
+    <link href="highlight/styles/github.css" rel="stylesheet">
+    <link href="docsearch/docsearch.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+
+    <title>Tokenizer - Metro 4 :: Popular HTML, CSS and JS library</title>
+</head>
+<body class="m4-cloak">
+
+<header data-role="html-container" data-insert-mode="replace" data-html-source="header.html"></header>
+
+<div data-role="html-container" data-insert-mode="replace" data-html-source="sidebar-menu.html"></div>
+
+<div class="container-fluid docs-content">
+
+    <div class="row flex-xl-nowrap">
+
+            <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
+                <h5>Table of contents</h5>
+                <hr/>
+                <ul class="toc-nav">
+                    <li class="toc-entry"><a href="#">Tokenizer</a></li>
+                </ul>
+
+            </div>
+
+            <main class="cell-xl-10 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+                <div class="place-right d-none d-block-lg" style="width: 200px;">
+                    <img src="images/logo.png" class="w-100" alt="">
+                </div>
+
+                <h1>Tokenizer</h1>
+                <p class="text-leader">
+                    Split your text into separate elements to style them individually.
+                </p>
+
+                <!-- ads-html -->
+
+                <h3>About</h3>
+                <p class="text-small">New in 4.4.0</p>
+
+                <div class="example">
+                    <style>
+                        #example1 {
+                            font-size: 38px;
+                            font-weight: bold;
+                            color: #ffffff;
+                            display: flex;
+                            justify-content: center;
+                            padding: 50px;
+                            background: #3e372d;
+                            position: relative;
+                        }
+                        #example1 .char {
+                            font-weight: bold;
+                            display: inline-block;
+                            width: 48px;
+                            height: 56px;
+                            line-height: 56px;
+                            text-align: center;
+                            text-transform: uppercase;
+                            z-index: 2;
+                            opacity: .8;
+                        }
+                        #example1 .char.te-odd {
+                            background: orangered;
+                            transform: skewY(-20deg);
+                        }
+                        #example1 .char:not(.space).te-even {
+                            background: orange;
+                            transform: skewY(20deg);
+                        }
+                    </style>
+                    <div id="example1" data-cls-token="char" data-role="tokenizer">
+                        Metro 4
+                    </div>
+                </div>
+                <pre><code>
+                    &lt;style&gt;
+                        #example1 {
+                            font-size: 38px;
+                            font-weight: bold;
+                            color: #ffffff;
+                            display: flex;
+                            justify-content: center;
+                            padding: 50px;
+                            background: #3e372d;
+                            position: relative;
+                        }
+                        #example1 .char {
+                            font-weight: bold;
+                            display: inline-block;
+                            width: 48px;
+                            height: 56px;
+                            line-height: 56px;
+                            text-align: center;
+                            text-transform: uppercase;
+                            z-index: 2;
+                            opacity: .8;
+                        }
+                        #example1 .char.te-odd {
+                            background: orangered;
+                            transform: skewY(-20deg);
+                        }
+                        #example1 .char:not(.space).te-even {
+                            background: orange;
+                            transform: skewY(20deg);
+                        }
+                    &lt;/style&gt;
+                    &lt;div id="example1" data-cls-token="char" data-role="tokenizer"&gt;
+                        Metro 4
+                    &lt;/div&gt;
+                </code></pre>
+
+                <h3>How it works</h3>
+                <pre><code>
+                    &lt;div data-role="tokenizer"&gt;
+                        Your text
+                    &lt;/div&gt;
+                </code></pre>
+                <p>
+                    Will transform to
+                </p>
+                <pre><code>
+                    &lt;div data-role="tokenizer"&gt;
+                        &lt;span&gt;Y&lt;/span&gt;
+                        &lt;span&gt;o&lt;/span&gt;
+                        &lt;span&gt;u&lt;/span&gt;
+                        &lt;span&gt;r&lt;/span&gt;
+                        &lt;span&gt;&lt;/span&gt;
+                        &lt;span&gt;t&lt;/span&gt;
+                        &lt;span&gt;e&lt;/span&gt;
+                        &lt;span&gt;x&lt;/span&gt;
+                        &lt;span&gt;t&lt;/span&gt;
+                    &lt;/div&gt;
+                </code></pre>
+
+                <h3>Options</h3>
+                <script>
+                    var tableOptionsData = [
+                        ["<code>textToTokenize</code>", "data-text-to-tokenize", "", "Text to tokenize"],
+                        ["<code>spaceSymbol</code>", "data-space-symbol", "", "Symbol to replace space in text, default empty string"],
+                        ["<code>spaceClass</code>", "data-space-class", ".space", "Class will be added to element contain space"],
+                        ["<code>tokenClass</code>", "data-token-class", "", "Class will be added to each element"],
+                        ["<code>splitter</code>", "data-splitter", "", "Element(s) used for split string"],
+                        ["<code>tokenElement</code>", "data-token-element", "span", "HTMLElement in which each token will be wrapped"],
+                        ["<code>useTokenSymbol</code>", "data-use-token-symbol", "true", "If true, to each element wll be added class <code>ts-*</code>, where asterisk is a wrapped symbol"],
+                        ["<code>useTokenIndex</code>", "data-use-token-index", "true", "If true, to each element (except the space) wll be added class <code>ti-*</code>, where asterisk is a number from 1 to ..."],
+                        ["<code>clsTokenizer</code>", "data-cls-tokenizer", "", "Class will be added to tokens container"],
+                        ["<code>clsToken</code>", "data-cls-token", "", "Class will be added to each token "],
+                        ["<code>clsTokenOdd</code>", "data-cls-token-odd", "", "Class will be added to each odd token (except the space)"],
+                        ["<code>clsTokenEven</code>", "data-cls-token-even", "", "Class will be added to each even token (except the space)"],
+                        ["<code>onTokenize</code>", "data-on-tokenize", "Metro.noop", "Event fired when tokens was created"],
+                        ["<code>onTokenCreate</code>", "data-on-token-create", "Metro.noop", "Event fired when token was created"],
+                        ["<code>onTokenizerCreate</code>", "data-on-tokenizer-create", "Metro.noop", "Event fired when tokenizer was created"],
+                    ];
+                </script>
+                <table class="table cell-border table-border options-table"
+                       data-role="table"
+                       data-horizontal-scroll="true"
+                       data-static="true"
+                       data-head="optionsTableHeader"
+                       data-body="tableOptionsData"></table>
+
+                <h3>More examples:</h3>
+                <ul>
+                    <li><a href="https://codepen.io/olton/pen/oNxbXEw">Tokenizer</a></li>
+                    <li><a href="https://codepen.io/olton/pen/XWdNEdQ">Tokenizer and Animation</a></li>
+                </ul>
+            </main>
+        </div>
+
+    </div>
+
+    <script src="docsearch/docsearch.min.js"></script>
+    <script src="js/defines.js"></script>
+
+    <script src="metro/js/metro.js?ver=@@b-version"></script>
+    <script src="highlight/highlight.pack.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/site.js"></script>
+    <!-- ads-script -->
+    <!-- ga-script -->
+    <!-- umami -->
+</body>
+</html>

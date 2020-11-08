@@ -387,7 +387,7 @@
     };
 
     function sendMessage(msg){
-        var chat = $("#chat").data("chat");
+        var chat = Metro.getPlugin("#chat", "chat");
         setTimeout(function(){
             var _m = {
                 name: opponent.name,
@@ -403,6 +403,6 @@
 
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

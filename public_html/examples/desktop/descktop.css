@@ -119,11 +119,10 @@
   padding: 1px;
   border-top: 1px rgba(255, 255, 204, 0.1) solid;
   border-right: 1px rgba(255, 255, 204, 0.1) solid;
-  top: auto;
   bottom: 100%;
   background-color: #004d6f;
   color: #ffffff;
-  display: none;
+  display: block;
   position: absolute;
   float: left;
   width: auto;

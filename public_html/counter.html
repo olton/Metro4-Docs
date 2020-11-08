@@ -84,11 +84,11 @@
                 <pre><code>
                     &lt;div&gt;
                         &lt;button class="button success"
-                            onclick="$('#counter').data('counter').start()"&gt;
+                            onclick="Metro.getPlugin('#counter', 'counter').start()"&gt;
                         Start&lt;/button&gt;
 
                         &lt;button class="button alert"
-                            onclick="$('#counter').data('counter').reset()"&gt;
+                            onclick="Metro.getPlugin('#counter', 'counter').reset()"&gt;
                         Reset&lt;/button&gt;
                     &lt;/div&gt;
 
@@ -209,6 +209,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

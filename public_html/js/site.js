@@ -1,3 +1,7 @@
+Metro.adblockSetup({
+    localhost: false
+});
+
 $(function() {
     "use strict";
 

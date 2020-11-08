@@ -467,7 +467,7 @@
                         <code>toggleState()</code>.
                 </p>
                 <pre><code>
-                    var input = $(el).data('input');
+                    var input = Metro.getPlugin(el,'input');
                     input.clear();
                     input.toDefault();
                     input.toggleState();
@@ -542,21 +542,21 @@
                     <div class="form-group">
                         <h5>Input small</h5>
                         <label>input</label>
-                        <input type="text" class="input-small" value="Input value">
+                        <input type="text" class="metro-input input-small" value="Input value">
                         <label>data-role=input</label>
                         <input type="text" class="input-small" data-role="input" value="Input value">
                     </div>
                     <div class="form-group">
                         <h5>Input regular</h5>
                         <label>input</label>
-                        <input type="text" value="Input value">
+                        <input type="text" value="Input value" class="metro-input">
                         <label>data-role=input</label>
                         <input type="text" data-role="input" value="Input value">
                     </div>
                     <div class="form-group">
                         <h5>Input large</h5>
                         <label>input</label>
-                        <input type="text" class="input-large" value="Input value">
+                        <input type="text" class="metro-input input-large" value="Input value">
                         <label>data-role=input</label>
                         <input type="text" class="input-large" data-role="input" value="Input value">
                     </div>
@@ -575,6 +575,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

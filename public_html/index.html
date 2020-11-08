@@ -40,8 +40,8 @@
 
 </head>
 <body class="m4-cloak" style="padding-top: 52px">
-<div class="container-fluid pos-fixed fixed-top z-top bg-white fg-dark" id="header">
-    <header class="app-bar container bg-white pos-relative" data-role="appbar" data-expand-point="md">
+<div class="container-fluid pos-fixed fixed-top z-top bg-transparent fg-dark" id="header">
+    <header class="app-bar container bg-transparent pos-relative" data-role="app-bar" data-on-before-menu-open="appBarMenuOpen" data-on-menu-close="appBarMenuClose" data-expand-point="md" data-on-media-point="headerMediaPoint">
         <a href="index.html" class="brand no-hover text-bold">METRO_4</a>
         <ul class="app-bar-menu ml-auto text-upper">
             <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
@@ -421,10 +421,32 @@
 
 <script src="metro/js/metro.js?ver=@@b-version"></script>
 <script>
+    function appBarMenuOpen(menu){
+        if (!appBarBackground) $(menu).parents(".container-fluid").addClass("bg-white");
+    }
+
+    function appBarMenuClose(menu){
+        if (!appBarBackground) $(menu).parents(".container-fluid").removeClass("bg-white");
+    }
+
     $(function(){
         Metro.utils.github("olton/Metro-UI-CSS", function(data){
             Metro.getPlugin("#github-stars", "counter").startInViewport(data.stargazers_count);
         });
+    });
+
+    var appBarBackground = false;
+
+    $(window).on("scroll", function(){
+        var appBar = $(".app-bar");
+        var h = appBar.height();
+        if (scrollY > h && !appBarBackground) {
+            appBar.parent().addClass("bg-white");
+            appBarBackground = true;
+        } else if (appBarBackground && scrollY <= h) {
+            appBarBackground = false;
+            appBar.parent().removeClass("bg-white");
+        }
     });
 
     $(window).on("adblock-alert", function(){
@@ -442,10 +464,10 @@
                 }
             );
         }, 2000);
-    })
+    });
 </script>
 <!-- ads-script -->
 <!-- ga-script -->
-<!-- hit-ua -->
+<!-- umami -->
 </body>
 </html>

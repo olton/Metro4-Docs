@@ -405,7 +405,7 @@
                     <li><strong>mute()</strong> - mute video</li>
                 </ul>
                 <pre><code class="javascript">
-                    var player = $(el).data('video');
+                    var player = Metro.getPlugin(el,'video');
                     player.play("https://metroui.org.ua/res/oceans.mp4");
                     player.pause();
                     player.resume();
@@ -430,6 +430,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

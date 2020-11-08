@@ -88,10 +88,10 @@
                     To define audio file add attribute <code>data-src="..."</code>.
                 </p>
                 <div class="example">
-                    <audio id="a1" data-role="audio" data-src="https://metroui.org.ua/res/hotel_california.mp3"></audio>
+                    <audio id="a1" data-role="audio-player" data-src="https://metroui.org.ua/res/hotel_california.mp3"></audio>
                 </div>
                 <pre><code class="html">
-                    &lt;audio data-role="audio" data-src="file.mp3"&gt;&lt;/audio&gt;
+                    &lt;audio data-role="audio-player" data-src="file.mp3"&gt;&lt;/audio&gt;
                 </code></pre>
 
                 <h3 id="_audio_controls">Controls</h3>
@@ -110,7 +110,7 @@
                     All this attributes has ben one of two values: <code>true</code> or <code>false</code>.
                 </p>
                 <div class="example">
-                    <audio data-role="audio"
+                    <audio data-role="audio-player"
                            data-src="https://metroui.org.ua/res/hotel_california.mp3"
                            data-show-loop="false"
                            data-show-stop="false"
@@ -119,7 +119,7 @@
                     ></audio>
                 </div>
                 <pre><code class="html">
-                    &lt;audio data-role="audio"
+                    &lt;audio data-role="audio-player"
                            data-src="https://metroui.org.ua/res/hotel_california.mp3"
                            data-show-loop="false"
                            data-show-stop="false"
@@ -142,7 +142,7 @@
                     Values for these attributes must be valid html tag for icon from font or image.
                 </p>
                 <div class="example">
-                    <audio data-role="audio"
+                    <audio data-role="audio-player"
                            data-loop-icon="<span class='mif-loop2 fg-orange'></span>"
                            data-mute-icon="<span class='mif-volume-mute2 fg-red'></span>"
                            data-volume-low-icon="<span class='mif-volume-low fg-yellow'></span>"
@@ -154,7 +154,7 @@
                     </audio>
                 </div>
                 <pre><code class="html">
-                    &lt;audio data-role="audio"
+                    &lt;audio data-role="audio-player"
                            data-loop-icon="&lt;span class='mif-loop2 fg-orange'&gt;&lt;/span&gt;"
                            data-mute-icon="&lt;span class='mif-volume-mute2 fg-red'&gt;&lt;/span&gt;"
                            data-volume-low-icon="&lt;span class='mif-volume-low fg-yellow'&gt;&lt;/span&gt;"
@@ -173,18 +173,18 @@
 
                 <h4 id="_audio_colors_dark">Dark scheme</h4>
                 <div class="example">
-                    <audio data-role="audio" data-src="https://metroui.org.ua/res/hotel_california.mp3"></audio>
+                    <audio data-role="audio-player" data-src="https://metroui.org.ua/res/hotel_california.mp3"></audio>
                 </div>
                 <pre><code class="html">
-                    &lt;audio data-role="audio" data-src="hotel_california.mp3"&gt;&lt;/audio&gt;
+                    &lt;audio data-role="audio-player" data-src="hotel_california.mp3"&gt;&lt;/audio&gt;
                 </code></pre>
 
                 <h4 id="_audio_colors_light">Light scheme</h4>
                 <div class="example">
-                    <audio data-role="audio" data-src="https://metroui.org.ua/res/hotel_california.mp3" class="light"></audio>
+                    <audio data-role="audio-player" data-src="https://metroui.org.ua/res/hotel_california.mp3" class="light"></audio>
                 </div>
                 <pre><code class="html">
-                    &lt;audio data-role="audio" data-src="hotel_california.mp3" class="light"&gt;&lt;/audio&gt;
+                    &lt;audio data-role="audio-player" data-src="hotel_california.mp3" class="light"&gt;&lt;/audio&gt;
                 </code></pre>
 
                 <!-- ads-html -->
@@ -199,7 +199,7 @@
                     You can set <code>looping audio</code> with attribute <code>data-loop="true"</code>.
                 </p>
                 <pre><code class="html">
-                    &lt;audio data-role="audio" data-loop="true"&gt;&lt;/audio&gt;
+                    &lt;audio data-role="audio-player" data-loop="true"&gt;&lt;/audio&gt;
                 </code></pre>
 
                 <h4 id="_audio_autoplay">Auto play audio</h4>
@@ -207,7 +207,7 @@
                     To <code>auto-play</code> audio, you can use attribute <code>data-autoplay="true"</code>.
                 </p>
                 <pre><code class="html">
-                    &lt;audio data-role="audio" data-autoplay="true"&gt;&lt;/audio&gt;
+                    &lt;audio data-role="audio-player" data-autoplay="true"&gt;&lt;/audio&gt;
                 </code></pre>
 
                 <h4 id="_audio_volume">Volume</h4>
@@ -215,7 +215,7 @@
                     You can setup <code>volume</code> with attribute <code>data-volume</code>. This value must be between <code>0</code> and <code>1</code>.
                 </p>
                 <pre><code class="html">
-                    &lt;audio data-role="audio" data-volume=".5"&gt;&lt;/audio&gt;
+                    &lt;audio data-role="audio-player" data-volume=".5"&gt;&lt;/audio&gt;
                 </code></pre>
 
                 <h3 id="_audio_events">Events</h3>
@@ -285,7 +285,7 @@
                     <li><strong>mute()</strong> - mute video</li>
                 </ul>
                 <pre><code class="javascript">
-                    var player = $(el).data('audio');
+                    var player = Metro.getPlugin(el, 'audio-player');
                     audio.play("https://metroui.org.ua/res/oceans.mp4");
                     audio.pause();
                     audio.resume();
@@ -310,6 +310,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

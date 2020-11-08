@@ -117,19 +117,19 @@
                     <button class="button" onclick="getDonutValue()">Get value</button>
                 </div>
                 <pre><code>
-                    &lt;div id="donut_val" data-role="donut" data-value="35" class="mx-auto"&gt;&lt;/div&gt;
+                    &lt;div id="donut" data-role="donut" data-value="35" class="mx-auto"&gt;&lt;/div&gt;
 
                     &lt;button class="button" onclick="setDonutNewValue()"&gt;Set new value&lt;/button&gt;
                     &lt;button class="button" onclick="getDonutValue()"&gt;Get value&lt;/button&gt;
 
                     &lt;script&gt;
                         function setDonutNewValue(){
-                            var donut = $('#donut_val').data('donut');
+                            var donut = Metro.getPlugin('#donut','donut');
                             donut.val($.random(0, 100));
                         }
 
                         function getDonutValue(){
-                            var donut = $('#donut_val').data('donut');
+                            var donut = Metro.getPlugin('#donut','donut');
                             alert(donut.val());
                         }
                     &lt;/script&gt;
@@ -308,6 +308,6 @@
 
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

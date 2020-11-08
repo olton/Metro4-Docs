@@ -534,7 +534,7 @@
                     </tbody>
                 </table>
                 <pre><code>
-                    var master = $(element).data('master');
+                    var master = Metro.getPlugin(element, 'master');
                     master.toPage(2);
                     master.next();
                     master.prev();
@@ -554,6 +554,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

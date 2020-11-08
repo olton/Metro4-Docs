@@ -187,7 +187,7 @@
                     Each collapse component has next methods: <code>collapse()</code>, <code>expand()</code>, <code>isCollapsed()</code>. You can use this methods to interact with component.
                 </p>
                 <pre><code class="javascript">
-                    el = $('#el').data('collapse');
+                    el = Metro.getPlugin('#el', 'collapse');
                     var collapsed = el.isCollapsed();
                     var f1 = collapsed === true ? "expand" : "collapse";
                     var f2 = collapsed === true ? "collapse" : "expand";
@@ -214,6 +214,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

@@ -92,7 +92,11 @@
                     <li><code>checkInterval</code> - ms, How often to check the bite</li>
                     <li><code>checkStop</code> - int, How many times to check a bite before leaving fishing</li>
                     <li><code>fireOnce</code> - bool || int, How many times to generate an event that the blocker is caught</li>
-                    <li><code>onBite</code> - event, Callback for an event when a blocker is caught</li>
+                    <li><code>localhost</code> - bool, default false, Firing alert on localhost</li>
+                    <li><code>localhostPattern</code> - string, additional pattern for check localhost</li>
+                    <li><code>onAlert</code> - event, Callback for an event when a blocker is caught</li>
+                    <li><code>onFishingStart</code> - event, Callback</li>
+                    <li><code>onFishingDone</code> - event, Callback</li>
                 </ul>
 
                 <h3>Events</h3>
@@ -169,6 +173,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

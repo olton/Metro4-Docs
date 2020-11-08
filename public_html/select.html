@@ -317,8 +317,8 @@
                         <td>Fired when dropdown list close</td>
                     </tr>
                     <tr>
-                        <td><code>onDown(list, select)</code></td>
-                        <td><code>data-on-down</code></td>
+                        <td><code>onDrop(list, select)</code></td>
+                        <td><code>data-on-drop</code></td>
                         <td>list</td>
                         <td>Fired when dropdown list open</td>
                     </tr>
@@ -356,7 +356,7 @@
                         <code>reset(true)</code> - reset to default.
                 </p>
                 <pre><code>
-                    var select = $(el).data('select');
+                    var select = Metro.getPlugin(el, 'select');
                     select.val([1, 2, 3]);
                     console.log(select.val());
                 </code></pre>
@@ -497,6 +497,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

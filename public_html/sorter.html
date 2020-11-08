@@ -310,7 +310,7 @@
                     <li><strong>reset()</strong> - Reset element to initial state before sorting</li>
                 </ul>
                 <pre><code>
-                    var sorter = $(el).data('sorter');
+                    var sorter = Metro.getPlugin(el,'sorter');
                     sorter.sort('asc');
                     sorter.sort('desc');
                 </code></pre>
@@ -413,6 +413,6 @@
     <script src="js/site.js"></script>
     <!-- ads-script -->
     <!-- ga-script -->
-    <!-- hit-ua -->
+    <!-- umami -->
 </body>
 </html>

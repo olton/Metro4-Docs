@@ -161,7 +161,7 @@ function createWindowYoutube(){
         width: 500,
         icon: "<span class='mif-youtube'></span>",
         title: "Youtube video",
-        content: "https://youtu.be/ZlhUJ6QkvL8",
+        content: "https://youtu.be/Qz6XNSB0F3E",
         clsContent: "bg-dark"
     });
 }
