@@ -1,7 +1,7 @@
 /*
- * Metro 4 Components Library v4.4.2  (https://metroui.org.ua)
+ * Metro 4 Components Library v4.4.3  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 08/11/2020 22:09:20
+ * Built at 12/11/2020 23:30:47
  * Licensed under MIT
  */
 .accordion {
@@ -3293,6 +3293,225 @@ input[type=reset].loading .load-caption {
 }
 .chip + .chip {
   margin-left: 8px;
+}
+.color-selector {
+  width: 306px;
+  background-color: #ffffff;
+  flex-shrink: 0;
+}
+.color-selector .color-box {
+  display: block;
+  border: 1px solid #dfdfdf;
+  padding: 10px;
+}
+.color-selector .row {
+  margin: 10px 0 0;
+  display: block;
+}
+.color-selector .row:nth-child(1) {
+  margin-top: 0;
+}
+.color-selector .user-colors-title {
+  padding: 4px 10px;
+  text-align: center;
+  font-size: 11px;
+  color: #1d1d1d;
+}
+.color-selector .default-swatches,
+.color-selector .user-colors,
+.color-selector .user-colors-actions {
+  display: block;
+  width: auto;
+}
+.color-selector .default-swatches .swatch,
+.color-selector .user-colors .swatch,
+.color-selector .user-colors-actions .swatch,
+.color-selector .default-swatches .user-swatch,
+.color-selector .user-colors .user-swatch,
+.color-selector .user-colors-actions .user-swatch {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: #ccc;
+  border-radius: 0;
+  margin-left: 4px;
+  margin-bottom: 4px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border: 1px solid #dfdfdf;
+  cursor: pointer;
+}
+.color-selector .default-swatches .swatch:not(.user-swatch):nth-child(8n+1),
+.color-selector .user-colors .swatch:not(.user-swatch):nth-child(8n+1),
+.color-selector .user-colors-actions .swatch:not(.user-swatch):nth-child(8n+1),
+.color-selector .default-swatches .user-swatch:not(.user-swatch):nth-child(8n+1),
+.color-selector .user-colors .user-swatch:not(.user-swatch):nth-child(8n+1),
+.color-selector .user-colors-actions .user-swatch:not(.user-swatch):nth-child(8n+1) {
+  margin-left: 0;
+}
+.color-selector .default-swatches .user-swatch,
+.color-selector .user-colors .user-swatch,
+.color-selector .user-colors-actions .user-swatch {
+  width: 24px;
+  height: 24px;
+}
+.color-selector .default-swatches .user-swatch:nth-child(10n+1),
+.color-selector .user-colors .user-swatch:nth-child(10n+1),
+.color-selector .user-colors-actions .user-swatch:nth-child(10n+1) {
+  margin-left: 0;
+}
+.color-selector .user-colors {
+  padding: 4px;
+}
+.color-selector .user-colors-actions {
+  margin-top: 8px;
+  text-align: center;
+}
+.color-selector .user-colors-actions .user-swatch {
+  margin: 0;
+}
+.color-selector .user-colors-actions .button {
+  padding: 0 20px;
+}
+.color-selector .cursor {
+  border-radius: 100%;
+  background: #ccc;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  border: 2px solid #fff;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+.color-selector .cursor.dragging {
+  -webkit-transition: none;
+  transition: none;
+}
+.color-selector canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ccc;
+}
+.color-selector .color-map {
+  position: relative;
+  width: 212px;
+  height: 200px;
+  overflow: hidden;
+}
+.color-selector .color-map .color-cursor {
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  margin-top: -15px;
+  top: 0;
+  left: 0;
+}
+.color-selector .hue-map {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  right: 40px;
+  width: 10px;
+}
+.color-selector .hue-map .hue-cursor {
+  top: 0;
+  left: 50%;
+  height: 20px;
+  width: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  pointer-events: none;
+}
+.color-selector .hue-map canvas {
+  border-radius: 8px;
+}
+.color-selector .alpha-map {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  right: 10px;
+  width: 10px;
+}
+.color-selector .alpha-map .alpha-cursor {
+  top: 0;
+  left: 50%;
+  height: 20px;
+  width: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  pointer-events: none;
+}
+.color-selector .alpha-map canvas {
+  border-radius: 8px;
+}
+.color-selector .color-value-hex,
+.color-selector .color-value-rgb,
+.color-selector .color-value-rgba,
+.color-selector .color-value-hsl,
+.color-selector .color-value-hsla,
+.color-selector .color-value-hsv,
+.color-selector .color-value-cmyk {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+          flex-flow: row nowrap;
+  -webkit-box-align: center;
+          align-items: center;
+}
+.color-selector .color-value-hex input,
+.color-selector .color-value-rgb input,
+.color-selector .color-value-rgba input,
+.color-selector .color-value-hsl input,
+.color-selector .color-value-hsla input,
+.color-selector .color-value-hsv input,
+.color-selector .color-value-cmyk input {
+  flex-shrink: 1;
+  min-width: 0;
+  font-size: 11px!important;
+  font-weight: bold;
+  text-align: center;
+}
+.color-selector .color-value-hex .prepend,
+.color-selector .color-value-rgb .prepend,
+.color-selector .color-value-rgba .prepend,
+.color-selector .color-value-hsl .prepend,
+.color-selector .color-value-hsla .prepend,
+.color-selector .color-value-hsv .prepend,
+.color-selector .color-value-cmyk .prepend {
+  font-size: 11px!important;
+  border-right: 1px solid #dfdfdf;
+  width: 26px!important;
+  text-align: center;
+  padding: 0 4px!important;
+}
+.color-selector .color-value-hex .radio,
+.color-selector .color-value-rgb .radio,
+.color-selector .color-value-rgba .radio,
+.color-selector .color-value-hsl .radio,
+.color-selector .color-value-hsla .radio,
+.color-selector .color-value-hsv .radio,
+.color-selector .color-value-cmyk .radio {
+  height: 28px!important;
+  width: 28px!important;
+}
+.color-selector .color-block {
+  width: 100%;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+          flex-flow: row nowrap;
+}
+.color-selector .color-block.as-string .prepend {
+  width: 40px!important;
 }
 .command-button,
 .image-button {
@@ -9124,12 +9343,12 @@ input.input-small:-ms-input-placeholder {
   -webkit-box-align: center;
           align-items: center;
   position: relative;
-  line-height: 48px;
+  line-height: 40px;
   text-decoration: none;
   color: inherit;
   white-space: nowrap;
   border: 2px solid transparent;
-  height: 48px;
+  height: 40px;
 }
 .navview .navview-menu li a:hover {
   text-decoration: none;
@@ -9711,7 +9930,6 @@ input.input-small:-ms-input-placeholder {
   display: block!important;
   position: absolute;
   left: calc(100% + 0px);
-  top: 0;
   background-color: inherit;
   padding: 0 16px;
 }

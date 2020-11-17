@@ -49,5 +49,7 @@ $(function() {
             );
         }, 2000);
     })
+
+    $("html").addClass("scrollbar-type-1 sb-red");
 });
 
