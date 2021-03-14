@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="twitter:site" content="@metroui">
+    <meta name="twitter:creator" content="@pimenov_sergey">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Metro 4 Components Library">
+    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+
+    <meta property="og:url" content="https://metroui.org.ua/index.html">
+    <meta property="og:title" content="Metro 4 Components Library">
+    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="968">
+    <meta property="og:image:height" content="504">
+
+    <meta name="author" content="Sergey Pimenov">
+    <meta name="description" content="Progress and activity indicators are visual indications of an app loading content or process executed. The most popular HTML, CSS, and JS library in Metro style.">
+    <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
+    <link href="highlight/styles/github.css" rel="stylesheet">
+    <link href="docsearch/docsearch.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+
+    <title>Progress and Activity - Metro 4 :: Popular HTML, CSS and JS library</title>
+</head>
+<body class="m4-cloak">
+
+<header data-role="html-container" data-insert-mode="replace" data-html-source="header.html"></header>
+
+<div data-role="html-container" data-insert-mode="replace" data-html-source="sidebar-menu.html"></div>
+
+<div class="container-fluid docs-content">
+
+    <div class="row flex-xl-nowrap">
+
+            <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
+                <h5>Table of contents</h5>
+                <hr/>
+                <ul class="toc-nav">
+                    <li class="toc-entry"><a href="#_activity_types">Activity indicators</a></li>
+                    <li class="toc-entry"><a href="#_activity_type_ring">Ring</a></li>
+                    <li class="toc-entry"><a href="#_activity_type_metro">Metro</a></li>
+                    <li class="toc-entry"><a href="#_activity_type_square">Square</a></li>
+                    <li class="toc-entry"><a href="#_activity_type_cycle">Cycle</a></li>
+                    <li class="toc-entry"><a href="#_activity_type_simple">Simple</a></li>
+                    <li class="toc-entry"><a href="#_activity_overlay">Activity overlay</a></li>
+                </ul>
+            </div>
+
+            <main class="cell-xl-10 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+                <div class="place-right d-none d-block-lg" style="width: 200px;">
+                    <img src="images/logo.png" class="w-100" alt="">
+                </div>
+
+                <h1>Activity</h1>
+                <p class="text-leader">
+                    Activity indicators are visual indications of an app loading content or process executed.
+                </p>
+
+                <!-- ads-html -->
+
+                <h3 id="_activity_types">Activity indicators</h3>
+                <p>
+                    Metro 4 implements several activity indicators, which you can use easily and simply.
+                    To create activity indicator add <code>data-role="activity"</code> attribute to element and define additional options.
+                    The activity indicator type define with <code>data-type=*</code> attribute.
+                    Currently supports four types for activity indicators:
+                        <code>ring</code>,
+                        <code>metro</code>,
+                        <code>square</code>,
+                        <code>cycle</code>.
+                        <code>atom</code>,
+                        <code>bars</code>.
+                </p>
+                <p>
+                    In addition you can define color subtype for activity indicator with attribute <code>data-style</code> and predefined values: <code>light</code> (default), <code>dark</code> and <code>color</code>.
+                </p>
+
+                <h4 id="_activity_type_ring">Ring</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center">
+                            <div class="mx-auto" data-role="activity" data-type="ring"></div>
+                        </div>
+                        <div class="cell-md-4 text-center">
+                            <div class="mx-auto" data-role="activity" data-type="ring" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4">
+                            <div class="mx-auto" data-role="activity" data-type="ring" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="ring"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="ring" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="ring" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_type_metro">Metro</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="metro"></div>
+                        </div>
+                        <div class="cell-md-4 text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="metro" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4 p-2">
+                            <div class="mx-auto" data-role="activity" data-type="metro" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="metro"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="metro" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="metro" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_type_square">Square</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="square"></div>
+                        </div>
+                        <div class="cell-md-4 text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="square" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4 p-2">
+                            <div class="mx-auto" data-role="activity" data-type="square" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="square"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="square" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="square" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_type_cycle">Cycle</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="cycle"></div>
+                        </div>
+                        <div class="cell-md-4 text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="cycle" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4 p-2">
+                            <div class="mx-auto" data-role="activity" data-type="cycle" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="cycle"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="cycle" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="cycle" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_type_simple">Simple</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="simple"></div>
+                        </div>
+                        <div class="cell-md-4 text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="simple" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4 p-2">
+                            <div class="mx-auto" data-role="activity" data-type="simple" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="simple"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="simple" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="simple" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_type_atom">Atom</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="atom"></div>
+                        </div>
+                        <div class="cell-md-4 text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="atom" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4 p-2">
+                            <div class="mx-auto" data-role="activity" data-type="atom" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="atom"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="atom" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="atom" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_type_bars">Bars</h4>
+
+                <div class="example">
+                    <div class="row">
+                        <div class="cell-md-4 bg-darkGray text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="bars"></div>
+                        </div>
+                        <div class="cell-md-4 text-center p-2">
+                            <div class="mx-auto" data-role="activity" data-type="bars" data-style="dark"></div>
+                        </div>
+                        <div class="cell-md-4 p-2">
+                            <div class="mx-auto" data-role="activity" data-type="bars" data-style="color"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code class="html">
+                    &lt;div data-role="activity" data-type="bars"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="bars" data-style="dark"&gt;&lt;/div&gt;
+                    &lt;div data-role="activity" data-type="bars" data-style="color"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h4 id="_activity_overlay">Activity overlay</h4>
+                <p class="text-small">
+                    This feature available from 4.1.20
+                </p>
+                <p>
+                    Metro 4 contains object to create <code>activity overlay</code>. This functionality stored in object <code>Metro.activity</code>. Object contains two methods: <code>open({...})</code> and <code>close(activity)</code>.
+                </p>
+                <p>Options:</p>
+                <ul>
+                    <li>type - string, valid activity type</li>
+                    <li>style - string, valid activity style</li>
+                    <li>autoHide - integer, milliseconds</li>
+                    <li>overlayClickClose - boolean, true or false</li>
+                    <li>overlayColor - string, hex value, ex: <code>#ffffff</code></li>
+                    <li>overlayAlpha - float, from 0 to 1</li>
+                    <li>text - additional text. <span class="text-small no-wrap fg-red">New in 4.2.0</span></li>
+                </ul>
+                <div class="example">
+                    <button class="button" onclick="
+                        Metro.activity.open({autoHide: 3000})
+                    ">Open</button>
+
+                    <button class="button" onclick="
+                        Metro.activity.open({
+                            type: 'metro',
+                            overlayClickClose: true
+                        })
+                    ">Open</button>
+
+                    <button class="button" onclick="
+                        var activity = Metro.activity.open({
+                            type: 'square',
+                            overlayColor: '#fff',
+                            overlayAlpha: 1
+                        });
+                        setTimeout(function(){
+                            Metro.activity.close(activity);
+                        }, 5000)
+                    ">Open</button>
+
+                    <button class="button" onclick="
+                        Metro.activity.open({
+                            type: 'square',
+                            overlayColor: '#fff',
+                            overlayAlpha: 1,
+                            text: '<div class=\'mt-2 text-small\'>Please, wait...</div>',
+                            overlayClickClose: true
+                        });
+                    ">Open</button>
+                </div>
+                <pre><code>
+                    &lt;button class="button" onclick="
+                        Metro.activity.open({autoHide: 3000})
+                    "&gt;Open&lt;/button&gt;
+
+                    &lt;button class="button" onclick="
+                        Metro.activity.open({
+                            type: 'metro',
+                            overlayClickClose: true
+                        })
+                    "&gt;Open&lt;/button&gt;
+
+                    &lt;button class="button" onclick="
+                        var activity = Metro.activity.open({
+                            type: 'square',
+                            overlayColor: '#fff',
+                            overlayAlpha: 1
+                        });
+                        setTimeout(function(){
+                            Metro.activity.close(activity);
+                        }, 5000)
+                    "&gt;Open&lt;/button&gt;
+
+                    &lt;button class="button" onclick="
+                        Metro.activity.open({
+                            type: 'square',
+                            overlayColor: '#fff',
+                            overlayAlpha: 1,
+                            text: '&lt;div class=\'mt-2 text-small\'&gt;Please, wait...&lt;/div&gt;',
+                            overlayClickClose: true
+                        });
+                    "&gt;Open&lt;/button&gt;
+                </code></pre>
+            </main>
+        </div>
+
+    </div>
+
+    <script src="docsearch/docsearch.min.js"></script>
+
+
+    <script src="metro/js/metro.js?ver=@@b-version"></script>
+    <script src="highlight/highlight.pack.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/site.js"></script>
+
+    <script>
+        $(function(){
+            $("#progress-observe-value").on("input change", function(){
+                $("#progress-observe").attr('data-value', this.value);
+            });
+
+            $("#progress-observe-buffer").on("input change", function(){
+                $("#progress-observe").attr('data-buffer', this.value);
+            });
+
+            $("#progress_methods_input_val").on("propertychange change keyup input paste", function(){
+                $("#progress_methods").data("progress").val(this.value);
+            });
+            $("#progress_methods_input_buff").on("propertychange change keyup input paste", function(){
+                $("#progress_methods").data("progress").buff(this.value);
+            });
+        })
+    </script>
+
+    <!-- ads-script -->
+    <!-- ga-script -->
+    <!-- umami -->
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>New Year is soon - Metro 4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel='stylesheet' href='metro/css/metro-all.min.css'>
+    <link rel='stylesheet' href='metro/christmas-balls/css/christmas-balls.css'>
+    <link rel='stylesheet' href='css/ny.css'>
+</head>
+
+<body class="m4-cloak h-vh-100">
+
+<div data-role="christmas-balls" data-sound-path="./metro/christmas-balls/sounds/"></div>
+
+<div data-role="tokenizer" data-cls-token="char" id="metro">Metro 4</div>
+<div class="w2021" data-role="tokenizer">2021</div>
+<div class="sub fg-cyan" data-role="tokenizer">New Years Is Soon!</div>
+
+<div class="h-100" id="field">
+</div>
+
+<div data-role="countdown" id="countdown"
+     data-date="2021-01-01 00:00"
+     data-animate="slide"
+     data-ease="easeOutBounce"
+     data-cls-part="new-size no-divider"
+     data-cls-days="op-orange fg-white"
+     data-cls-hours="op-red fg-white"
+     data-cls-minutes="op-green fg-white"
+     data-cls-seconds="op-blue fg-white"
+></div>
+
+<a href="~index.html" class="button large alert">
+    Get Metro 4
+</a>
+
+</body>
+
+<script src='metro/js/metro.min.js'></script>
+<script src='metro/christmas-balls/js/christmas-balls.js'></script>
+<script id="rendered-js">
+    function generateSnow(snowflakes) {
+        var snowflake;
+        var field = $("#field");
+        var fieldWidth = field.width(),
+            fieldHeight = field.height();
+
+        snowflakes = snowflakes || 40;
+
+        for (var i = 0; i < snowflakes; i++) {
+            snowflake = $("<div>")
+                .addClass("snowflake")
+                .addClass("size-" + $.random(1, 3))
+                .appendTo("#field");
+            snowflake.css({
+                left: $.random(0, fieldWidth - 1)
+            });
+            snowflake.animate({
+                draw: {
+                    top: [-100, $.random(100, fieldHeight)]
+                },
+                dur: $.random(3000, 10000),
+                onDone: function () {
+                    $(this).remove();
+                }
+            });
+        }
+    }
+
+    $(function () {
+        generateSnow();
+
+        setInterval(function () {
+            generateSnow();
+        }, 3000);
+    });
+</script>
+
+
+</body>
+
+</html>
+ 

@@ -1,0 +1,288 @@
+body {
+    background: transparent url("https://metroui.org.ua/images/new-year/ny-2-opt.jpg") center center no-repeat;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.snowflake {
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 1000;
+}
+
+.size-1 {
+    width: 1px;
+    height: 1px;
+}
+
+.size-2 {
+    width: 2px;
+    height: 2px;
+}
+
+.size-3 {
+    width: 3px;
+    height: 3px;
+}
+
+.w2021 {
+    position: absolute;
+    top: 250px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    left: 0;
+}
+
+.ts-2 {
+    background: transparent url("https://metroui.org.ua/images/new-year/2snow.png") top left no-repeat;
+}
+
+.ts-0 {
+    background: transparent url("https://metroui.org.ua/images/new-year/0snow.png") top left no-repeat;
+}
+
+.ts-1 {
+    background: transparent url("https://metroui.org.ua/images/new-year/1snow.png") top left no-repeat;
+}
+
+.w2021 > * {
+    text-indent: -99999px;
+    background-size: contain !important;
+    width: 200px;
+    height: 200px;
+    margin-left: -100px;
+}
+
+.w2021 > *:nth-child(1) {
+    margin-left: 20px;
+}
+
+.sub {
+    position: absolute;
+    top: ~"calc(100% - 50px)";
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    font-size: 36px;
+    font-weight: 100;
+}
+
+.sub > *:not(.space) {
+    display: inline-block;
+    position: relative;
+}
+
+.sub > .space {
+    width: 10px;
+    display: inline-block;
+}
+
+#metro {
+    display: -webkit-box;
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding: 50px;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#metro .char {
+    display: inline-block;
+    background: #ffffff;
+    color: #282828;
+    border-bottom: 4px coral solid;
+    font-size: 48px;
+    padding: 10px 8px 0;
+    text-align: center;
+    box-shadow: 2px 2px 4px #000;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0 4px;
+    position: relative;
+    width: 64px;
+    height: 80px;
+    transform-origin: 50% 6px;
+}
+
+#metro .char::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #39342e;
+    left: 50%;
+    top: 6px;
+    margin-left: -4px;
+}
+
+#metro .char.te-odd {
+    margin-top: 3px;
+}
+
+#metro .ts-M {
+    animation: skew 2s linear infinite;
+}
+
+#metro .ts-e {
+    animation: skew-reverse 2.2s linear infinite;
+}
+
+#metro .ts-t {
+    animation: skew 3s linear infinite;
+}
+
+#metro .ts-r {
+    animation: skew-reverse 2.8s linear infinite;
+}
+
+#metro .ts-o {
+    animation: skew-reverse 3.2s linear infinite;
+}
+
+#metro .ts-4 {
+    animation: skew 1.9s linear infinite;
+}
+
+@-webkit-keyframes skew {
+    0% {
+        transform: skew(-10deg, 10deg);
+    }
+    25% {
+        transform: skew(0deg, 0deg);
+    }
+    50% {
+        transform: skew(8deg, -8deg);
+    }
+    75% {
+        transform: skew(0deg, 0deg);
+    }
+    100% {
+        transform: skew(-10deg, 10deg);
+    }
+}
+
+@keyframes skew {
+    0% {
+        transform: skew(-10deg, 10deg);
+    }
+    25% {
+        transform: skew(0deg, 0deg);
+    }
+    50% {
+        transform: skew(8deg, -8deg);
+    }
+    75% {
+        transform: skew(0deg, 0deg);
+    }
+    100% {
+        transform: skew(-10deg, 10deg);
+    }
+}
+
+@-webkit-keyframes skew-reverse {
+    0% {
+        transform: skew(8deg, -8deg);
+    }
+    25% {
+        transform: skew(0deg, 0deg);
+    }
+    50% {
+        transform: skew(-10deg, 10deg);
+    }
+    75% {
+        transform: skew(0deg, 0deg);
+    }
+    100% {
+        transform: skew(8deg, -8deg);
+    }
+}
+
+@keyframes skew-reverse {
+    0% {
+        transform: skew(8deg, -8deg);
+    }
+    25% {
+        transform: skew(0deg, 0deg);
+    }
+    50% {
+        transform: skew(-10deg, 10deg);
+    }
+    75% {
+        transform: skew(0deg, 0deg);
+    }
+    100% {
+        transform: skew(8deg, -8deg);
+    }
+}
+
+.button {
+    position: absolute;
+    top: 650px;
+    left: 50%;
+    transform: translatex(-50%);
+    border-radius: 30px;
+    padding: 0 60px !important;
+}
+
+#countdown {
+    position: absolute;
+    top: 450px;
+    left: 50%;
+    transform: translatex(-50%);
+    color: white;
+    font-size: 48px;
+
+    &::before {
+        content: "Until the beginning of the new year is left";
+        position: absolute;
+        top: -20px;
+        font-size: 12px;
+        text-transform: uppercase;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+}
+
+@media all and (min-width: 768px ) {
+    #countdown {
+        font-size: 72px;
+
+        &::before {
+            transform: translatex(0);
+        }
+    }
+}
+
+//.new-size {
+//    width: 116px;
+//    height: 116px;
+//    border-radius: 50%;
+//    overflow: hidden;
+//    &::after {
+//        padding-bottom: 6px;
+//    }
+//}
+
+.christmas-balls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

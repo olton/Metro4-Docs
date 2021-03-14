@@ -40,16 +40,15 @@
 
 </head>
 <body class="m4-cloak" style="padding-top: 52px">
-<div class="container-fluid pos-fixed fixed-top z-top bg-transparent fg-dark" id="header">
+<div class="container-fluid pos-fixed fixed-top z-top bg-red fg-white" id="header" data-role="gradient-box" data-gradient-colors="#c90230, #870007">
     <header class="app-bar container bg-transparent pos-relative" data-role="app-bar" data-on-before-menu-open="appBarMenuOpen" data-on-menu-close="appBarMenuClose" data-expand-point="md" data-on-media-point="headerMediaPoint">
         <a href="index.html" class="brand no-hover text-bold">METRO_4</a>
         <ul class="app-bar-menu ml-auto text-upper">
             <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
             <li><a href="m4q-about.html" class="app-bar-item">Components</a></li>
             <li><a href="examples.html" class="app-bar-item">Examples</a></li>
-            <li><a href="https://builder.metroui.org.ua" class="app-bar-item text-bold">Builder</a></li>
-            <li><a href="support.html" class="app-bar-item text-bold fg-darkRed">You can help</a></li>
-            <li><a href="https://github.com/olton/Metro-UI-CSS" class="app-bar-item">GitHub</a></li>
+            <a href="https://coinlist.co/clt?referral_code=N4KYP9" class="app-bar-item text-upper text-bold">Invest into Cryptos!</a>
+            <li><a href="support.html" class="app-bar-item text-bold fg-yellow">Support</a></li>
         </ul>
     </header>
 </div>
@@ -76,7 +75,7 @@
             </div>
 
             <div class="cell-lg-6 order-1 order-lg-2">
-                <img src="images/web_development.svg" alt="web development" class="w-100 mt-5">
+                <img src="images/web_development.svg" alt="web development" class="w-100 mt-12">
             </div>
         </div>
     </div>
@@ -103,6 +102,10 @@
                 <img alt="npm-ver" class="m-1" style="border-radius: 10px;"
                      src="https://img.shields.io/npm/v/metro4?color=24285b&labelColor=d4d4d4&label=npm&style=for-the-badge"/>
             </a>
+        </div>
+
+        <div class="text-center mt-10 mb-10">
+            <a href="https://coinlist.co/clt?referral_code=N4KYP9" class="button info border-radius-20 pl-10 pr-10"><span class="h5 m-0">Goto the Coinlist to invest into Cryptos!</span></a>
         </div>
     </div>
 </div>
@@ -422,14 +425,6 @@
 
 <script src="metro/js/metro.js?ver=@@b-version"></script>
 <script>
-    function appBarMenuOpen(menu){
-        if (!appBarBackground) $(menu).parents(".container-fluid").addClass("bg-white");
-    }
-
-    function appBarMenuClose(menu){
-        if (!appBarBackground) $(menu).parents(".container-fluid").removeClass("bg-white");
-    }
-
     $(function(){
         Metro.utils.github("olton/Metro-UI-CSS", function(data){
             Metro.getPlugin("#github-stars", "counter").startInViewport(data.stargazers_count);
@@ -438,17 +433,25 @@
 
     var appBarBackground = false;
 
-    $(window).on("scroll", function(){
-        var appBar = $(".app-bar");
-        var h = appBar.height();
-        if (scrollY > h && !appBarBackground) {
-            appBar.parent().addClass("bg-white");
-            appBarBackground = true;
-        } else if (appBarBackground && scrollY <= h) {
-            appBarBackground = false;
-            appBar.parent().removeClass("bg-white");
-        }
-    });
+    function appBarMenuOpen(menu){
+        if (!appBarBackground) $(menu).parents(".container-fluid").addClass("bg-white");
+    }
+
+    function appBarMenuClose(menu){
+        if (!appBarBackground) $(menu).parents(".container-fluid").removeClass("bg-white");
+    }
+
+    // $(window).on("scroll", function(){
+    //     var appBar = $(".app-bar");
+    //     var h = appBar.height();
+    //     if (scrollY > h && !appBarBackground) {
+    //         appBar.parent().addClass("bg-white");
+    //         appBarBackground = true;
+    //     } else if (appBarBackground && scrollY <= h) {
+    //         appBarBackground = false;
+    //         appBar.parent().removeClass("bg-white");
+    //     }
+    // });
 
     $(window).on("adblock-alert", function(){
         setTimeout(function(){

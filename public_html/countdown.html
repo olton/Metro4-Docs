@@ -111,6 +111,18 @@
                     </thead>
                     <tbody>
                     <tr>
+                        <td>animate</td>
+                        <td><code>data-animate</code></td>
+                        <td>switch</td>
+                        <td>Can be: slide, fade, zoom, switch (default)</td>
+                    </tr>
+                    <tr>
+                        <td>ease</td>
+                        <td><code>data-ease</code></td>
+                        <td>linear</td>
+                        <td>Can be: a valid ease function name</td>
+                    </tr>
+                    <tr>
                         <td>days</td>
                         <td><code>data-days</code></td>
                         <td>0</td>
@@ -245,6 +257,7 @@
                 <p>
                     Also you can set start point manually. To set start point add <code>data-date</code> attribute to element.
                     Value for this attribute can be <a href="http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15"><strong>VALID</strong> date string</a>.
+                    If you use custom format of date, you must use attribute <code>data-input-format</code> to setup data format.
                 </p>
                 <div class="example">
                     <div data-role="countdown" data-date="01/01/2018" data-days="1" data-hours="2" data-minutes="3" data-seconds="4"></div>

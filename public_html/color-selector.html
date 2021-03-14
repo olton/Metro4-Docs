@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="twitter:site" content="@metroui">
+    <meta name="twitter:creator" content="@pimenov_sergey">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Metro 4 Components Library">
+    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+
+    <meta property="og:url" content="https://metroui.org.ua/index.html">
+    <meta property="og:title" content="Metro 4 Components Library">
+    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="968">
+    <meta property="og:image:height" content="504">
+
+    <meta name="author" content="Sergey Pimenov">
+    <meta name="description" content="The most popular HTML, CSS, and JS library in Metro style.">
+    <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
+    <link href="highlight/styles/github.css" rel="stylesheet">
+    <link href="docsearch/docsearch.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+
+    <title>Color selector - Metro 4 :: Popular HTML, CSS and JS library</title>
+</head>
+<body class="m4-cloak">
+
+<header data-role="html-container" data-insert-mode="replace" data-html-source="header.html"></header>
+
+<div data-role="html-container" data-insert-mode="replace" data-html-source="sidebar-menu.html"></div>
+
+<div class="container-fluid docs-content">
+
+    <div class="row flex-xl-nowrap">
+
+            <div class="d-none d-block-xl cell-xl-2 order-2 border-left bd-light toc-wrapper">
+                <h5>Table of contents</h5>
+                <hr/>
+                <ul class="toc-nav">
+                    <li class="toc-entry"><a href="#">Color selector</a></li>
+                </ul>
+
+            </div>
+
+            <main class="cell-xl-10 order-1 pr-1-sx pl-1-sx pr-5-md pl-5-md">
+                <div class="place-right d-none d-block-lg" style="width: 200px;">
+                    <img src="images/logo.png" class="w-100" alt="">
+                </div>
+
+                <h1>Color selector</h1>
+                <p class="text-leader">
+                    Pick a color with component color selector.
+                </p>
+
+                <!-- ads-html -->
+
+                <h3>About</h3>
+                <p class="text-small">Added in 4.4.3</p>
+
+                <p>
+                    If you need to pick a color value, you can create <code>color-selector</code> component.
+                </p>
+                <div class="example d-flex flex-justify-center">
+                    <div data-role="color-selector"></div>
+                </div>
+                <pre><code>
+                    &lt;div data-role="color-selector"&gt;&lt;/div&gt;
+                </code></pre>
+
+                <h3>Options</h3>
+                <script>
+                    var optionsData = [
+                        ["defaultSwatches", "data-default-swatches", "string", "Comma delimited string with hex colors, Pre-defined color swatches"],
+                        ["userColors", "data-user-color", "null", "User defined colors, comma delimited string with hex colors"],
+                        ["returnValueType", "data-return-value-type", "hex", "Type for returned value, can be hex, rgb, rgba, hsl, hsla, hsv"],
+                        ["returnAsString", "data-return-as-string", "false", "If true, value returns as composite string hex(), rgb(), rgba(), hsl(), hsla(), hsv()"],
+                        ["showValues", "data-show-values", "string", "Default is a comma delimited string hex, rgb, rgba, hsl, hsla, hsv"],
+                        ["showAsString", "data-show-as-string", "null", "You can define, who is displayed as composite string. Can be: hex, rgb, rgba, hsl, hsla, hsv"],
+                        ["showUserColors", "data-show-user-colors", "true", "Show/hide user colors block"],
+                        ["target", "data-target", "null", "DOMSelector for target object, if defined, to target will applied color to backgraund"],
+                        ["controller", "data-controller", "null", "DOMSelector for external controller, must be a text input"],
+                        ["addUserColorTitle", "data-add-user-color-title", "", ""],
+                        ["userColorsTitle", "data-user-colors-title", "", ""],
+                        ["hslMode", "data-hsl-mode", "string", "<code>percent</code> or <code>double</code>, default <code>percent</code>"],
+                        ["showAlphaChannel", "data-show-alpha-channel", "true", "Show/hide alpha channel controller"],
+                        ["inputThreshold", "data-input-threshold", "300", "Threshold interval in ms for edit values"],
+                        ["initColor", "data-init-color", "null", "Init color, if defined, value must be a valid string color value"],
+                        ["readonlyInput", "data-readonly-input", "false", "If true, all inputs will have a readonly state"],
+                        ["clsSelector", "data-cls-selector", "", ""],
+                        ["clsSwatches", "data-cls-swatches", "", ""],
+                        ["clsSwatch", "data-cls-swatch", "", ""],
+                        ["clsValue", "data-cls-value", "", ""],
+                        ["clsLabel", "data-cls-label", "", ""],
+                        ["clsInput", "data-cls-input", "", ""],
+                        ["clsUserColorButton", "data-cls-user-color-button", "", ""],
+                        ["clsUserColors", "data-cls-user-colors", "", ""],
+                        ["clsUserColorsTitle", "data-cls-user-colors-title", "", ""],
+                        ["clsUserColor", "data-cls-user-color", "", ""],
+                        ["onColor", "data-on-color", "Metro.noop", "Event fired when user pick a color"],
+                        ["onColorSelectorCreate", "data-on-color-selector-create", "Metro.noop", "Event fired when selector was created"]
+                    ];
+                </script>
+                <table class="table cell-border table-border options-table"
+                       data-role="table"
+                       data-horizontal-scroll="true"
+                       data-head="optionsTableHeader"
+                       data-body="optionsData"
+                       data-static="true"
+                ></table>
+
+            </main>
+        </div>
+
+    </div>
+
+    <script src="docsearch/docsearch.min.js"></script>
+    <script src="js/defines.js"></script>
+    <script src="metro/js/metro.js?ver=@@b-version"></script>
+    <script src="highlight/highlight.pack.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/site.js"></script>
+    <!-- ads-script -->
+    <!-- ga-script -->
+    <!-- umami -->
+</body>
+</html>
