@@ -36,24 +36,24 @@ module.exports = function(grunt) {
             adsense: {
                 options: {
                     patterns: [
-                        {
-                            match: /<!-- ads-html -->/g,
-                            replacement: ''+
-                                '<!-- Metro UI - Responsive 1 -->\n' +
-                                '<ins class="adsbygoogle"\n' +
-                                '     style="display:block"\n' +
-                                '     data-ad-client="ca-pub-1632668592742327"\n' +
-                                '     data-ad-slot="8347181909"\n' +
-                                '     data-ad-format="auto"' +
-                                '     data-full-width-responsive="true"></ins>\n' +
-                                '<script>\n' +
-                                '(adsbygoogle = window.adsbygoogle || []).push({});\n' +
-                                '</script>'
-                        },
-                        {
-                            match: /<!-- ads-script -->/g,
-                            replacement: '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>'
-                        },
+                        // {
+                        //     match: /<!-- ads-html -->/g,
+                        //     replacement: ''+
+                        //         '<!-- Metro UI - Responsive 1 -->\n' +
+                        //         '<ins class="adsbygoogle"\n' +
+                        //         '     style="display:block"\n' +
+                        //         '     data-ad-client="ca-pub-1632668592742327"\n' +
+                        //         '     data-ad-slot="8347181909"\n' +
+                        //         '     data-ad-format="auto"' +
+                        //         '     data-full-width-responsive="true"></ins>\n' +
+                        //         '<script>\n' +
+                        //         '(adsbygoogle = window.adsbygoogle || []).push({});\n' +
+                        //         '</script>'
+                        // },
+                        // {
+                        //     match: /<!-- ads-script -->/g,
+                        //     replacement: '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>'
+                        // },
                         {
                             match: /<!-- ga-script -->/g,
                             replacement: '<!-- Global site tag (gtag.js) - Google Analytics -->\n' +
