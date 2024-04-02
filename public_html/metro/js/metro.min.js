@@ -1,6 +1,6 @@
 /*
  * Metro 4 Components Library v4.5.0  (https://metroui.org.ua)
- * Copyright 2012-2021 Sergey Pimenov
+ * Copyright 2012-2021 Serhii Pimenov
  * Built at 14/03/2021 18:52:12
  * Licensed under MIT
  */

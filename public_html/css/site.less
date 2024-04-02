@@ -1,6 +1,27 @@
-@import "../../../Metro4-Core/source/include/vars";
-@import "../../../Metro4-Core/source/include/mixins";
+@import "../../../Metro4/source/include/vars";
+@import "../../../Metro4/source/include/mixins";
+:root {
+    --brand-color: #067bb6;
+    --brand-color3: #05496b;
+    --brand-color2: #ade2ff;
+}
 
+.fg-brand {
+    color: var(--brand-color) !important;
+}
+.bg-brand {
+    background: var(--brand-color) !important;
+}
+.bd-brand {
+    border-color: var(--brand-color) !important;
+}
+.bg-brand-dark {
+    background: var(--brand-color3) !important;
+}
+
+.accent-color {
+    color: var(--brand-color) !important;
+}
 #spider-navigator {
     height: 1px;
     visibility: hidden;
@@ -292,9 +313,9 @@ footer {
         cursor: pointer;
         &:hover {
             background-color: @cyan;
-            color: @white;
+            color: #fff;
             [class*=mif-] {
-                color: @white;
+                color: #fff;
             }
         }
     }
@@ -691,4 +712,8 @@ h1 + .text-leader {
 
 main {
     overflow: hidden;
+}
+
+.sidebar {
+    overflow: visible!important;
 }

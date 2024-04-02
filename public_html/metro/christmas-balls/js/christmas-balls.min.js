@@ -1,6 +1,6 @@
 /*!
  * Christmas Balls - A Metro 4 Component v1.0.0  (https://github.com/olton/christmas-balls.git)
- * Copyright 2020 Sergey Pimenov
+ * Copyright 2020 Serhii Pimenov
  * Built at 24/12/2020 17:28:37
  * Licensed under MIT
  !*/

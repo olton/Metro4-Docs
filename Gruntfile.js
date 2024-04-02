@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                     patterns: [
                         {
                             match: /<!-- ads-html -->/g,
-                            replacement: '\n' +
+                            replacement: ''+
                                 '<!-- Metro UI - Responsive 1 -->\n' +
                                 '<ins class="adsbygoogle"\n' +
                                 '     style="display:block"\n' +
@@ -57,13 +57,13 @@ module.exports = function(grunt) {
                         {
                             match: /<!-- ga-script -->/g,
                             replacement: '<!-- Global site tag (gtag.js) - Google Analytics -->\n' +
-                                <!-- Global site tag (gtag.js) - Google Analytics -->
+                                `<!-- Global site tag (gtag.js) - Google Analytics -->\n`+
                                 `<script async src="https://www.googletagmanager.com/gtag/js?id=G-VXGQBLEBHH"></script>
                                 <script>
                                     window.dataLayer = window.dataLayer || [];
                                     function gtag(){dataLayer.push(arguments);}
                                     gtag('js', new Date());
-        
+
                                     gtag('config', 'G-VXGQBLEBHH');
                                 </script>`
                         },

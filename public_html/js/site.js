@@ -33,23 +33,23 @@ $(function() {
         }
     });
 
-    $(window).on("adblock-alert", function(){
-        setTimeout(function(){
-            Metro.createToast(
-                "<span class='text-leader'>At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker and support Metro 4!</span>" +
-                "<br>"+
-                "<br>"+
-                "By the way, this block is shown by the built-in Metro 4 function! ",
-                null, null, "alert",
-                {
-                    showTop: true,
-                    distance: 60,
-                    timeout: 10000
-                }
-            );
-        }, 2000);
-    })
+    // $(window).on("adblock-alert", function(){
+    //     setTimeout(function(){
+    //         Metro.createToast(
+    //             "<span class='text-leader'>At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker and support Metro 4!</span>" +
+    //             "<br>"+
+    //             "<br>"+
+    //             "By the way, this block is shown by the built-in Metro 4 function! ",
+    //             null, null, "alert",
+    //             {
+    //                 showTop: true,
+    //                 distance: 60,
+    //                 timeout: 10000
+    //             }
+    //         );
+    //     }, 2000);
+    // })
 
-    $("html").addClass("scrollbar-type-1 sb-red");
+    $("html").addClass("scrollbar-type-1 sb-cyan");
 });
 

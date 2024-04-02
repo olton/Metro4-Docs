@@ -1,3 +1,23 @@
+:root {
+  --brand-color: #067bb6;
+  --brand-color3: #05496b;
+  --brand-color2: #ade2ff;
+}
+.fg-brand {
+  color: var(--brand-color) !important;
+}
+.bg-brand {
+  background: var(--brand-color) !important;
+}
+.bd-brand {
+  border-color: var(--brand-color) !important;
+}
+.bg-brand-dark {
+  background: var(--brand-color3) !important;
+}
+.accent-color {
+  color: var(--brand-color) !important;
+}
 #spider-navigator {
   height: 1px;
   visibility: hidden;
@@ -264,10 +284,10 @@ footer p a {
 }
 .icon-list li:hover {
   background-color: #1ba1e2;
-  color: #ffffff;
+  color: #fff;
 }
 .icon-list li:hover [class*=mif-] {
-  color: #ffffff;
+  color: #fff;
 }
 .icon-list [class*=mif-] {
   font-size: 2em !important;
@@ -591,4 +611,7 @@ h1 + .text-leader {
 }
 main {
   overflow: hidden;
+}
+.sidebar {
+  overflow: visible!important;
 }

@@ -4,7 +4,9 @@
   "description": "Documentation for Metro 4",
   "main": "Gruntfile.js",
   "scripts": {
-    "build": "npm install && grunt",
+    "clear": "shx rm -rf build/*",
+    "build": "npm run clear && npm install && grunt",
+    "deploy": "npm run build && grunt --gruntfile Deploy.js",
     "cy:test": "cypress open",
     "cy:run": "cypress run",
     "start": "http-server ./public_html -c-1 -s",
@@ -42,7 +44,8 @@
     "http-server": "0.12.3",
     "load-grunt-tasks": "^5.1.0",
     "start-server-and-test": "^1.11.0",
-    "time-grunt": "^2.0.0"
+    "time-grunt": "^2.0.0",
+    "shx": "^0.3.4"
   },
   "dependencies": {
     "npm-check-updates": "^7.0.1"

@@ -7,13 +7,13 @@
     <meta name="twitter:site" content="@metroui">
     <meta name="twitter:creator" content="@pimenov_sergey">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Metro 4 Components Library">
-    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta name="twitter:title" content="Metro UI Components Library">
+    <meta name="twitter:description" content="Metro UI is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
     <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
 
     <meta property="og:url" content="https://metroui.org.ua/index.html">
-    <meta property="og:title" content="Metro 4 Components Library">
-    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
+    <meta property="og:title" content="Metro UI Components Library">
+    <meta property="og:description" content="Metro UI is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins  .">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
     <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
@@ -21,19 +21,19 @@
     <meta property="og:image:width" content="968">
     <meta property="og:image:height" content="504">
 
-    <meta name="author" content="Sergey Pimenov">
+    <meta name="author" content="Serhii Pimenov">
     <meta name="description" content="The most popular HTML, CSS, and JS library in Metro style.">
     <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
+    <link href="metro/metro.css" rel="stylesheet">
     <link href="highlight/styles/github.css" rel="stylesheet">
-    <link href="docsearch/docsearch.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"/>
     <link href="css/site.css" rel="stylesheet">
 
-    <title>Sidebar - Metro 4 :: Popular HTML, CSS and JS library</title>
+    <title>Sidebar - Metro UI :: Popular HTML, CSS and JS library</title>
 </head>
 <body class="m4-cloak">
 
@@ -86,7 +86,7 @@
                 <p>
                     Often you can see the component that hides on the side of the content and contains a menu and is displayed on demand.
                     Such a component is called a sidebar.
-                    You can create it with Metro 4 <code>sidebar</code> component.
+                    You can create it with Metro UI <code>sidebar</code> component.
                 </p>
                 <div class="example p-0 no-overflow" style="height: 400px;">
                     <aside class="sidebar pos-absolute open z-2" data-role="sidebar" data-toggle="#sidebar-toggle" id="sb1">
@@ -95,8 +95,8 @@
                             <div class="avatar">
                                 <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
                             </div>
-                            <span class="title fg-white">Metro 4 Components Library</span>
-                            <span class="subtitle fg-white"> 2018 &copy; Sergey Pimenov</span>
+                            <span class="title fg-white">Metro UI Components Library</span>
+                            <span class="subtitle fg-white"> 2018 &copy; Serhii Pimenov</span>
                         </div>
                         <ul class="sidebar-menu">
                             <li><a><span class="mif-home icon"></span>Home</a></li>
@@ -152,8 +152,8 @@
                             <div class="avatar">
                                 <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
                             </div>
-                            <span class="title fg-white" style="font-size: 18px; font-weight: 100">Metro 4 Components Library</span>
-                            <span class="subtitle fg-white"> 2018 &copy; Sergey Pimenov</span>
+                            <span class="title fg-white" style="font-size: 18px; font-weight: 100">Metro UI Components Library</span>
+                            <span class="subtitle fg-white"> 2018 &copy; Serhii Pimenov</span>
                         </div>
                     </aside>
                 </div>
@@ -166,8 +166,8 @@
                         &lt;div class="avatar"&gt;
                             &lt;img data-role="gravatar" data-email="sergey@pimenov.com.ua"&gt;
                         &lt;/div&gt;
-                        &lt;span class="title"&gt;Metro 4 Components Library&lt;/span&gt;
-                        &lt;span class="subtitle"&gt; 2018 &copy; Sergey Pimenov&lt;/span&gt;
+                        &lt;span class="title"&gt;Metro UI Components Library&lt;/span&gt;
+                        &lt;span class="subtitle"&gt; 2018 &copy; Serhii Pimenov&lt;/span&gt;
                     &lt;/div&gt;
                 </code></pre>
 
@@ -249,7 +249,7 @@
                 <p>
                     You can set sidebar <code>toggle</code> with special attribute <code>data-toggle="..."</code>.
                     Value for this attribute must be a valid element selector <code>id</code> or <code>class</code>.
-                    For sidebar toggle Metro 4 bind click event, who toggle sidebar state.
+                    For sidebar toggle Metro UI bind click event, who toggle sidebar state.
                 </p>
                 <div class="example p-0 no-overflow" style="height: 400px;">
                     <aside class="sidebar pos-absolute z-2" data-role="sidebar" data-toggle="#sidebar-toggle-2">
@@ -257,8 +257,8 @@
                             <div class="avatar">
                                 <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
                             </div>
-                            <span class="title fg-white" style="font-size: 18px; font-weight: 100">Metro 4 Components Library</span>
-                            <span class="subtitle fg-white"> 2018 &copy; Sergey Pimenov</span>
+                            <span class="title fg-white" style="font-size: 18px; font-weight: 100">Metro UI Components Library</span>
+                            <span class="subtitle fg-white"> 2018 &copy; Serhii Pimenov</span>
                         </div>
                         <ul class="sidebar-menu">
                             <li><a><span class="mif-home icon"></span>Home</a></li>
@@ -281,8 +281,8 @@
                             &lt;div class="avatar"&gt;
                                 &lt;img data-role="gravatar" data-email="sergey@pimenov.com.ua"&gt;
                             &lt;/div&gt;
-                            &lt;span class="title fg-white"&gt;Metro 4 Components Library&lt;/span&gt;
-                            &lt;span class="subtitle fg-white"&gt; 2018 &copy; Sergey Pimenov&lt;/span&gt;
+                            &lt;span class="title fg-white"&gt;Metro UI Components Library&lt;/span&gt;
+                            &lt;span class="subtitle fg-white"&gt; 2018 &copy; Serhii Pimenov&lt;/span&gt;
                         &lt;/div&gt;
                         &lt;ul class="sidebar-menu"&gt;
                             &lt;li&gt;&lt;a&gt;&lt;span class="mif-home icon"&gt;&lt;/span&gt;Home&lt;/a&gt;&lt;/li&gt;
@@ -310,8 +310,8 @@
                             <div class="avatar">
                                 <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
                             </div>
-                            <span class="title fg-white">Metro 4 Components Library</span>
-                            <span class="subtitle fg-white"> 2018 &copy; Sergey Pimenov</span>
+                            <span class="title fg-white">Metro UI Components Library</span>
+                            <span class="subtitle fg-white"> 2018 &copy; Serhii Pimenov</span>
                         </div>
                         <ul class="sidebar-menu">
                             <li><a><span class="mif-home icon"></span>Home</a></li>
@@ -349,8 +349,8 @@
                             &lt;div class="avatar"&gt;
                                 &lt;img data-role="gravatar" data-email="sergey@pimenov.com.ua"&gt;
                             &lt;/div&gt;
-                            &lt;span class="title fg-white"&gt;Metro 4 Components Library&lt;/span&gt;
-                            &lt;span class="subtitle fg-white"&gt; 2018 &copy; Sergey Pimenov&lt;/span&gt;
+                            &lt;span class="title fg-white"&gt;Metro UI Components Library&lt;/span&gt;
+                            &lt;span class="subtitle fg-white"&gt; 2018 &copy; Serhii Pimenov&lt;/span&gt;
                         &lt;/div&gt;
                         &lt;ul class="sidebar-menu"&gt;
                             &lt;li&gt;&lt;a&gt;&lt;span class="mif-home icon"&gt;&lt;/span&gt;Home&lt;/a&gt;&lt;/li&gt;
@@ -396,8 +396,8 @@
                             <div class="avatar">
                                 <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
                             </div>
-                            <span class="title fg-white">Metro 4 Components Library</span>
-                            <span class="subtitle fg-white"> 2018 &copy; Sergey Pimenov</span>
+                            <span class="title fg-white">Metro UI Components Library</span>
+                            <span class="subtitle fg-white"> 2018 &copy; Serhii Pimenov</span>
                         </div>
                         <ul class="sidebar-menu">
                             <li><a><span class="mif-home icon"></span>Home</a></li>
@@ -433,8 +433,8 @@
                             &lt;div class="avatar"&gt;
                                 &lt;img data-role="gravatar" data-email="sergey@pimenov.com.ua"&gt;
                             &lt;/div&gt;
-                            &lt;span class="title fg-white"&gt;Metro 4 Components Library&lt;/span&gt;
-                            &lt;span class="subtitle fg-white"&gt; 2018 &copy; Sergey Pimenov&lt;/span&gt;
+                            &lt;span class="title fg-white"&gt;Metro UI Components Library&lt;/span&gt;
+                            &lt;span class="subtitle fg-white"&gt; 2018 &copy; Serhii Pimenov&lt;/span&gt;
                         &lt;/div&gt;
                         &lt;ul class="sidebar-menu"&gt;
                             &lt;li&gt;&lt;a&gt;&lt;span class="mif-home icon"&gt;&lt;/span&gt;Home&lt;/a&gt;&lt;/li&gt;
@@ -589,7 +589,7 @@
 
                 <h3 id="_sidebar_object">Sidebar object</h3>
                 <p>
-                    Metro 4 contains special object <code>Metro.sidebar</code> to manipulate <code>Sidebars</code>.
+                    Metro UI contains special object <code>Metro.sidebar</code> to manipulate <code>Sidebars</code>.
                     This object contains next methods:
                 </p>
                 <ul>
@@ -604,10 +604,8 @@
 
     </div>
 
-    <script src="docsearch/docsearch.min.js"></script>
 
-
-    <script src="metro/js/metro.js?ver=@@b-version"></script>
+    <script src="metro/metro.js"></script>
     <script src="highlight/highlight.pack.js"></script>
     <script src="js/clipboard.min.js"></script>
     <script src="js/site.js"></script>

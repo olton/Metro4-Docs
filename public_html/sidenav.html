@@ -1,4 +1,5 @@
 <nav id="doc-nav" class="pt-1" data-role="collapse" data-toggle-element="#doc-nav-toggle">
+    <div id="algolia-search"></div>
     <div class="doc-nav-item d-block d-none-md">
         <a href="index.html">General</a>
         <ul class="">
@@ -227,11 +228,8 @@
             dur: 500
         });
     });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"
+        onload="docsearch({appId: '90CHSLCJTV',apiKey: 'c0207161474ce182d44c10f16181304e',indexName: 'metroui-org',container: '#algolia-search',debug: false});">
 
-    if (Metro.utils.detectIE() !== 11 && docsearch) docsearch({
-        apiKey: '00a53b92ba6ed063bec0a9320e60d4e6',
-        indexName: 'metroui',
-        inputSelector: '#search_input',
-        debug: false
-    });
 </script>

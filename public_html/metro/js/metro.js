@@ -1,6 +1,6 @@
 /*
- * Metro 4 Components Library v4.5.0  (https://metroui.org.ua)
- * Copyright 2012-2021 Sergey Pimenov
+ * Metro UI Components Library v4.5.0  (https://metroui.org.ua)
+ * Copyright 2012-2021 Serhii Pimenov
  * Built at 14/03/2021 18:52:12
  * Licensed under MIT
  */
@@ -397,7 +397,8 @@
             return fnFormat.bind(this)(result, locale)
         }
     });
-}());(function() {
+}());
+(function() {
     'use strict';
 
     Datetime.use({
@@ -1389,7 +1390,7 @@
     }
 }());
 
-/*! 
+/*!
  * Cake string library 1.0.0
  * https://github.com/olton/cake
  *
@@ -5175,7 +5176,7 @@ $.fn.extend({
                 });
             } else {
                 el.setAttribute(name, val);
-                // 
+                //
             }
         });
     },
@@ -8192,9 +8193,9 @@ $.noConflict = function() {
                     "Sij", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"
                 ],
                 "days": [
-                    "Nedjelja","Ponedjeljak","Utorak", "Srijeda", "Četvrtak", "Petak", "Subota",  
-                    "Ne","Po", "Ut", "Sr", "Če", "Pe", "Su", 
-                    "Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub" 
+                    "Nedjelja","Ponedjeljak","Utorak", "Srijeda", "Četvrtak", "Petak", "Subota",
+                    "Ne","Po", "Ut", "Sr", "Če", "Pe", "Su",
+                    "Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"
                 ],
                 "time": {
                     "days": "DANI",

@@ -7,13 +7,13 @@
     <meta name="twitter:site" content="@metroui">
     <meta name="twitter:creator" content="@pimenov_sergey">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Metro 4 Components Library">
-    <meta name="twitter:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.">
+    <meta name="twitter:title" content="Metro UI Components Library">
+    <meta name="twitter:description" content="Metro UI is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.">
     <meta name="twitter:image" content="https://metroui.org.ua/images/m4-logo-social.png">
 
     <meta property="og:url" content="https://metroui.org.ua/index.html">
-    <meta property="og:title" content="Metro 4 Components Library">
-    <meta property="og:description" content="Metro 4 is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.">
+    <meta property="og:title" content="Metro UI Components Library">
+    <meta property="og:description" content="Metro UI is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://metroui.org.ua/images/m4-logo-social.png">
     <meta property="og:image:secure_url" content="https://metroui.org.ua/images/m4-logo-social.png">
@@ -21,19 +21,19 @@
     <meta property="og:image:width" content="968">
     <meta property="og:image:height" content="504">
 
-    <meta name="author" content="Sergey Pimenov">
-    <meta name="description" content="Are you tired of Bootstrap? Get started with Metro 4, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page.">
+    <meta name="author" content="Serhii Pimenov">
+    <meta name="description" content="Are you tired of Bootstrap? Get started with Metro UI, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page.">
     <meta name="keywords" content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <link href="metro/css/metro-all.css?ver=@@b-version" rel="stylesheet">
+    <link href="metro/metro.css" rel="stylesheet">
     <link href="highlight/styles/github.css" rel="stylesheet">
-    <link href="docsearch/docsearch.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"/>
     <link href="css/site.css" rel="stylesheet">
 
-    <title>Including Metro 4 in your page</title>
+    <title>Including Metro UI in your page</title>
 </head>
 <body class="m4-cloak">
 
@@ -60,7 +60,7 @@
                     <img src="images/logo.png" class="w-100" alt="">
                 </div>
 
-                <h1>Including Metro 4</h1>
+                <h1>Including Metro UI</h1>
 
                 <!-- ads-html -->
 
@@ -83,12 +83,12 @@
                     Begin from <code>4.3.3</code>, you can include <code>metro.js</code> in <code>head</code> of your page or before closing tag <code>&lt;/body&gt;</code>.
                 </p>
                 <p>
-                    Begin from 4.3.3, Metro 4 initialized after page content was loaded. You can change this behavior with special meta tag <code>metro4:init:mode</code>.
+                    Begin from 4.3.3, Metro UI initialized after page content was loaded. You can change this behavior with special meta tag <code>metro4:init:mode</code>.
                     This tag can have a one of next values:
                 </p>
                 <ul>
-                    <li><code>contentloaded</code> (default) - Metro 4 initialized after content was loaded</li>
-                    <li><code>immediate</code> - Metro 4 initialized immediate after <code>metro.js</code> was loaded</li>
+                    <li><code>contentloaded</code> (default) - Metro UI initialized after content was loaded</li>
+                    <li><code>immediate</code> - Metro UI initialized immediate after <code>metro.js</code> was loaded</li>
                 </ul>
 
                 <pre><code>
@@ -116,9 +116,9 @@
                     &lt;/body&gt;
                 </code></pre>
 
-                <h3 id="_manual_init">Manual Metro 4 initialization</h3>
+                <h3 id="_manual_init">Manual Metro UI initialization</h3>
                 <p>
-                    By default, Metro 4 initiated automatically. You can disable this behavior and init manual Metro 4 with special meta tag <code>metro4:init</code> and method <code>Metro.init()</code>.
+                    By default, Metro UI initiated automatically. You can disable this behavior and init manual Metro UI with special meta tag <code>metro4:init</code> and method <code>Metro.init()</code>.
                     To disable auto init, you must add to page <code>head</code> meta tag <code>&lt;meta name="metro4:init" content="false"&gt;</code> and call method <code>Metro.init()</code> where you need it.
                 </p>
 
@@ -150,10 +150,7 @@
 
     </div>
 
-    <script src="docsearch/docsearch.min.js"></script>
-
-
-    <script src="metro/js/metro.js?ver=@@b-version"></script>
+    <script src="metro/metro.js"></script>
     <script src="highlight/highlight.pack.js"></script>
     <script src="js/clipboard.min.js"></script>
     <script src="js/site.js"></script>
