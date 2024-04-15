@@ -80,7 +80,7 @@ module.exports = function(grunt) {
                                     window.addEventListener("load", () => {
                                         setTimeout(()=>{
                                             docsearch({
-                                              container: '#algolia-search',
+                                              container: '#docsearch',
                                               appId: '90CHSLCJTV',
                                               indexName: 'metroui-org',
                                               apiKey: 'c0207161474ce182d44c10f16181304e',
