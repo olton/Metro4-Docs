@@ -73,7 +73,23 @@ module.exports = function(grunt) {
                         },
                         {
                             match: /<!-- umami -->/g,
-                            replacement: `<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3" onload="docsearch({appId: '90CHSLCJTV',apiKey: 'c0207161474ce182d44c10f16181304e',indexName: 'metroui-org',container: '#algolia-search',debug: false});"></script>`
+                            replacement: `
+                                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+                                <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
+                                <script>
+                                    window.addEventListener("load", () => {
+                                        setTimeout(()=>{
+                                            docsearch({
+                                              container: '#algolia-search',
+                                              appId: '90CHSLCJTV',
+                                              indexName: 'metroui-org',
+                                              apiKey: 'c0207161474ce182d44c10f16181304e',
+                                            });
+                                        }, 1000)
+                                    })
+                                </script>
+                            `
+                            // <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3" onload="docsearch({appId: '90CHSLCJTV',apiKey: 'c0207161474ce182d44c10f16181304e',indexName: 'metroui-org',container: '#algolia-search',debug: false});"></script>
                         },
                     ]
                 },
