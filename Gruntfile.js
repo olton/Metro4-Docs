@@ -7,6 +7,7 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        alg: grunt.file.readJSON('.ftpauth')["algolia"],
 
         clean: {
             build: ['build']
@@ -81,9 +82,9 @@ module.exports = function(grunt) {
                                         setTimeout(()=>{
                                             docsearch({
                                               container: '#docsearch',
-                                              appId: '3YA8D73J2D',
-                                              indexName: 'metroui',
-                                              apiKey: '9f2ac6585d9604329a7a2263441047a1',
+                                              appId: alg.appId,
+                                              indexName: alg.indexName,
+                                              apiKey: alg.apiKey,
                                             });
                                         }, 1000)
                                     })
