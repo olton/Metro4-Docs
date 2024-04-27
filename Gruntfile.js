@@ -81,9 +81,9 @@ module.exports = function(grunt) {
                                         setTimeout(()=>{
                                             docsearch({
                                               container: '#docsearch',
-                                              appId: '90CHSLCJTV',
-                                              indexName: 'metroui-org',
-                                              apiKey: 'c0207161474ce182d44c10f16181304e',
+                                              appId: '3YA8D73J2D',
+                                              indexName: 'metroui',
+                                              apiKey: '9f2ac6585d9604329a7a2263441047a1',
                                             });
                                         }, 1000)
                                     })
