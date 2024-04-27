@@ -42,8 +42,7 @@ body {
   background-size: contain;
 }
 .presenta-box {
-  -webkit-box-shadow: 2px 2px 10px #ffd2d2;
-          box-shadow: 2px 2px 10px #ffd2d2;
+  box-shadow: 2px 2px 10px #ffd2d2;
 }
 .features {
   padding: 60px 0;
@@ -62,8 +61,7 @@ body {
   background-size: contain;
 }
 .shadowed {
-  -webkit-box-shadow: 2px 2px 20px #ffd2d2;
-          box-shadow: 2px 2px 20px #ffd2d2;
+  box-shadow: 2px 2px 20px #ffd2d2;
 }
 .pandora .button {
   border-radius: 50px;
@@ -82,12 +80,8 @@ footer a:hover {
   color: #c9c9c9;
 }
 .special-thanks {
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
 .special-thanks [class*=cell-] {
   text-align: center;
@@ -114,24 +108,16 @@ footer a:hover {
   max-height: 260px;
   overflow: hidden;
   border-radius: 4px;
-  -webkit-box-shadow: 2px 2px 10px #a9a4a4;
-          box-shadow: 2px 2px 10px #a9a4a4;
-  -webkit-transition: -webkit-transform 0.1s linear;
-  transition: -webkit-transform 0.1s linear;
-  -o-transition: transform 0.1s linear;
+  box-shadow: 2px 2px 10px #a9a4a4;
   transition: transform 0.1s linear;
-  transition: transform 0.1s linear, -webkit-transform 0.1s linear;
   z-index: 0;
 }
 .work-box:hover {
-  -webkit-transform: scale(1.2);
-      -ms-transform: scale(1.2);
-          transform: scale(1.2);
+  transform: scale(1.2);
   z-index: 1;
 }
 .buy-me-coffee > div {
-  -webkit-box-shadow: inset 2px 2px 20px #ffd2d2;
-          box-shadow: inset 2px 2px 20px #ffd2d2;
+  box-shadow: inset 2px 2px 20px #ffd2d2;
   background: #faf5f5;
 }
 .buy-me-coffee > div img {
@@ -143,3 +129,4 @@ footer a:hover {
 .google-auto-placed {
   display: none!important;
 }
+/*# sourceMappingURL=site2.css.map */

@@ -4,9 +4,7 @@
   "description": "Documentation for Metro 4",
   "main": "Gruntfile.js",
   "scripts": {
-    "clear": "shx rm -rf build/*",
-    "build": "npm run clear && npm install && grunt",
-    "deploy": "npm run build && grunt --gruntfile Deploy.js",
+    "build": "npm install && grunt",
     "cy:test": "cypress open",
     "cy:run": "cypress run",
     "start": "http-server ./public_html -c-1 -s",
@@ -31,23 +29,20 @@
     "last 3 version"
   ],
   "devDependencies": {
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^9.8.4",
     "autoprefixer-core": "^6.0.1",
-    "cypress": "^13.8.1",
-    "grunt": "^1.6.1",
-    "grunt-contrib-clean": "^2.0.1",
+    "cypress": "^4.9.0",
+    "grunt": "^1.1.0",
+    "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-ftp-push": "^1.2.1",
     "grunt-postcss": "^0.9.0",
-    "grunt-replace": "^2.0.2",
-    "grunt-shell": "^4.0.0",
-    "http-server": "14.1.1",
+    "grunt-replace": "^1.0.1",
+    "grunt-shell": "^3.0.1",
+    "http-server": "0.12.3",
     "load-grunt-tasks": "^5.1.0",
-    "start-server-and-test": "^2.0.3",
+    "start-server-and-test": "^1.11.0",
     "time-grunt": "^2.0.0",
-    "shx": "^0.3.4"
-  },
-  "dependencies": {
-    "npm-check-updates": "^16.14.20"
+    "npm-check-updates": "^7.0.1"
   }
 }
