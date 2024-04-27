@@ -82,9 +82,9 @@ module.exports = function(grunt) {
                                         setTimeout(()=>{
                                             docsearch({
                                               container: '#docsearch',
-                                              appId: alg.appId,
-                                              indexName: alg.indexName,
-                                              apiKey: alg.apiKey,
+                                              appId: '<%= alg.appId %>',
+                                              indexName: '<%= alg.indexName %>',
+                                              apiKey: '<%= alg.apiKey %>',
                                             });
                                         }, 1000)
                                     })
