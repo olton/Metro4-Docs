@@ -27,438 +27,209 @@
     <meta name="description"
           content="Are you tired of Bootstrap? Get started with Metro UI, the popular framework for building responsive, mobile-first sites in Metro style, with the Metro CDN and a template starter page. The most popular HTML, CSS, and JS library in Metro style.">
     <meta name="keywords"
-          content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework">
+          content="HTML, CSS, JS, Metro, CSS3, Javascript, HTML5, UI, Library, Web, Development, Framework, Bootstrap, jQuery">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"/>
     <link href="https://cdn.metroui.org.ua/current/metro.css" rel="stylesheet">
-    <link href="highlight/styles/github.css" rel="stylesheet">
-    <link href="css/site2.css" rel="stylesheet">
+    <link href="https://cdn.metroui.org.ua/current/icons.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
 
     <title>Metro UI - Popular HTML, CSS and JS library</title>
 
 </head>
 <body class="m4-cloak" style="padding-top: 52px">
-<div class="container-fluid pos-fixed fixed-top z-top bg-red fg-white" id="header" data-role="gradient-box" data-gradient-colors="#c90230, #870007">
-    <header class="app-bar container bg-transparent pos-relative" data-role="app-bar" data-on-before-menu-open="appBarMenuOpen" data-on-menu-close="appBarMenuClose" data-expand-point="md" data-on-media-point="headerMediaPoint">
-        <a href="index.html" class="brand no-hover text-bold">METRO_UI</a>
-        <ul class="app-bar-menu ml-auto text-upper">
-            <li><a href="intro.html" class="app-bar-item">Get Started</a></li>
-            <li><a href="m4q-about.html" class="app-bar-item">Components</a></li>
-            <li><a href="examples.html" class="app-bar-item">Examples</a></li>
-<!--            <li><a href="support.html" class="app-bar-item text-bold fg-yellow">Support</a></li>-->
-        </ul>
-    </header>
-</div>
 
-<div class="container-fluid hero-wrapper">
-    <div class="container new-hero-container">
-        <div class="row">
-            <div class="cell-lg-6 order-2 order-lg-1">
-                <div class="new-hero text-center text-left-lg">
-                    <div class="display2 fg-dark text-bold" style="line-height: 1">
-                        <span class="reduce-2">Create your site quickly and effectively with Metro UI</span>
-                    </div>
+<nav data-role="appbar" data-expand-point="md">
+    <a class="brand no-hover text-bold">
+        <span>METRO UI</span>
+    </a>
 
-                    <div class="text-leader2 mt-4 mb-4">
-                        Metro UI is a free open-source impressive components library
-                        built on html, css, javascript.
-                    </div>
+    <ul class="app-bar-menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="m4q-about.html">Docs</a></li>
+        <li><a href="examples.html">Examples</a></li>
+        <li><a href="icons.html">Icons</a></li>
+        <li><a href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
+    </ul>
 
-                    <div class="mt-8">
-                        <a href="intro.html" class="button get-started-button large"><span class="ml-4 mr-4">Get Started</span></a>
-                        <a href="https://github.com/olton/Metro-UI-CSS" class="mt-2 mt-0-sm button download-source-button large"><span class="ml-4 mr-4">Download Source</span></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cell-lg-6 order-1 order-lg-2">
-                <img src="images/web_development.svg" alt="web development" class="w-100 mt-12">
-            </div>
+    <div class="app-bar-container ml-auto mr-2 social-buttons">
+        <div class="app-bar-item no-hover">
+            <span class="mif-versions mr-2"></span>
+            <span>5.x</span>
         </div>
+        <a href="#" class="app-bar-item social-btn"><span class="mif-github"></span></a>
+        <a href="#" class="app-bar-item social-btn"><span class="mif-twitter"></span></a>
     </div>
-</div>
+</nav>
 
-<div class="container-fluid">
-    <div class="container pt-0 pt-20-lg">
-        <div class="d-flex flex-justify-center flex-align-center mt-6 mb-6 text-small">
-            <a href="https://github.com/olton/Metro-UI-CSS/stargazers"
-               class="enlarge-4x m-1 fg-red no-decor fg-darkRed-hover transition"><span class="mif-star-full"></span>
-                <span id="github-stars" data-role="counter" data-start-on-viewport="true">0</span></a>
-        </div>
-
-        <div class="text-center">
-            <a href="https://github.com/olton/Metro-UI-CSS/releases" class="no-decor">
-                <img alt="release-ver" class="m-1" style="border-radius: 10px;"
-                     src="https://img.shields.io/github/v/release/olton/Metro-UI-CSS?color=24285b&labelColor=d4d4d4&style=for-the-badge"/>
-            </a>
-            <a href="https://www.nuget.org/packages/Metro4/" class="no-decor">
-                <img alt="nuget-ver" class="m-1" style="border-radius: 10px;"
-                     src="https://img.shields.io/nuget/v/Metro4.svg?color=24285b&labelColor=d4d4d4&style=for-the-badge"/>
-            </a>
-            <a href="https://www.npmjs.com/package/metro4" class="no-decor">
-                <img alt="npm-ver" class="m-1" style="border-radius: 10px;"
-                     src="https://img.shields.io/npm/v/metro4?color=24285b&labelColor=d4d4d4&label=npm&style=for-the-badge"/>
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="container pt-20">
-        <!-- ads-html -->
-    </div>
-</div>
-
-<div class="container-fluid presenta">
+<section class="container-fluid">
     <div class="container">
         <div class="row">
-            <div class="cell-lg-4">
-                <div class="presenta-box bg-white d-flex flex-column flex-align-center  border border-radius-10 bd-transparent p-4 h-100">
-                    <img src="images/campaign_launch.svg" style="height: 200px;">
-                    <h3>Easy and Rocket</h3>
-                    <div class="text-center">
-                        Using Metro UI is very easy, you don't even need to know javascript to make fully functional
-                        websites that interact with the user.
+            <div class="cell-lg-2"></div>
+            <div class="cell-lg-8">
+                <div class="hero d-flex flex-column flex-justify-center flex-align-center">
+                    <div style="font-size: 180px; width: 260px; height: 260px; border-radius: 50%;" class="d-flex flex-align-center flex-justify-center border bd-white">
+                        <span class="mif-medium"></span>
                     </div>
-                    <br>
-                    <div class="mt-auto mb-4">
-                        <a href="intro.html" class="button">Get started</a>
+                    <h1 class="text-bold">Create your site fast and effectively with <span class="no-wrap">Metro UI</span></h1>
+                    <div class="text-leader2">
+                        Metro UI is a free open-source impressive html-first components library built on html, css, javascript.
                     </div>
-                </div>
-            </div>
 
-            <div class="cell-lg-4">
-                <div class="presenta-box bg-white d-flex flex-column flex-align-center  border border-radius-10 bd-transparent p-4 h-100">
-                    <img src="images/coding.svg" style="height: 200px;">
-                    <h3>Open Source</h3>
-                    <div class="text-center">
-                        Metro UI is an open source project. You can access to full source code on the GitHub and get
-                        Metro UI with free license.
+                    <div class="row mt-10 mb-4">
+                        <div class="cell-lg-1"></div>
+                        <div class="cell-lg-5">
+                            <div class="button large success w-100 rounded flex-column" style="line-height: 1" id="copyNpmInstall">
+                                <div class="mono reduce-3">$ npm i @olton/metroui</div>
+                                <div class="reduce-6 mt-1">Click to copy to clipboard</div>
+                            </div>
+                        </div>
+                        <div class="cell-lg-5">
+                            <div class="button large info w-100 rounded flex-column" style="line-height: 1" id="openDocs">
+                                <span class="mono reduce-3">Read the docs</span>
+                                <div class="reduce-6 mt-1">Click to open docs</div>
+                            </div>
+                        </div>
+                        <div class="cell-lg-1"></div>
                     </div>
-                    <br>
-                    <div class="mt-auto mb-4">
-                        <a href="https://github.com/olton/Metro-UI-CSS" class="button">Goto repository</a>
-                    </div>
-                </div>
-            </div>
 
-            <div class="cell-lg-4">
-                <div class="presenta-box bg-white d-flex flex-column flex-align-center border border-radius-10 bd-transparent p-4 h-100">
-                    <img src="images/code_development.svg" style="height: 200px;">
-                    <h3>For Developers</h3>
-                    <div class="text-center">
-                        Metro UI is accessible in various ways. You can get Metro UI from NPM, Nuget, GitHub, and GitLab.
-                    </div>
-                    <br>
-                    <div class="mt-auto mb-4">
-                        <a href="download.html" class="button">Download source</a>
+                    <div>
+                        <ul class="inline-list reduce-4 text-upper">
+                            <li><a class="fg-white no-decor " href="https://github.com/olton/Metro-UI-CSS">Fork Repo</a></li>
+                            <li>&bull;</li>
+                            <li><a class="fg-white no-decor" href="https://github.com/olton/Metro-UI-CSS/archive/refs/heads/master.zip">Download Zip</a></li>
+                            <li>&bull;</li>
+                            <li><a class="fg-white no-decor" href="https://github.com/olton/Metro-UI-CSS/discussions">Discuss</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+            <div class="cell-lg-2"></div>
         </div>
     </div>
+</section>
 
-    <div class="container pt-20 pb-20 text-center text-left-lg">
-        <div class="row">
-            <div class="cell-lg-6">
-                <img src="images/user_interface.svg" alt="checklist">
-            </div>
-            <div class="cell-lg-6">
-                <div class="display3 mt-12 fg-dark">What is it?</div>
-                <div class="text-leader21">
-                    <p>
-                        Metro UI is an open source toolkit for developing with HTML, CSS, and JS.
-                        Quickly prototype your ideas or build your entire app with responsive grid system, extensive
-                        prebuilt components, and powerful plugins.
-                    </p>
-                    <p>
-                        Metro UI developed to build websites in Windows Metro Style and include general styles, grid,
-                        layouts, typography, 100+ components and routines, 500+ built-in icons.
-                    </p>
-                    <p>
-                        Metro UI is an open-source and has an free dual licensing model.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container buy-me-coffee">
-        <div class="text-center p-10 border border-radius-10 bd-transparent shadowed">
-            <div class="h3 text-light text-center">
-                <span class="reduce-1 enlarge-1-md">
-                    Like Metro UI?
-                    <br>Buy coffee for the author or become a patron!
-                </span>
-            </div>
-
-            <br>
-
-            <a href="https://www.patreon.com/metroui" rel="nofollow" class="d-inline-block">
-                <img style="height: 38px; border-radius: 20px;" alt="patreon" src="images/become-patron.png">
-            </a>
-
-            <a class="button" target="_blank" href="https://www.buymeacoffee.com/pimenov">
-                <img style="height: 18px" src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy coffee for the author"><span class="text-bold reduce-2 text-upper ml-2">Buy coffee for the author</span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid features">
+<section class="container-fluid">
     <div class="container">
-        <div class="bg-white border border-radius-10 bd-transparent shadowed">
-            <div class="row">
-                <div class="cell-md-4">
-                    <div class="bg-white p-8 fg-dark h-100">
-                        <img src="images/css.svg" alt="css" style="height: 200px;">
-                        <h4 class="fg-dark mt-4">Base styles</h4>
-                        <p>
-                            Metro UI includes various styles for changing the appearance of html elements.
-                        </p>
-                    </div>
-                </div>
-                <div class="cell-md-4">
-                    <div class="bg-white p-8 fg-dark h-100">
-                        <img src="images/ui_design.svg" alt="css" style="height: 200px;">
-                        <h4 class="fg-dark mt-4">100+ Components</h4>
-                        <p>
-                            More than 100 HTML components are available to you to solve almost all tasks.
-                        </p>
-                    </div>
-                </div>
-                <div class="cell-md-4">
-                    <div class="bg-white p-8 fg-dark h-100">
-                        <img src="images/javascript.svg" alt="css" style="height: 200px;">
-                        <h4 class="fg-dark mt-4">Tools and Routines</h4>
-                        <p>
-                            Various built-in tool functions and classes will increase your productivity.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="cell-md-4">
-                    <div class="bg-white p-8 fg-dark h-100">
-                        <img src="images/bug_fixed.svg" alt="css" style="height: 200px;">
-                        <h4 class="fg-dark mt-4">Issues</h4>
-                        <p>
-                            Rapid response to detected bugs and their elimination.
-                        </p>
-                    </div>
-                </div>
-                <div class="cell-md-4">
-                    <div class="bg-white p-8 fg-dark h-100">
-                        <img src="images/book_lover.svg" alt="css" style="height: 200px;">
-                        <h4 class="fg-dark mt-4">Documentation</h4>
-                        <p>
-                            Detailed description of all elements of the Metro UI library.
-                        </p>
-                    </div>
-                </div>
-                <div class="cell-md-4">
-                    <div class="bg-white p-8 fg-dark h-100">
-                        <img src="images/rocket_launch.svg" alt="css" style="height: 200px;">
-                        <h4 class="fg-dark mt-4">Dependencies free</h4>
-                        <p>
-                            The Metro UI library has no dependencies and is very fast.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid pandora">
-    <div class="container pt-20 pb-20">
         <div class="row">
-            <div class="cell-lg-6 order-2 order-lg-1">
-                <div class="display3 fg-dark">Pandora - free big example!</div>
-                <div class="text-leader2">
-                    <p>
-                        <b>Pandora</b> - is a Responsive and Clean Admin Dashboard template. This template created with
-                        Metro UI with uses native classes, elements, and components. The template contains different
-                        types of reusable and professional responsive components with different variations.
-                    <p>
+            <div class="cell-lg-2"></div>
+            <div class="cell-lg-8">
+                <div class="row">
+                    <div class="cell-lg-4">
+                        <div class="card">
+                            <div class="card-header">Easy to Use</div>
+                            <div class="card-content">
+                                Using Metro UI is very easy, you don't even need to know javascript to make fully functional websites that interact with the user.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell-lg-4">
+                        <div class="card">
+                            <div class="card-header">Open Source</div>
+                            <div class="card-content">
+                                Metro UI is an open source project. You can access to full source code on the GitHub and get Metro UI with free license.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell-lg-4">
+                        <div class="card">
+                            <div class="card-header">Simple Access</div>
+                            <div class="card-content">
+                                Metro UI is accessible in various ways.
+                                You can get Metro UI from NPM, CDN, or download source from GitHub, and GitLab.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="cell-lg-6 order-1 order-lg-2">
-                <img src="https://user-images.githubusercontent.com/365108/56853343-eef5a980-692e-11e9-8613-b7e42a913383.jpg"
-                     alt="checklist">
-            </div>
-        </div>
-
-        <div class="mt-10 text-center">
-            <a href="https://themes.org.ua/pandora/" class="button warning">Open Pandora Demo</a>
-            <a href="https://github.com/olton/Pandora" class="button info">Download Source</a>
+            <div class="cell-lg-2"></div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="container-fluid">
+<section class="container-fluid">
     <div class="container">
-        <!-- ads-html -->
+        <div class="row">
+            <div class="cell-lg-2"></div>
+            <div class="cell-lg-8">
+                <div class="card">
+                    <div class="card-header">What is it?</div>
+                    <div class="card-content">
+                        Metro UI is an open source html-first toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with responsive grid system, extensive prebuilt components, and powerful plugins.
+                        <p class="mt-4">Metro UI developed to build websites in Windows Metro Style and include general styles, grid, layouts, typography, 100+ components and routines, 500+ built-in icons.
+                        <p>Metro UI is an open-source and has a free licensing model.
+                    </div>
+                </div>
+            </div>
+            <div class="cell-lg-2"></div>
+        </div>
     </div>
-</div>
+</section>
 
-<div class="container-fluid pt-20 pb-20 in-action-wrapper2">
+<section class="container-fluid mt-10 d-none">
     <div class="container">
-        <div class="h2 text-center mb-10"><span>Metro UI in action!</span></div>
+        <div class="d-flex flex-column flex-justify-center flex-align-center">
+            <div class="h1">Start at your convenience</div>
+            <div class="mb-4">
+                Use NPM package manager or include from CDN
+            </div>
 
-        <div class="row">
-            <div class="cell-md-4">
-                <div class="work-box">
-                    <a href="https://themes.org.ua/pandora"><img src="images/our-work/pandora.jpg" alt="work pandora"></a>
+            <div class="row mt-4">
+                <div class="cell-md-6">
+                    <div class="h5 mb-1">
+                        <span class="mif-view_in_ar"></span> Use NPM:
+                    </div>
+                    <div class="cell-12">
+                        <pre><code class="language-shell">$ npm install @olton/metroui</code></pre>
+                    </div>
+                    <div class="cell-12">
+                        <pre><code class="language-javascript">import "@olton/metroui/source/index.js"</code></pre>
+                    </div>
                 </div>
-            </div>
-            <div class="cell-md-4">
-                <div class="work-box">
-                    <a href="https://themes.org.ua/mirohost"><img src="images/our-work/mirohost.jpg" alt="work mirohost"></a>
-                </div>
-            </div>
-            <div class="cell-md-4">
-                <div class="work-box">
-                    <a href="https://metroui.org.ua/examples/tiles/start.html"><img src="images/our-work/start.jpg" alt="work start screen"></a>
-                </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="cell-md-4">
-                <div class="work-box">
-                    <a href="https://themes.org.ua/aistant"><img src="images/our-work/aistant.jpg" alt="work aistant"></a>
+                <div class="cell-md-6">
+                    <div class="h5 mb-1">
+                        <span class="mif-earth"></span> Use CDN:
+                    </div>
+                    <div class="cell-12">
+                    <pre><code class="language-html">
+                        &lt;link rel="stylesheet" href="https://cdn.metroui.org.ua/current/metro.css"&gt;
+                        &lt;link rel="stylesheet" href="https://cdn.metroui.org.ua/current/icons.css"&gt;
+                        ...
+                        &lt;script src="https://cdn.metroui.org.ua/current/metro.js"&gt;&lt;/script&gt;
+                    </code></pre>
+                    </div>
                 </div>
-            </div>
-            <div class="cell-md-4">
-                <div class="work-box">
-                    <a href="https://cryptoscamalert.com"><img src="images/our-work/cryptoscamalert.jpg" alt="work cryptoscamalert"></a>
-                </div>
-            </div>
-            <div class="cell-md-4">
-                <div class="work-box">
-                    <a href="https://metroui.org.ua/examples/github/github.html"><img src="images/our-work/github.jpg" alt="work github"></a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="container-fluid bg-white fg-dark bg-white">
-    <div class="container pt-10 pb-10">
-        <div class="h2 text-center"><span>Thank for technical support</span></div>
-
-        <div class="row special-thanks">
-            <div class="cell-md-2">
-                <a href="https://mirohost.net/"><img src="images/mirohost_logo.svg" alt="Mirohost.net"></a>
-            </div>
-            <div class="cell-md-2">
-                <a href="https://www.keycdn.com/"><img src="images/keycdn-logo.svg" alt="keycdn.com"></a>
-            </div>
-            <div class="cell-md-2">
-                <a href="https://www.jetbrains.com/"><img src="images/jetbrains.svg" alt="jetbrains.com"></a>
             </div>
         </div>
     </div>
-</div>
-
-<footer class="footer-bg">
-    <div class="container pt-20 pb-20">
-        <div class="text-center">
-            <ul class="inline-list reduce-1" id="social-menu">
-                <li><a class="" href="https://www.facebook.com/groups/metro4.libary/"><span class="mif-facebook"></span></a>
-                </li>
-                <li><a class="" href="https://twitter.com/MetroUI"><span class="mif-twitter"></span></a></li>
-                <li><a class="" href="#"><span class="mif-youtube"></span></a></li>
-                <li><a class="" href="https://github.com/olton/Metro-UI-CSS"><span class="mif-github"></span></a></li>
-            </ul>
-        </div>
-
-        <div class="text-center mt-10">
-            <ul class="inline-list reduce-1" id="footer-menu">
-                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">License</a></li>
-                <li><a class="" href="https://pimenov.com.ua">Author</a></li>
-                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
-                <li><a class="" href="https://github.com/olton/Metro-UI-CSS/releases">Releases</a></li>
-                <li><a class="" href="https://www.npmjs.com/package/metro4">Npm</a></li>
-                <li><a class="" href="https://www.nuget.org/packages/Metro4/">Nuget</a></li>
-            </ul>
-        </div>
-
-        <div class="text-center m-10">
-            <span class="h2"><span class="fg-cyan">Made in </span><span class="fg-yellow">Ukraine</span></span>
-        </div>
-
-        <div class="text-center mt-10 reduce-1">
-            Metro UI (Metro UI CSS) &copy; 2012-2020 by <a href="https://pimenov.com.ua" class="no-wrap">Serhii
-            Pimenov</a>.
-            <br/>
-            <span class="no-wrap">Hosting by <a class href="https://mirohost.net/">Mirohost</a>.</span>
-            <br/>
-            <span class="no-wrap">Metro CDN by <a class href="https://www.keycdn.com/">KeyCDN</a>.</span>
-            <br/>
-            <span class="no-wrap">IDE PhpStorm by <a class href="https://www.jetbrains.com/">JetBrains</a>.</span>
-            <br/>
-            Docs version <span class="docs-version">2020.1</span>. Code licensed <a class href="https://github.com/olton/Metro-UI-CSS/blob/master/LICENSE">MIT</a>,
-            docs <a class href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
-        </div>
-    </div>
-</footer>
-
+</section>
 
 <script src="https://cdn.metroui.org.ua/current/metro.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>
-    $(function(){
-        Metro.utils.github("olton/Metro-UI-CSS", function(data){
-            Metro.getPlugin("#github-stars", "counter").startInViewport(data.stargazers_count);
-        });
-    });
+    Metro.utils.cleanPreCode("pre code")
+    hljs.highlightAll()
 
-    var appBarBackground = false;
-
-    function appBarMenuOpen(menu){
-        if (!appBarBackground) $(menu).parents(".container-fluid").addClass("bg-white");
+    const copy2clipboard = function(v, cb) {
+        navigator.clipboard.writeText(v).then(function(){
+            Metro.utils.exec(cb, [v])
+        })
     }
 
-    function appBarMenuClose(menu){
-        if (!appBarBackground) $(menu).parents(".container-fluid").removeClass("bg-white");
-    }
+    $("#copyNpmInstall").on("click", () => {
+        copy2clipboard(`npm install @olton/metroui --save`, () => {
+            Metro.toast.create(`Command copied into clipboard!`)
+        })
+    })
 
-    // $(window).on("scroll", function(){
-    //     var appBar = $(".app-bar");
-    //     var h = appBar.height();
-    //     if (scrollY > h && !appBarBackground) {
-    //         appBar.parent().addClass("bg-white");
-    //         appBarBackground = true;
-    //     } else if (appBarBackground && scrollY <= h) {
-    //         appBarBackground = false;
-    //         appBar.parent().removeClass("bg-white");
-    //     }
-    // });
-
-    // $(window).on("adblock-alert", function(){
-    //     setTimeout(function(){
-    //         Metro.createToast(
-    //             "<span class='text-leader'>At the moment, advertising is almost the only source of financing for the project. Please disable ad blocker and support Metro UI!</span>" +
-    //             "<br>"+
-    //             "<br>"+
-    //             "By the way, this block is shown by the built-in Metro UI function! ",
-    //             null, null, "alert",
-    //             {
-    //                 showTop: true,
-    //                 distance: 60,
-    //                 timeout: 10000
-    //             }
-    //         );
-    //     }, 2000);
-    // });
+    $("#openDocs").on("click", () => {
+        window.location.href=`https://metroui.org.ua/m4q-about.html`
+    })
 </script>
-<!-- ads-script -->
-<!-- ga-script -->
-<!-- umami -->
 </body>
 </html>
