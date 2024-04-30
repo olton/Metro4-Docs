@@ -68,6 +68,13 @@ pre {
         border-bottom: 1px solid #686868;
     }
 
+    .card-footer {
+        border: none;
+        display: flex;
+        justify-content: flex-start;
+        padding: 0 10px 0 10px;
+    }
+
     .card-content {
         padding: 10px;
     }
