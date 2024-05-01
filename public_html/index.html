@@ -34,8 +34,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"/>
-    <link href="https://cdn.metroui.org.ua/current/metro.css" rel="stylesheet">
-    <link href="https://cdn.metroui.org.ua/current/icons.css" rel="stylesheet">
+    <link href="https://cdn.metroui.org.ua/dev/metro.css" rel="stylesheet">
+    <link href="https://cdn.metroui.org.ua/dev/icons.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet">
 
     <title>Metro UI - Popular HTML, CSS and JS library</title>
@@ -75,7 +75,7 @@
             <div class="cell-lg-8">
                 <div class="hero d-flex flex-column flex-justify-center flex-align-center">
                     <div style="font-size: 180px; width: 260px; height: 260px; border-radius: 50%;" class="d-flex flex-align-center flex-justify-center border bd-white">
-                        <div data-role="cube" data-flash-color="#ffffff" style="transform: scale(.6) translate(-30px, 20px);"></div>
+                        <div data-role="cube" data-color="bg-cyan bd-darkCyan" data-flash-color="#ffffff" style="transform: scale(.6) translate(-30px, 20px);"></div>
                     </div>
                     <h1 class="text-bold">Create your site fast and effectively with <span class="no-wrap">Metro UI</span></h1>
                     <div class="text-leader2">
@@ -322,25 +322,31 @@
                     Use any bundler to create your own set of Metro UI components
                 </div>
                 <div class="row mt-4">
-                    <div class="cell-sm-3">
+                    <div class="cell-md-one-fifth cell-sm-3 cell-fs-6">
+                        <a href="https://esbuild.github.io/" class=" bundler">
+                            <img src="images/logos/esbuild-logo.svg"/>
+                            <div>esbuild</div>
+                        </a>
+                    </div>
+                    <div class="cell-md-one-fifth cell-sm-3 cell-fs-6">
                         <a href="https://parceljs.org/" class=" bundler">
                             <img src="images/logos/parcel-logo.svg"/>
                             <div>Parcel</div>
                         </a>
                     </div>
-                    <div class="cell-sm-3">
+                    <div class="cell-md-one-fifth cell-sm-3 cell-fs-6">
                         <a href="https://rollupjs.org/" class=" bundler">
                             <img src="images/logos/rollup-logo.svg"/>
                             <div>Rollup</div>
                         </a>
                     </div>
-                    <div class="cell-sm-3">
+                    <div class="cell-md-one-fifth cell-sm-3 cell-fs-6">
                         <a href="https://vitejs.dev/" class=" bundler">
                             <img src="images/logos/vite-logo.svg"/>
                             <div>Vite</div>
                         </a>
                     </div>
-                    <div class="cell-sm-3">
+                    <div class="cell-md-one-fifth cell-sm-3 cell-fs-6">
                         <a href="https://webpack.js.org/" class=" bundler">
                             <img src="images/logos/webpack-logo.svg"/>
                             <div>Vite</div>
@@ -349,7 +355,7 @@
                 </div>
 
                 <div class="row mt-10 mb-10">
-                    <div class="cell-lg-8">
+                    <div class="cell-lg-7">
                         <pre title="index.js"><code class="language-javascript">
                             import "@olton/metroui/source/core"
                             import "@olton/metroui/source/common/common-css"
@@ -367,15 +373,16 @@
                             You can see more examples of using different bundlers <a class="fg-white" href="https://github.com/olton/metro4-bundlers">here</a>.
                         </div>
                     </div>
-                    <div class="cell-lg-4">
+                    <div class="cell-lg-5">
                         <pre title="shell"><code class="language-shell">
                             npm i --save-dev vite less
                         </code></pre>
                         <pre title="package.json"><code class="language-json">
                             {
-                                "scripts": {
-                                    "build": "vite build"
-                                }
+                              "scripts": {
+                                "start": "vite",
+                                "build": "vite build"
+                              }
                             }
                         </code></pre>
                         <pre title="shell"><code class="language-shell">
@@ -399,13 +406,13 @@
                 <h3 class="text-center">Technical Partners</h3>
                 <div class="row">
                     <div class="cell-md-4 d-flex flex-justify-center flex-align-center">
-                        <a href="https://www.jetbrains.com"><img src="images/jetbrains.svg"/></a>
+                        <a class="m-4" href="https://www.jetbrains.com"><img src="images/jetbrains.svg"/></a>
                     </div>
                     <div class="cell-md-4 d-flex flex-justify-center flex-align-center">
-                        <a href="https://mirohost.net"><img src="images/mirohost_logo.svg"/></a>
+                        <a class="m-4" href="https://mirohost.net"><img src="images/mirohost_logo.svg"/></a>
                     </div>
                     <div class="cell-md-4 d-flex flex-justify-center flex-align-center">
-                        <a href="https://www.keycdn.com"><img src="images/keycdn-logo.svg"/></a>
+                        <a class="m-4" href="https://www.keycdn.com"><img src="images/keycdn-logo.svg"/></a>
                     </div>
                 </div>
             </div>
@@ -460,7 +467,7 @@
     </div>
 </footer>
 
-<script src="https://cdn.metroui.org.ua/current/metro.js"></script>
+<script src="https://cdn.metroui.org.ua/dev/metro.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>
     Metro.utils.cleanPreCode("pre code")
