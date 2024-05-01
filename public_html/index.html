@@ -50,7 +50,7 @@
 
     <ul class="app-bar-menu">
         <li><a href="/">Home</a></li>
-        <li><a href="m4q-about.html">Docs</a></li>
+        <li><a href="intro.html">Docs</a></li>
         <li><a href="examples.html">Examples</a></li>
         <li><a href="icons.html">Icons</a></li>
         <li><a href="https://github.com/olton/Metro-UI-CSS/issues">Issues</a></li>
@@ -281,6 +281,115 @@
     </div>
 </section>
 
+<section class="p-14 d-flex flex-justify-center"><span class="mif-designing" style="font-size: 70px"></span></section>
+
+<section class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="cell-lg-2"></div>
+            <div class="cell-lg-8">
+                <h3 class="text-center">You can use CDN</h3>
+                <div class="text-leader2 text-center">
+                    You can use CDN to include Metro UI into you page:
+                </div>
+                <div class="mt-4 mb-4">
+                    <pre title="index.html"><code>
+                        &lt;!DOCTYPE html&gt;
+                        &lt;html lang="en"&gt;
+                          &lt;head&gt;
+                            &lt;!-- Required meta tags --&gt;
+                            &lt;meta charset="utf-8"&gt;
+                            &lt;meta name="viewport" content="width=device-width,
+                                initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;
+
+                              &lt;!-- Metro UI --&gt;
+                            &lt;link rel="stylesheet" href="https://cdn.metroui.org.ua/current/metro.css"&gt;
+                            &lt;link rel="stylesheet" href="https://cdn.metroui.org.ua/current/icons.css"&gt;
+                          &lt;/head&gt;
+                          &lt;body&gt;
+                            &lt;h1&gt;Hello, world!&lt;/h1&gt;
+
+                            &lt;!-- Metro UI --&gt;
+                            &lt;script src="https://cdn.metroui.org.ua/current/metro.js"&gt;&lt;/script&gt;
+                          &lt;/body&gt;
+                        &lt;/html&gt;
+                    </code></pre>
+                </div>
+
+                <h3 class="text-center">or</h3>
+                <h3 class="text-center">Build your one</h3>
+                <div class="text-leader2 text-center">
+                    Use any bundler to create your own set of Metro UI components
+                </div>
+                <div class="row mt-4">
+                    <div class="cell-sm-3">
+                        <a href="https://parceljs.org/" class=" bundler">
+                            <img src="images/logos/parcel-logo.svg"/>
+                            <div>Parcel</div>
+                        </a>
+                    </div>
+                    <div class="cell-sm-3">
+                        <a href="https://rollupjs.org/" class=" bundler">
+                            <img src="images/logos/rollup-logo.svg"/>
+                            <div>Rollup</div>
+                        </a>
+                    </div>
+                    <div class="cell-sm-3">
+                        <a href="https://vitejs.dev/" class=" bundler">
+                            <img src="images/logos/vite-logo.svg"/>
+                            <div>Vite</div>
+                        </a>
+                    </div>
+                    <div class="cell-sm-3">
+                        <a href="https://webpack.js.org/" class=" bundler">
+                            <img src="images/logos/webpack-logo.svg"/>
+                            <div>Vite</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row mt-10 mb-10">
+                    <div class="cell-lg-8">
+                        <pre title="index.js"><code class="language-javascript">
+                            import "@olton/metroui/source/core"
+                            import "@olton/metroui/source/common/common-css"
+                            import "@olton/metroui/source/colors"
+                            import "@olton/metroui/source/components/accordion"
+                            import "@olton/metroui/source/icons"
+                        </code></pre>
+                        <pre title="index.html"><code class="language-javascript">
+                            &lt;div data-role="accordion"&gt;...&lt;/div&gt;
+                            &lt;span class="mif-rocket"&gt;...&lt;/span&gt;
+
+                            &lt;script src="index.js" type="module"&gt;&lt;/script&gt;
+                        </code></pre>
+                        <div class="text-small mt-2-minus">
+                            You can see more examples of using different bundlers <a class="fg-white" href="https://github.com/olton/metro4-bundlers">here</a>.
+                        </div>
+                    </div>
+                    <div class="cell-lg-4">
+                        <pre title="shell"><code class="language-shell">
+                            npm i --save-dev vite less
+                        </code></pre>
+                        <pre title="package.json"><code class="language-json">
+                            {
+                                "scripts": {
+                                    "build": "vite build",
+                                    "watch": "vite"
+                                }
+                            }
+                        </code></pre>
+                        <pre title="shell"><code class="language-shell">
+                            npm run build
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="cell-lg-2"></div>
+        </div>
+    </div>
+</section>
+
 <section class="p-14 d-flex flex-justify-center"><span class="mif-cog" style="font-size: 70px"></span></section>
 
 <section class="container-fluid">
@@ -358,6 +467,14 @@
     Metro.utils.cleanPreCode("pre code")
     hljs.highlightAll()
 
+    $("pre").each((i, pre) => {
+        const el = $(pre)
+        const title = el.attr("title")
+        if (title) {
+            el.append($("<label>").text(title))
+        }
+    })
+
     const copy2clipboard = function(v, cb) {
         navigator.clipboard.writeText(v).then(function(){
             Metro.utils.exec(cb, [v])
@@ -372,6 +489,10 @@
 
     $("#openDocs").on("click", () => {
         window.location.href=`https://metroui.org.ua/m4q-about.html`
+    })
+
+    $("#openBundlersRepo").on("click", () => {
+        window.location.href=`https://github.com/olton/metro4-bundlers`
     })
 </script>
 <script id="help-ukraine-win" async="true" src="https://helpukrainewinwidget.org/cdn/widget.js?type=three&position=middle-right&layout=main"></script>
