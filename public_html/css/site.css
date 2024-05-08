@@ -607,6 +607,3 @@ h1 + .text-leader {
 main {
   overflow: hidden;
 }
-.sidebar {
-  overflow: visible!important;
-}
