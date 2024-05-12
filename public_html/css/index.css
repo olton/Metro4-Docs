@@ -1,5 +1,16 @@
 :root {
+    --appbar-background: rgba(32, 38, 57, .8);
+    --appbar-item-background: rgba(32, 38, 57, .8);
+    --appbar-item-background-hover: rgba(63, 76, 119, .4);
+    --appbar-item-color-hover: #fff;
+    --appbar-item-color: #fff;
+    --appbar-hamburger-color: #fff;
 
+    --card-background: rgb(32, 38, 57);
+    --card-background-content: rgba(32, 38, 57, 0);
+    --card-color: #fff;
+    --card-color-content: #fff;
+    --card-avatar-border-color: #ffffff;
 }
 
 body {
@@ -15,19 +26,6 @@ body {
     background-repeat: repeat;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-.app-bar {
-    background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(49, 59, 91) 70.2%);
-    border-bottom: 1px solid #365f71;
-    .hamburger span {
-        background-color: aliceblue!important;
-    }
-}
-
-.social-btn {
-    width: 26px!important;
-    height: 26px!important;
 }
 
 .hero {
@@ -93,7 +91,7 @@ pre {
 
     &.image {
         padding: 0;
-        height: 200px;
+        height: 160px;
         -webkit-transition: -webkit-transform 0.2s;
         transition: -webkit-transform 0.2s;
         transition: transform 0.2s;
@@ -140,16 +138,16 @@ footer {
     .hero {
         padding: 10px;
     }
-    .social-buttons {
-        right: 48px!important;
-        position: absolute!important;
-        top: 0;
-    }
+}
 
+.app-bar:not(.app-bar-expand) {
     .app-bar-menu {
-        &.opened {
-            background: #000;
-            color: #fff;
-        }
+        width: 100%;
+        -webkit-box-ordinal-group: 1001;
+            -ms-flex-order: 1000;
+                order: 1000;
+        top: 100%;
+        left: 0;
+        position: absolute;
     }
 }
