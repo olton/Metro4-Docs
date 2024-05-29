@@ -1,9 +1,12 @@
-@import "../../../Metro4/source/include/vars";
-@import "../../../Metro4/source/include/mixins";
 :root {
     --brand-color: #067bb6;
     --brand-color3: #05496b;
     --brand-color2: #ade2ff;
+    --appbar-background: var(--brand-color);
+    --appbar-item-background: var(--brand-color);
+    --appbar-item-background-hover: var(--brand-color3);
+    --appbar-item-color: #ffffff;
+    --appbar-item-color-hover: #ffffff;
 }
 
 .fg-brand {
@@ -43,7 +46,7 @@
     [class*=cell] {
         padding-top: 12px;
         padding-bottom: 12px;
-        border: 1px solid @gray!important;
+        border: 1px solid #ccc!important;
         text-align: center;
     }
 }
@@ -63,7 +66,7 @@
     }
     [class^=cell]:nth-child(odd) > div {
         background: #23d160;
-        color: @white;
+        color: #fff;
     }
 }
 
@@ -95,7 +98,7 @@ pre {
 .toc-wrapper, #sidenav, .doc-nav-item {
 
     & > h5 {
-        color: @darkGray;
+        color: #191919;
         margin-top: 0;
     }
 
@@ -109,10 +112,10 @@ pre {
         }
 
         li a {
-            color: @darkGray;
+            color: #191919;
 
             &:hover {
-                color: @dark;
+                color: #000000;
             }
         }
 
@@ -120,7 +123,7 @@ pre {
             font-weight: bold;
 
             a {
-                color: @dark;
+                color: #000000;
                 font-weight: bolder;
             }
 
@@ -157,7 +160,7 @@ ul.toc-nav {
 }
 
 .doc-nav-item > a {
-    color: @dark;
+    color: #000000;
     font-weight: bold;
 }
 
@@ -220,7 +223,7 @@ footer {
         font-size: 12px;
     }
     p a {
-        color: @dark;
+        color: #000000;
         font-weight: bold;
     }
 }
@@ -308,11 +311,11 @@ footer {
     li {
         width: 100%;
         font-size: .8em;
-        color: @gray;
+        color: #cccccc;
         padding: .5rem 1rem;
         cursor: pointer;
         &:hover {
-            background-color: @cyan;
+            background-color: #468cff;
             color: #fff;
             [class*=mif-] {
                 color: #fff;
@@ -325,7 +328,7 @@ footer {
         width: 40px;
         text-align: center;
         vertical-align: middle;
-        color: @dark;
+        color: #000000;
         display: inline-block;
     }
 }
@@ -525,7 +528,7 @@ body {
 }
 
 .neb-commercial::after {
-    border-color: @darkMagenta transparent transparent transparent;
+    border-color: #8b008b transparent transparent transparent;
 }
 
 .feature-bg {
