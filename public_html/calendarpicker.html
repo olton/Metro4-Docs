@@ -120,17 +120,21 @@
 
                 <div class="example">
                     <div class="row">
-                        <div class="cell-md-4">
+                        <div class="cell-md-3">
                             <p>Default</p>
                             <input type="text" data-role="calendarpicker"  data-dialog-point="360">
                         </div>
-                        <div class="cell-md-4">
-                            <p>%d %b %Y</p>
-                            <input type="text" data-role="calendarpicker" value="1972/12/21" data-format="%d %m %Y" data-dialog-point="360">
+                        <div class="cell-md-3">
+                            <p>DD-MM-YYYY</p>
+                            <input type="text" data-role="calendarpicker" value="1972/12/21" data-format="DD-MM-YYYY" data-dialog-point="360">
                         </div>
-                        <div class="cell-md-4">
-                            <p>%d %B %Y</p>
-                            <input type="text" data-role="calendarpicker" data-format="%d %M %Y" data-dialog-point="360">
+                        <div class="cell-md-3">
+                            <p>DD, MMM YYYY</p>
+                            <input type="text" data-role="calendarpicker" data-format="DD, MMM YYYY" data-dialog-point="360">
+                        </div>
+                        <div class="cell-md-3">
+                            <p>DD, MMM YYYY (uk-UA)</p>
+                            <input type="text" data-role="calendarpicker" data-format="DD, MMM YYYY" data-dialog-point="360" data-locale="uk-UA">
                         </div>
                     </div>
                 </div>
