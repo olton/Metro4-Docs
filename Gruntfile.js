@@ -57,16 +57,17 @@ module.exports = function(grunt) {
                         // },
                         {
                             match: /<!-- ga-script -->/g,
-                            replacement: '<!-- Global site tag (gtag.js) - Google Analytics -->\n' +
-                                `<!-- Global site tag (gtag.js) - Google Analytics -->\n`+
-                                `<script async src="https://www.googletagmanager.com/gtag/js?id=G-VXGQBLEBHH"></script>
-                                <script>
-                                    window.dataLayer = window.dataLayer || [];
-                                    function gtag(){dataLayer.push(arguments);}
-                                    gtag('js', new Date());
-
-                                    gtag('config', 'G-VXGQBLEBHH');
-                                </script>`
+                            replacement: `
+                                    <!-- Google tag (gtag.js) -->
+                                    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N08RZ551GL"></script>
+                                    <script>
+                                        window.dataLayer = window.dataLayer || [];
+                                        function gtag(){dataLayer.push(arguments);}
+                                        gtag('js', new Date());
+                                    
+                                        gtag('config', 'G-N08RZ551GL');
+                                    </script>
+                                `
                         },
                         {
                             match: /<!-- buy-me-coffee -->/g,
